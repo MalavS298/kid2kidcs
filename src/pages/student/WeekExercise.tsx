@@ -37,7 +37,6 @@ const WeekExercise = () => {
       </div>
     );
   }
-  const [isRunning, setIsRunning] = useState(false);
 
   const lineCount = Math.max(code.split("\n").length, 12);
 
