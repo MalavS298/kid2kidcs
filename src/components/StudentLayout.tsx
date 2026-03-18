@@ -137,9 +137,10 @@ const StudentLayout = () => {
         </div>
       </aside>
 
-      {/* Main content */}
       <main className="flex-1 min-h-screen">
-        <Outlet />
+        <StudentContext.Provider value={{ unlockedWeeks }}>
+          <Outlet />
+        </StudentContext.Provider>
       </main>
     </div>
   );
