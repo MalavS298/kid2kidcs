@@ -1,28 +1,84 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Calendar, Clock, Plus, User } from "lucide-react";
+import { Calendar, Clock, Plus, User, Video, ExternalLink, Loader2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 const assignedStudents = ["Alex Chen", "Sam Lee"];
 
-const initialMeetings = [
-  { id: 1, student: "Alex Chen", date: "2026-03-20", time: "15:00", duration: "1 hour", status: "scheduled" as const },
-  { id: 2, student: "Sam Lee", date: "2026-03-21", time: "16:00", duration: "1 hour", status: "scheduled" as const },
-  { id: 3, student: "Alex Chen", date: "2026-03-13", time: "15:00", duration: "1 hour", status: "completed" as const },
-];
+type Meeting = {
+  id: string;
+  student_name: string;
+  teacher_name: string;
+  scheduled_date: string;
+  scheduled_time: string;
+  duration: string;
+  status: string;
+  zoom_join_url: string | null;
+  zoom_start_url: string | null;
+  zoom_meeting_id: string | null;
+  zoom_password: string | null;
+};
 
 const TeacherMeetings = () => {
-  const [meetings, setMeetings] = useState(initialMeetings);
+  const [meetings, setMeetings] = useState<Meeting[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ student: "", date: "", time: "" });
+  const [loading, setLoading] = useState(false);
+  const [fetching, setFetching] = useState(true);
+  const { toast } = useToast();
 
-  const handleSchedule = (e: React.FormEvent) => {
+  const fetchMeetings = async () => {
+    const { data, error } = await supabase
+      .from("meetings")
+      .select("*")
+      .order("scheduled_date", { ascending: true });
+
+    if (error) {
+      console.error("Error fetching meetings:", error);
+    } else {
+      setMeetings(data || []);
+    }
+    setFetching(false);
+  };
+
+  useEffect(() => {
+    fetchMeetings();
+  }, []);
+
+  const handleSchedule = async (e: React.FormEvent) => {
     e.preventDefault();
-    setMeetings([...meetings, { id: Date.now(), ...form, duration: "1 hour", status: "scheduled" }]);
-    setForm({ student: "", date: "", time: "" });
-    setShowForm(false);
+    if (!form.student || !form.date || !form.time) return;
+
+    setLoading(true);
+    try {
+      const startTime = `${form.date}T${form.time}:00`;
+      const { data, error } = await supabase.functions.invoke("create-zoom-meeting", {
+        body: {
+          topic: `Kid2Kid CS - ${form.student}`,
+          start_time: startTime,
+          duration: 60,
+          student_name: form.student,
+          teacher_name: "Teacher",
+        },
+      });
+
+      if (error) throw error;
+      if (!data.success) throw new Error(data.error);
+
+      toast({ title: "Meeting scheduled!", description: `Zoom meeting created for ${form.student}` });
+      setForm({ student: "", date: "", time: "" });
+      setShowForm(false);
+      fetchMeetings();
+    } catch (err: any) {
+      console.error("Error scheduling:", err);
+      toast({ title: "Error", description: err.message || "Failed to create meeting", variant: "destructive" });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -30,7 +86,7 @@ const TeacherMeetings = () => {
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-section font-medium mb-1">Meetings</h1>
-          <p className="text-muted-foreground">Manage your lesson schedule.</p>
+          <p className="text-muted-foreground">Manage your lesson schedule with Zoom.</p>
         </div>
         <Button onClick={() => setShowForm(!showForm)} size="sm">
           <Plus className="w-3 h-3" /> Schedule Lesson
@@ -63,32 +119,54 @@ const TeacherMeetings = () => {
             </div>
           </div>
           <div className="flex gap-2">
-            <Button type="submit" size="sm">Confirm</Button>
+            <Button type="submit" size="sm" disabled={loading}>
+              {loading && <Loader2 className="w-3 h-3 animate-spin" />}
+              {loading ? "Creating..." : "Confirm & Create Zoom"}
+            </Button>
             <Button type="button" variant="ghost" size="sm" onClick={() => setShowForm(false)}>Cancel</Button>
           </div>
         </form>
       )}
 
-      <div className="space-y-3">
-        {meetings.map(m => (
-          <div key={m.id} className="rounded-lg bg-card shadow-subtle p-4 flex items-center gap-4">
-            <div className={`w-2 h-2 rounded-full shrink-0 ${m.status === "scheduled" ? "bg-accent" : "bg-green-500"}`} />
-            <div className="flex-1">
-              <div className="flex items-center gap-2 text-ui-sm font-medium">
-                <User className="w-3 h-3" /> {m.student}
+      {fetching ? (
+        <div className="flex items-center justify-center py-12 text-muted-foreground">
+          <Loader2 className="w-4 h-4 animate-spin mr-2" /> Loading meetings...
+        </div>
+      ) : meetings.length === 0 ? (
+        <div className="text-center py-12 text-muted-foreground">
+          No meetings scheduled yet. Click "Schedule Lesson" to create one.
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {meetings.map(m => (
+            <div key={m.id} className="rounded-lg bg-card shadow-subtle p-4 flex items-center gap-4">
+              <div className={`w-2 h-2 rounded-full shrink-0 ${m.status === "scheduled" ? "bg-accent" : "bg-green-500"}`} />
+              <div className="flex-1">
+                <div className="flex items-center gap-2 text-ui-sm font-medium">
+                  <User className="w-3 h-3" /> {m.student_name}
+                </div>
+                <div className="flex items-center gap-3 text-[12px] text-muted-foreground mt-0.5">
+                  <span className="flex items-center gap-1"><Calendar className="w-3 h-3" /> {m.scheduled_date}</span>
+                  <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {m.scheduled_time}</span>
+                  <span>{m.duration}</span>
+                </div>
               </div>
-              <div className="flex items-center gap-3 text-[12px] text-muted-foreground mt-0.5">
-                <span className="flex items-center gap-1"><Calendar className="w-3 h-3" /> {m.date}</span>
-                <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {m.time}</span>
-                <span>{m.duration}</span>
+              <div className="flex items-center gap-2">
+                {m.zoom_start_url && (
+                  <a href={m.zoom_start_url} target="_blank" rel="noopener noreferrer">
+                    <Button size="sm" variant="outline" className="gap-1">
+                      <Video className="w-3 h-3" /> Start <ExternalLink className="w-3 h-3" />
+                    </Button>
+                  </a>
+                )}
+                <span className={`text-[11px] uppercase tracking-wider px-2 py-0.5 rounded-full ${
+                  m.status === "scheduled" ? "bg-accent/10 text-accent" : "bg-green-500/10 text-green-600"
+                }`}>{m.status}</span>
               </div>
             </div>
-            <span className={`text-[11px] uppercase tracking-wider px-2 py-0.5 rounded-full ${
-              m.status === "scheduled" ? "bg-accent/10 text-accent" : "bg-green-500/10 text-green-600"
-            }`}>{m.status}</span>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

@@ -14,7 +14,54 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      meetings: {
+        Row: {
+          created_at: string
+          duration: string
+          id: string
+          scheduled_date: string
+          scheduled_time: string
+          status: string
+          student_name: string
+          teacher_name: string
+          updated_at: string
+          zoom_join_url: string | null
+          zoom_meeting_id: string | null
+          zoom_password: string | null
+          zoom_start_url: string | null
+        }
+        Insert: {
+          created_at?: string
+          duration?: string
+          id?: string
+          scheduled_date: string
+          scheduled_time: string
+          status?: string
+          student_name: string
+          teacher_name: string
+          updated_at?: string
+          zoom_join_url?: string | null
+          zoom_meeting_id?: string | null
+          zoom_password?: string | null
+          zoom_start_url?: string | null
+        }
+        Update: {
+          created_at?: string
+          duration?: string
+          id?: string
+          scheduled_date?: string
+          scheduled_time?: string
+          status?: string
+          student_name?: string
+          teacher_name?: string
+          updated_at?: string
+          zoom_join_url?: string | null
+          zoom_meeting_id?: string | null
+          zoom_password?: string | null
+          zoom_start_url?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
