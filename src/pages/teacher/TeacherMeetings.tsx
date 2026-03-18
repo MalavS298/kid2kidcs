@@ -53,7 +53,6 @@ const TeacherMeetings = () => {
                 </SelectContent>
               </Select>
             </div>
-            </div>
             <div>
               <Label>Date</Label>
               <Input type="date" value={form.date} onChange={e => setForm({ ...form, date: e.target.value })} required />
