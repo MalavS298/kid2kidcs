@@ -13,6 +13,17 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ['Geist Sans', 'system-ui', '-apple-system', 'sans-serif'],
+        mono: ['Geist Mono', 'monospace'],
+      },
+      fontSize: {
+        'ui-sm': '14px',
+        'base': '16px',
+        'subhead': '20px',
+        'section': '32px',
+        'hero': '48px',
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -59,31 +70,38 @@ export default {
         },
       },
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        lg: "var(--radius-outer)",
+        md: "var(--radius-inner)",
+        sm: "var(--radius-button)",
+      },
+      boxShadow: {
+        'subtle': '0 0 0 1px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.05)',
+        'card': '0 4px 6px -1px rgba(0,0,0,0.1)',
+        'focus': '0 0 0 2px hsla(226, 70%, 55%, 0.2)',
       },
       keyframes: {
         "accordion-down": {
-          from: {
-            height: "0",
-          },
-          to: {
-            height: "var(--radix-accordion-content-height)",
-          },
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
         },
         "accordion-up": {
-          from: {
-            height: "var(--radix-accordion-content-height)",
-          },
-          to: {
-            height: "0",
-          },
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
+        },
+        "shimmer": {
+          "0%": { backgroundPosition: "-200% 0" },
+          "100%": { backgroundPosition: "200% 0" },
+        },
+        "fade-in-up": {
+          "0%": { opacity: "0", transform: "translateY(8px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
         },
       },
       animation: {
-        "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
+        "accordion-down": "accordion-down 0.2s cubic-bezier(0.2, 0, 0, 1)",
+        "accordion-up": "accordion-up 0.2s cubic-bezier(0.2, 0, 0, 1)",
+        "shimmer": "shimmer 2s linear infinite",
+        "fade-in-up": "fade-in-up 0.5s cubic-bezier(0.2, 0, 0, 1) forwards",
       },
     },
   },

@@ -3,8 +3,21 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import Index from "./pages/Index.tsx";
-import NotFound from "./pages/NotFound.tsx";
+import Index from "./pages/Index";
+import NotFound from "./pages/NotFound";
+import LoginPage from "./pages/LoginPage";
+import StudentLayout from "./components/StudentLayout";
+import StudentHome from "./pages/student/StudentHome";
+import WeekContent from "./pages/student/WeekContent";
+import WeekExercise from "./pages/student/WeekExercise";
+import StudentMeetings from "./pages/student/StudentMeetings";
+import TeacherLayout from "./components/TeacherLayout";
+import TeacherHome from "./pages/teacher/TeacherHome";
+import TeacherMeetings from "./pages/teacher/TeacherMeetings";
+import TeacherManage from "./pages/teacher/TeacherManage";
+import AdminLayout from "./components/AdminLayout";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminPairing from "./pages/admin/AdminPairing";
 
 const queryClient = new QueryClient();
 
@@ -16,7 +29,26 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route path="/login" element={<LoginPage />} />
+
+          <Route path="/student" element={<StudentLayout />}>
+            <Route index element={<StudentHome />} />
+            <Route path="week/:weekId/content" element={<WeekContent />} />
+            <Route path="week/:weekId/exercise" element={<WeekExercise />} />
+            <Route path="meetings" element={<StudentMeetings />} />
+          </Route>
+
+          <Route path="/teacher" element={<TeacherLayout />}>
+            <Route index element={<TeacherHome />} />
+            <Route path="meetings" element={<TeacherMeetings />} />
+            <Route path="manage" element={<TeacherManage />} />
+          </Route>
+
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<AdminDashboard />} />
+            <Route path="pairing" element={<AdminPairing />} />
+          </Route>
+
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
