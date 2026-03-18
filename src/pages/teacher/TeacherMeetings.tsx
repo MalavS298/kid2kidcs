@@ -2,7 +2,10 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Calendar, Clock, Plus, User } from "lucide-react";
+
+const assignedStudents = ["Alex Chen", "Sam Lee"];
 
 const initialMeetings = [
   { id: 1, student: "Alex Chen", date: "2026-03-20", time: "15:00", duration: "1 hour", status: "scheduled" as const },
@@ -39,7 +42,16 @@ const TeacherMeetings = () => {
           <div className="grid grid-cols-3 gap-4">
             <div>
               <Label>Student</Label>
-              <Input placeholder="Student name" value={form.student} onChange={e => setForm({ ...form, student: e.target.value })} required />
+              <Select value={form.student} onValueChange={v => setForm({ ...form, student: v })}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select student" />
+                </SelectTrigger>
+                <SelectContent>
+                  {assignedStudents.map(s => (
+                    <SelectItem key={s} value={s}>{s}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <Label>Date</Label>
