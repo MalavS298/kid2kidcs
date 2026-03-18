@@ -62,12 +62,7 @@ const HeroSection = () =>
       
         <Link to="/login">
           <Button variant="hero" size="lg">
-            Student Login <ArrowRight className="w-4 h-4" />
-          </Button>
-        </Link>
-        <Link to="/login">
-          <Button variant="heroOutline" size="lg" className="bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/20">
-            Teacher Portal
+            Join Now <ArrowRight className="w-4 h-4" />
           </Button>
         </Link>
       </motion.div>
