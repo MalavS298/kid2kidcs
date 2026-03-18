@@ -4,7 +4,7 @@ import { Code2, BookOpen, Users, Monitor, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import heroBg from "@/assets/hero-bg.jpg";
 
-const transition = { type: "tween" as const, ease: [0.2, 0, 0, 1], duration: 0.5 };
+const transition = { type: "tween" as const, ease: [0.2, 0, 0, 1] as [number, number, number, number], duration: 0.5 };
 
 const Navbar = () => (
   <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
