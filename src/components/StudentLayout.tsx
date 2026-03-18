@@ -21,6 +21,7 @@ const StudentLayout = () => {
   const navigate = useNavigate();
   const [openWeek, setOpenWeek] = useState<number | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   // In production, this comes from the DB (set by teacher). Using localStorage for demo.
   const [unlockedWeeks] = useState(() => {

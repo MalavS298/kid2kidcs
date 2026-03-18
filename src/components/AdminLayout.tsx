@@ -2,8 +2,10 @@ import { useState } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { Code2, Home, Users, LogOut, LayoutDashboard, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
+import SettingsPanel from "@/components/SettingsPanel";
 
 const AdminLayout = () => {
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const isActive = (path: string) => location.pathname === path;
