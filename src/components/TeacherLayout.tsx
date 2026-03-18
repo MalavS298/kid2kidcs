@@ -1,6 +1,7 @@
+import { useState } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
-import { Code2, Home, Calendar, Users, LogOut } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Code2, Home, Calendar, Users, LogOut, Settings } from "lucide-react";
+import SettingsPanel from "@/components/SettingsPanel";
 
 const TeacherLayout = () => {
   const location = useLocation();
