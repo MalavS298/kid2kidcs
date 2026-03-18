@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, createContext, useContext } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
-import { Code2, Home, BookOpen, Calendar, ChevronDown, ChevronRight, FileText, Code, LogOut } from "lucide-react";
+import { Code2, Home, BookOpen, Calendar, ChevronDown, ChevronRight, FileText, Code, LogOut, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
