@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Code, Play, RotateCcw, Circle } from "lucide-react";
+import { Code, Play, RotateCcw, Circle, Lock } from "lucide-react";
+import { useStudentContext } from "@/components/StudentLayout";
 
 const exercises: Record<string, { title: string; prompt: string; starter: string }> = {
   "1": { title: "Variable Swap", prompt: "Write code to swap the values of two variables a and b without using a third variable.", starter: "a = 5\nb = 10\n\n# Swap a and b below\n" },
