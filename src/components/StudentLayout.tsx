@@ -57,6 +57,14 @@ const StudentLayout = () => {
             {sidebarOpen && <span>Home</span>}
           </Link>
 
+          <Link to="/student/meetings" className={cn(
+            "flex items-center gap-2 px-3 py-2 rounded-md text-ui-sm transition-colors",
+            isActive("/student/meetings") ? "bg-card shadow-subtle text-foreground border-l-2 border-primary" : "text-muted-foreground hover:bg-secondary"
+          )}>
+            <Calendar className="w-4 h-4 shrink-0" />
+            {sidebarOpen && <span>Meetings</span>}
+          </Link>
+
           {sidebarOpen && <div className="text-[11px] uppercase tracking-wider text-muted-foreground px-3 pt-4 pb-1">Weekly Plan</div>}
 
           {weeks.map(w => {
@@ -119,14 +127,6 @@ const StudentLayout = () => {
             </div>
             );
           })}
-
-          <Link to="/student/meetings" className={cn(
-            "flex items-center gap-2 px-3 py-2 rounded-md text-ui-sm transition-colors",
-            isActive("/student/meetings") ? "bg-card shadow-subtle text-foreground border-l-2 border-primary" : "text-muted-foreground hover:bg-secondary"
-          )}>
-            <Calendar className="w-4 h-4 shrink-0" />
-            {sidebarOpen && <span>Meetings</span>}
-          </Link>
         </nav>
 
         <div className="p-2 border-t border-border">
