@@ -59,24 +59,33 @@ const StudentLayout = () => {
 
           {sidebarOpen && <div className="text-[11px] uppercase tracking-wider text-muted-foreground px-3 pt-4 pb-1">Weekly Plan</div>}
 
-          {weeks.map(w => (
+          {weeks.map(w => {
+            const locked = w.id > unlockedWeeks;
+            return (
             <div key={w.id}>
               <button
-                onClick={() => setOpenWeek(openWeek === w.id ? null : w.id)}
-                className="w-full flex items-center gap-2 px-3 py-2 rounded-md text-ui-sm text-muted-foreground hover:bg-secondary transition-colors"
+                onClick={() => !locked && setOpenWeek(openWeek === w.id ? null : w.id)}
+                className={cn(
+                  "w-full flex items-center gap-2 px-3 py-2 rounded-md text-ui-sm transition-colors",
+                  locked ? "text-muted-foreground/40 cursor-not-allowed" : "text-muted-foreground hover:bg-secondary"
+                )}
               >
-                <BookOpen className="w-4 h-4 shrink-0" />
+                {locked ? <Lock className="w-4 h-4 shrink-0" /> : <BookOpen className="w-4 h-4 shrink-0" />}
                 {sidebarOpen && (
                   <>
                     <span className="flex-1 text-left">{`Week ${w.id}`}</span>
-                    <motion.div animate={{ rotate: openWeek === w.id ? 90 : 0 }} transition={{ duration: 0.2 }}>
-                      <ChevronRight className="w-3 h-3" />
-                    </motion.div>
+                    {locked ? (
+                      <span className="text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded bg-secondary text-muted-foreground/50">Locked</span>
+                    ) : (
+                      <motion.div animate={{ rotate: openWeek === w.id ? 90 : 0 }} transition={{ duration: 0.2 }}>
+                        <ChevronRight className="w-3 h-3" />
+                      </motion.div>
+                    )}
                   </>
                 )}
               </button>
               <AnimatePresence>
-                {openWeek === w.id && sidebarOpen && (
+                {openWeek === w.id && !locked && sidebarOpen && (
                   <motion.div
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: "auto", opacity: 1 }}
@@ -108,7 +117,8 @@ const StudentLayout = () => {
                 )}
               </AnimatePresence>
             </div>
-          ))}
+            );
+          })}
 
           <Link to="/student/meetings" className={cn(
             "flex items-center gap-2 px-3 py-2 rounded-md text-ui-sm transition-colors",
