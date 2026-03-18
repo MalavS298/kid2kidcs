@@ -130,7 +130,11 @@ const StudentLayout = () => {
           })}
         </nav>
 
-        <div className="p-2 border-t border-border">
+        <div className="p-2 border-t border-border space-y-1">
+          <button onClick={() => setSettingsOpen(true)} className="w-full flex items-center gap-2 px-3 py-2 rounded-md text-ui-sm text-muted-foreground hover:bg-secondary transition-colors">
+            <Settings className="w-4 h-4 shrink-0" />
+            {sidebarOpen && <span>Settings</span>}
+          </button>
           <button onClick={handleLogout} className="w-full flex items-center gap-2 px-3 py-2 rounded-md text-ui-sm text-muted-foreground hover:bg-secondary transition-colors">
             <LogOut className="w-4 h-4 shrink-0" />
             {sidebarOpen && <span>Sign Out</span>}
