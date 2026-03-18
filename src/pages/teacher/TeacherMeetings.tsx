@@ -42,7 +42,17 @@ const TeacherMeetings = () => {
           <div className="grid grid-cols-3 gap-4">
             <div>
               <Label>Student</Label>
-              <Input placeholder="Student name" value={form.student} onChange={e => setForm({ ...form, student: e.target.value })} required />
+              <Select value={form.student} onValueChange={v => setForm({ ...form, student: v })}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select student" />
+                </SelectTrigger>
+                <SelectContent>
+                  {assignedStudents.map(s => (
+                    <SelectItem key={s} value={s}>{s}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
             </div>
             <div>
               <Label>Date</Label>
