@@ -1,1 +1,4 @@
 project_id = "ibbptofzbdwybijnmixo"
+
+[functions.create-zoom-meeting]
+verify_jwt = false
