@@ -1,4 +1,5 @@
-import { Calendar, Clock, User } from "lucide-react";
+import { Calendar, Clock, User, Video, ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const StudentHome = () => {
   const user = JSON.parse(localStorage.getItem("k2k_user") || '{"name":"Student"}');
