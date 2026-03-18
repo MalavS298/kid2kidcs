@@ -141,6 +141,7 @@ const StudentLayout = () => {
             {sidebarOpen && <span>Sign Out</span>}
           </button>
         </div>
+        <SettingsPanel open={settingsOpen} onClose={() => setSettingsOpen(false)} />
       </aside>
 
       <main className="flex-1 min-h-screen">
