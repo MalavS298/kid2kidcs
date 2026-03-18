@@ -1,4 +1,5 @@
-import { Calendar, Clock, User } from "lucide-react";
+import { Calendar, Clock, User, Video, ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const StudentHome = () => {
   const user = JSON.parse(localStorage.getItem("k2k_user") || '{"name":"Student"}');
@@ -44,6 +45,28 @@ const StudentHome = () => {
               </div>
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* Upcoming Meeting Card */}
+      <div className="rounded-lg bg-card shadow-subtle p-5 mt-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-10 rounded-md bg-accent/10 flex items-center justify-center">
+              <Video className="w-5 h-5 text-accent" />
+            </div>
+            <div>
+              <h3 className="font-medium">Upcoming Session</h3>
+              <div className="flex items-center gap-3 text-ui-sm text-muted-foreground mt-0.5">
+                <span className="flex items-center gap-1"><Calendar className="w-3 h-3" /> Mar 20, 2026</span>
+                <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> 3:00 PM – 4:00 PM</span>
+                <span className="flex items-center gap-1"><User className="w-3 h-3" /> Jordan S.</span>
+              </div>
+            </div>
+          </div>
+          <Button size="sm">
+            Join Meeting <ArrowRight className="w-3 h-3" />
+          </Button>
         </div>
       </div>
     </div>
