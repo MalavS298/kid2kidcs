@@ -11,12 +11,21 @@ const weeks = [
   { id: 3, title: "Week 3: Loops", pdf: "For and While Loops", exercise: "Pattern Printer" },
   { id: 4, title: "Week 4: Functions", pdf: "Defining Functions", exercise: "Calculator App" },
 ];
+// Context to share unlocked weeks across student pages
+export const StudentContext = createContext<{ unlockedWeeks: number }>({ unlockedWeeks: 2 });
+export const useStudentContext = () => useContext(StudentContext);
 
 const StudentLayout = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [openWeek, setOpenWeek] = useState<number | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  // In production, this comes from the DB (set by teacher). Using localStorage for demo.
+  const [unlockedWeeks] = useState(() => {
+    const stored = localStorage.getItem("k2k_unlocked_weeks");
+    return stored ? parseInt(stored) : 2; // Default: weeks 1-2 unlocked
+  });
 
   const handleLogout = () => {
     localStorage.removeItem("k2k_user");
