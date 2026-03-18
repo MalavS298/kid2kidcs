@@ -11,7 +11,19 @@ const weekContent: Record<string, { title: string; topics: string[] }> = {
 
 const WeekContent = () => {
   const { weekId } = useParams();
+  const { unlockedWeeks } = useStudentContext();
+  const weekNum = parseInt(weekId || "1");
   const content = weekContent[weekId || "1"];
+
+  if (weekNum > unlockedWeeks) {
+    return (
+      <div className="p-8 max-w-3xl flex flex-col items-center justify-center min-h-[60vh] text-center">
+        <Lock className="w-10 h-10 text-muted-foreground/30 mb-4" />
+        <h2 className="text-xl font-medium mb-2">Week {weekId} is Locked</h2>
+        <p className="text-muted-foreground text-ui-sm">Your teacher hasn't unlocked this week yet. Check back soon!</p>
+      </div>
+    );
+  }
 
   return (
     <div className="p-8 max-w-3xl">
