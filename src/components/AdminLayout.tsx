@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { Code2, Home, Users, LogOut, LayoutDashboard, Settings } from "lucide-react";
-import SettingsPanel from "@/components/SettingsPanel";
+import { cn } from "@/lib/utils";
 
 const AdminLayout = () => {
   const location = useLocation();
