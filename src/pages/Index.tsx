@@ -34,15 +34,6 @@ const HeroSection = () => (
       <div className="absolute inset-0 bg-foreground/60" />
     </div>
     <div className="relative z-10 text-center px-4 max-w-3xl mx-auto">
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ ...transition, delay: 0.1 }}
-        className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/20 border border-primary/30 text-primary-foreground text-ui-sm mb-6"
-      >
-        <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
-        Now accepting students for Summer Camp
-      </motion.div>
       <motion.h1
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
