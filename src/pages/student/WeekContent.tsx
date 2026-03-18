@@ -1,5 +1,6 @@
-import { useParams } from "react-router-dom";
-import { FileText } from "lucide-react";
+import { useParams, Navigate } from "react-router-dom";
+import { FileText, Lock } from "lucide-react";
+import { useStudentContext } from "@/components/StudentLayout";
 
 const weekContent: Record<string, { title: string; topics: string[] }> = {
   "1": { title: "Variables & Types", topics: ["What is a variable?", "Data types: int, float, str, bool", "Type conversion", "Input/Output"] },
