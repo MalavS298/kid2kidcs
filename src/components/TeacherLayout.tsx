@@ -1,8 +1,11 @@
+import { useState } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
-import { Code2, Home, Calendar, Users, LogOut } from "lucide-react";
+import { Code2, Home, Calendar, Users, LogOut, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
+import SettingsPanel from "@/components/SettingsPanel";
 
 const TeacherLayout = () => {
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const isActive = (path: string) => location.pathname === path;
@@ -39,11 +42,15 @@ const TeacherLayout = () => {
             </Link>
           ))}
         </nav>
-        <div className="p-2 border-t border-border">
+        <div className="p-2 border-t border-border space-y-1">
+          <button onClick={() => setSettingsOpen(true)} className="w-full flex items-center gap-2 px-3 py-2 rounded-md text-ui-sm text-muted-foreground hover:bg-secondary transition-colors">
+            <Settings className="w-4 h-4" /> Settings
+          </button>
           <button onClick={handleLogout} className="w-full flex items-center gap-2 px-3 py-2 rounded-md text-ui-sm text-muted-foreground hover:bg-secondary transition-colors">
             <LogOut className="w-4 h-4" /> Sign Out
           </button>
         </div>
+        <SettingsPanel open={settingsOpen} onClose={() => setSettingsOpen(false)} />
       </aside>
       <main className="flex-1 min-h-screen"><Outlet /></main>
     </div>

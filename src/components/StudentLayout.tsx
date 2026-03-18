@@ -1,6 +1,7 @@
 import { useState, createContext, useContext } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
-import { Code2, Home, BookOpen, Calendar, ChevronDown, ChevronRight, FileText, Code, LogOut, Lock } from "lucide-react";
+import { Code2, Home, BookOpen, Calendar, ChevronDown, ChevronRight, FileText, Code, LogOut, Lock, Settings } from "lucide-react";
+import SettingsPanel from "@/components/SettingsPanel";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
@@ -20,6 +21,7 @@ const StudentLayout = () => {
   const navigate = useNavigate();
   const [openWeek, setOpenWeek] = useState<number | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   // In production, this comes from the DB (set by teacher). Using localStorage for demo.
   const [unlockedWeeks] = useState(() => {
@@ -129,12 +131,17 @@ const StudentLayout = () => {
           })}
         </nav>
 
-        <div className="p-2 border-t border-border">
+        <div className="p-2 border-t border-border space-y-1">
+          <button onClick={() => setSettingsOpen(true)} className="w-full flex items-center gap-2 px-3 py-2 rounded-md text-ui-sm text-muted-foreground hover:bg-secondary transition-colors">
+            <Settings className="w-4 h-4 shrink-0" />
+            {sidebarOpen && <span>Settings</span>}
+          </button>
           <button onClick={handleLogout} className="w-full flex items-center gap-2 px-3 py-2 rounded-md text-ui-sm text-muted-foreground hover:bg-secondary transition-colors">
             <LogOut className="w-4 h-4 shrink-0" />
             {sidebarOpen && <span>Sign Out</span>}
           </button>
         </div>
+        <SettingsPanel open={settingsOpen} onClose={() => setSettingsOpen(false)} />
       </aside>
 
       <main className="flex-1 min-h-screen">
