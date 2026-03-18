@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Code, Play, RotateCcw, Circle } from "lucide-react";
+import { Code, Play, RotateCcw, Circle, Lock } from "lucide-react";
+import { useStudentContext } from "@/components/StudentLayout";
 
 const exercises: Record<string, { title: string; prompt: string; starter: string }> = {
   "1": { title: "Variable Swap", prompt: "Write code to swap the values of two variables a and b without using a third variable.", starter: "a = 5\nb = 10\n\n# Swap a and b below\n" },
@@ -20,10 +21,22 @@ const LineNumbers = ({ count }: { count: number }) => (
 
 const WeekExercise = () => {
   const { weekId } = useParams();
+  const { unlockedWeeks } = useStudentContext();
+  const weekNum = parseInt(weekId || "1");
   const ex = exercises[weekId || "1"];
   const [code, setCode] = useState(ex?.starter || "");
   const [output, setOutput] = useState("");
   const [isRunning, setIsRunning] = useState(false);
+
+  if (weekNum > unlockedWeeks) {
+    return (
+      <div className="h-screen flex flex-col items-center justify-center text-center px-4">
+        <Lock className="w-10 h-10 text-muted-foreground/30 mb-4" />
+        <h2 className="text-xl font-medium mb-2">Week {weekId} is Locked</h2>
+        <p className="text-muted-foreground text-ui-sm">Your teacher hasn't unlocked this week yet.</p>
+      </div>
+    );
+  }
 
   const lineCount = Math.max(code.split("\n").length, 12);
 
