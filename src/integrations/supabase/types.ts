@@ -14,6 +14,57 @@ export type Database = {
   }
   public: {
     Tables: {
+      applications: {
+        Row: {
+          acknowledge_commitment: boolean
+          acknowledge_true_info: boolean
+          age: number
+          created_at: string
+          email: string
+          id: string
+          name: string
+          prior_experience: string | null
+          school: string | null
+          status: string
+          type: string
+          updated_at: string
+          user_id: string | null
+          why_join: string | null
+        }
+        Insert: {
+          acknowledge_commitment?: boolean
+          acknowledge_true_info?: boolean
+          age: number
+          created_at?: string
+          email: string
+          id?: string
+          name: string
+          prior_experience?: string | null
+          school?: string | null
+          status?: string
+          type: string
+          updated_at?: string
+          user_id?: string | null
+          why_join?: string | null
+        }
+        Update: {
+          acknowledge_commitment?: boolean
+          acknowledge_true_info?: boolean
+          age?: number
+          created_at?: string
+          email?: string
+          id?: string
+          name?: string
+          prior_experience?: string | null
+          school?: string | null
+          status?: string
+          type?: string
+          updated_at?: string
+          user_id?: string | null
+          why_join?: string | null
+        }
+        Relationships: []
+      }
       meetings: {
         Row: {
           created_at: string
