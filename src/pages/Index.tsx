@@ -60,7 +60,7 @@ const HeroSection = () =>
       transition={{ ...transition, delay: 0.4 }}
       className="flex items-center justify-center gap-3">
       
-        <Link to="/login">
+        <Link to="/join">
           <Button variant="hero" size="lg">
             Join Now <ArrowRight className="w-4 h-4" />
           </Button>
@@ -77,8 +77,8 @@ const features = [
 
 
 const AboutSection = () =>
-<section id="about" className="py-24 px-4">
-    <div className="container max-w-4xl mx-auto text-center">
+<section id="about" className="py-32 px-4">
+    <div className="container max-w-5xl mx-auto text-center">
       <motion.h2
       initial={{ opacity: 0, y: 8 }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -122,8 +122,8 @@ const stats = [
 
 
 const ImpactSection = () =>
-<section id="impact" className="py-24 px-4 bg-secondary/30">
-    <div className="container max-w-4xl mx-auto text-center">
+<section id="impact" className="py-32 px-4 bg-secondary/30">
+    <div className="container max-w-5xl mx-auto text-center">
       <motion.h2
       initial={{ opacity: 0, y: 8 }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -163,8 +163,8 @@ const timeline = [
 
 
 const HistorySection = () =>
-<section id="history" className="py-24 px-4">
-    <div className="container max-w-3xl mx-auto text-center">
+<section id="history" className="py-32 px-4">
+    <div className="container max-w-4xl mx-auto text-center">
       <motion.h2
       initial={{ opacity: 0, y: 8 }}
       whileInView={{ opacity: 1, y: 0 }}
