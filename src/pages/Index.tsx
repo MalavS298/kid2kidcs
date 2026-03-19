@@ -60,7 +60,7 @@ const HeroSection = () =>
       transition={{ ...transition, delay: 0.4 }}
       className="flex items-center justify-center gap-3">
       
-        <Link to="/login">
+        <Link to="/join">
           <Button variant="hero" size="lg">
             Join Now <ArrowRight className="w-4 h-4" />
           </Button>
