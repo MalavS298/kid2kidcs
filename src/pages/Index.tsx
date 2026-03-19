@@ -169,14 +169,17 @@ const timeline = [
 
 
 const HistorySection = () =>
-<section id="history" className="py-32 px-4">
-    <div className="container max-w-4xl mx-auto text-center">
+<section id="history" className="py-32 px-4 relative overflow-hidden">
+    <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
+      <span className="text-[12rem] md:text-[16rem] font-medium tracking-tight text-foreground/[0.03] leading-none">History</span>
+    </div>
+    <div className="container max-w-4xl mx-auto text-center relative z-10">
       <motion.h2
       initial={{ opacity: 0, y: 8 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={transition}
-      className="text-section font-medium mb-14">
+      className="text-5xl md:text-6xl font-medium mb-14">
       
         How We Started
       </motion.h2>
