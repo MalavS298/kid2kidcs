@@ -163,8 +163,8 @@ const timeline = [
 
 
 const HistorySection = () =>
-<section id="history" className="py-24 px-4">
-    <div className="container max-w-3xl mx-auto text-center">
+<section id="history" className="py-32 px-4">
+    <div className="container max-w-4xl mx-auto text-center">
       <motion.h2
       initial={{ opacity: 0, y: 8 }}
       whileInView={{ opacity: 1, y: 0 }}
