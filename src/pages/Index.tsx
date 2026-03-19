@@ -77,14 +77,17 @@ const features = [
 
 
 const AboutSection = () =>
-<section id="about" className="py-32 px-4">
-    <div className="container max-w-5xl mx-auto text-center">
+<section id="about" className="py-32 px-4 relative overflow-hidden">
+    <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
+      <span className="text-[12rem] md:text-[16rem] font-medium tracking-tight text-foreground/[0.03] leading-none">Mission</span>
+    </div>
+    <div className="container max-w-5xl mx-auto text-center relative z-10">
       <motion.h2
       initial={{ opacity: 0, y: 8 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={transition}
-      className="text-section font-medium mb-4">
+      className="text-5xl md:text-6xl font-medium mb-4">
       
         Our Mission
       </motion.h2>
