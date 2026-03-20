@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Code2, BookOpen, Users, Monitor, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 
 const transition = { type: "tween" as const, ease: [0.2, 0, 0, 1] as [number, number, number, number], duration: 0.5 };
@@ -20,9 +21,12 @@ const Navbar = () =>
         <a href="#impact" className="hover:text-foreground transition-colors">Impact</a>
         <a href="#history" className="hover:text-foreground transition-colors">History</a>
       </div>
-      <Link to="/login">
-        <Button size="sm">Sign In</Button>
-      </Link>
+      <div className="flex items-center gap-2">
+        <ThemeToggle />
+        <Link to="/login">
+          <Button size="sm">Sign In</Button>
+        </Link>
+      </div>
     </div>
   </nav>;
 
