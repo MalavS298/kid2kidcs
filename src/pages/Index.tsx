@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Code2, BookOpen, Users, Monitor, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
-import heroBg from "@/assets/hero-bg.jpg";
+
 
 const transition = { type: "tween" as const, ease: [0.2, 0, 0, 1] as [number, number, number, number], duration: 0.5 };
 
@@ -28,20 +28,17 @@ const Navbar = () =>
 
 
 const HeroSection = () =>
-<section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden">
-    <div className="absolute inset-0">
-      <img src={heroBg} alt="" className="w-full h-full object-cover" />
-      <div className="absolute inset-0 bg-foreground/60" />
-    </div>
+<section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden bg-gradient-to-b from-background via-background to-secondary/30 pt-14">
     <div className="relative z-10 text-center px-4 max-w-3xl mx-auto">
       <motion.h1
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ ...transition, delay: 0.2 }}
-      className="text-5xl md:text-7xl font-bold tracking-tight leading-[1.1] text-primary-foreground mb-4">
+      className="text-5xl md:text-7xl font-bold tracking-tight leading-[1.1] text-foreground mb-6">
       
         Where Kids Teach{" "}
-        <span className="italic bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+        <br className="hidden md:block" />
+        <span className="bg-gradient-to-r from-primary via-accent to-destructive bg-clip-text text-transparent">
           Kids to Code
         </span>
       </motion.h1>
@@ -49,7 +46,7 @@ const HeroSection = () =>
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ ...transition, delay: 0.3 }}
-      className="text-primary-foreground/70 text-lg max-w-xl mx-auto mb-8">
+      className="text-muted-foreground text-lg max-w-xl mx-auto mb-8">
       
         Join our 4-week computer science camp. High school volunteers teaching middle schoolers the fundamentals of Python in a fun, interactive environment.
       
