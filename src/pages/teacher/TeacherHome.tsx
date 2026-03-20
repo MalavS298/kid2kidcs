@@ -3,51 +3,38 @@ import { Clock, Users, Calendar, TrendingUp } from "lucide-react";
 const TeacherHome = () => {
   const user = JSON.parse(localStorage.getItem("k2k_user") || '{"name":"Teacher"}');
 
-  return (
-    <div className="p-8 max-w-4xl">
-      <h1 className="text-section font-medium mb-2">Welcome back, {user.name}</h1>
-      <p className="text-muted-foreground mb-8">Here's your teaching overview.</p>
+  const statCards = [
+    { icon: Clock, label: "Volunteer Hours", value: "0", bg: "bg-primary" },
+    { icon: Calendar, label: "Sessions Held", value: "0", bg: "bg-[hsl(25,95%,53%)]" },
+    { icon: Users, label: "Total Students", value: "0", bg: "bg-[hsl(160,84%,39%)]" },
+  ];
 
-      <div className="grid md:grid-cols-2 gap-4 mb-8">
-        <div className="rounded-lg bg-card shadow-card p-6">
-          <div className="flex items-center gap-2 text-ui-sm text-muted-foreground mb-3">
-            <Clock className="w-4 h-4" /> Volunteer Hours
+  return (
+    <div className="p-8 max-w-5xl">
+      <h1 className="text-2xl font-bold mb-1">Teacher Dashboard</h1>
+      <p className="text-muted-foreground mb-8">Manage your sessions and track student progress.</p>
+
+      <div className="grid md:grid-cols-3 gap-4 mb-8">
+        {statCards.map((s, i) => (
+          <div key={i} className={`${s.bg} rounded-2xl p-5 text-primary-foreground`}>
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-8 h-8 rounded-lg bg-primary-foreground/20 flex items-center justify-center">
+                <s.icon className="w-4 h-4" />
+              </div>
+              <span className="text-sm font-medium text-primary-foreground/80">{s.label}</span>
+            </div>
+            <div className="text-3xl font-bold font-mono">{s.value}</div>
           </div>
-          <div className="text-4xl font-medium font-mono text-primary">24.5</div>
-          <div className="text-ui-sm text-muted-foreground mt-1">hours this semester</div>
-        </div>
-        <div className="rounded-lg bg-card shadow-card p-6">
-          <div className="flex items-center gap-2 text-ui-sm text-muted-foreground mb-3">
-            <Calendar className="w-4 h-4" /> Sessions Held
-          </div>
-          <div className="text-4xl font-medium font-mono text-primary">12</div>
-          <div className="text-ui-sm text-muted-foreground mt-1">sessions completed</div>
-        </div>
+        ))}
       </div>
 
-      <div className="rounded-lg bg-card shadow-subtle p-6">
-        <div className="flex items-center gap-2 mb-4">
-          <TrendingUp className="w-4 h-4 text-muted-foreground" />
-          <h3 className="font-medium">Upcoming Sessions</h3>
-        </div>
-        <div className="space-y-3">
-          {[
-            { student: "Alex Chen", date: "Mar 20", time: "3:00 PM", week: "Week 2" },
-            { student: "Sam Lee", date: "Mar 21", time: "4:00 PM", week: "Week 1" },
-          ].map((s, i) => (
-            <div key={i} className="flex items-center justify-between p-3 rounded-md bg-secondary/50">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-ui-sm font-medium text-primary">
-                  {s.student.split(" ").map(n => n[0]).join("")}
-                </div>
-                <div>
-                  <div className="text-ui-sm font-medium">{s.student}</div>
-                  <div className="text-[12px] text-muted-foreground">{s.week}</div>
-                </div>
-              </div>
-              <div className="text-ui-sm text-muted-foreground">{s.date} · {s.time}</div>
-            </div>
-          ))}
+      <div>
+        <h2 className="text-lg font-bold mb-3">Quick Upcoming Sessions</h2>
+        <div className="rounded-xl bg-card shadow-subtle p-6">
+          <div className="text-center text-muted-foreground py-4">
+            <Calendar className="w-8 h-8 mx-auto mb-2 text-muted-foreground/30" />
+            <p className="text-sm">No upcoming sessions.</p>
+          </div>
         </div>
       </div>
     </div>

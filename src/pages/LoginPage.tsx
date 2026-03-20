@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Code2 } from "lucide-react";
+import { Code2, ArrowLeft } from "lucide-react";
 
 type Role = "student" | "teacher" | "admin";
 
@@ -33,34 +33,37 @@ const LoginPage = () => {
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
-        <div className="flex items-center justify-center gap-2 mb-8">
-          <div className="w-10 h-10 rounded-md bg-primary flex items-center justify-center">
-            <Code2 className="w-5 h-5 text-primary-foreground" />
+        {/* Back button */}
+        <Link to="/" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8">
+          <ArrowLeft className="w-4 h-4" /> Back to website
+        </Link>
+
+        <div className="flex flex-col items-center mb-8">
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center mb-4 shadow-lg">
+            <Code2 className="w-8 h-8 text-primary-foreground" />
           </div>
-          <span className="text-xl font-medium">Kid2Kid <span className="text-accent">CS</span></span>
+          <h1 className="text-2xl font-bold">Welcome Back</h1>
+          <p className="text-sm text-muted-foreground">Sign in to continue your coding journey</p>
         </div>
 
-        <div className="rounded-lg bg-card shadow-subtle p-6">
-          <h2 className="text-xl font-medium mb-1">Sign In</h2>
-          <p className="text-ui-sm text-muted-foreground mb-6">Enter your credentials to access the workbench</p>
-
+        <div className="rounded-xl bg-card shadow-subtle p-6">
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="student@kid2kid.com" />
+              <Label htmlFor="email">Username</Label>
+              <Input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="e.g., student123" className="mt-1 rounded-lg bg-secondary/50 border-0" />
             </div>
             <div>
               <Label htmlFor="password">Password</Label>
-              <Input id="password" type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••" />
+              <Input id="password" type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••" className="mt-1 rounded-lg bg-secondary/50 border-0" />
             </div>
-            {error && <p className="text-ui-sm text-destructive">{error}</p>}
-            <Button type="submit" className="w-full">Sign In</Button>
+            {error && <p className="text-sm text-destructive">{error}</p>}
+            <Button type="submit" className="w-full rounded-full h-11 text-base">Sign In</Button>
           </form>
         </div>
 
-        <div className="mt-6 p-4 rounded-lg bg-secondary/50 text-ui-sm">
+        <div className="mt-6 p-4 rounded-lg bg-secondary/50 text-sm">
           <p className="font-medium mb-2">Demo Accounts</p>
-          <div className="space-y-1 text-muted-foreground font-mono">
+          <div className="space-y-1 text-muted-foreground font-mono text-xs">
             <p>student@kid2kid.com / student</p>
             <p>teacher@kid2kid.com / teacher</p>
             <p>admin@kid2kid.com / admin</p>

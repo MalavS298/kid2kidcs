@@ -15,7 +15,7 @@ const Navbar = () =>
         </div>
         <span>Kid2Kid <span className="text-accent">CS</span></span>
       </Link>
-      <div className="hidden md:flex items-center gap-6 text-ui-sm text-muted-foreground">
+      <div className="hidden md:flex items-center gap-6 text-sm text-muted-foreground">
         <a href="#about" className="hover:text-foreground transition-colors">About</a>
         <a href="#impact" className="hover:text-foreground transition-colors">Impact</a>
         <a href="#history" className="hover:text-foreground transition-colors">History</a>
@@ -38,7 +38,7 @@ const HeroSection = () =>
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ ...transition, delay: 0.2 }}
-      className="text-hero font-medium tracking-tight leading-[1.1] text-primary-foreground mb-4">
+      className="text-5xl md:text-7xl font-bold tracking-tight leading-[1.1] text-primary-foreground mb-4">
       
         Where Kids Teach{" "}
         <span className="italic bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
@@ -51,7 +51,7 @@ const HeroSection = () =>
       transition={{ ...transition, delay: 0.3 }}
       className="text-primary-foreground/70 text-lg max-w-xl mx-auto mb-8">
       
-        Join our 4-week computer science bootcamp. High school volunteers teaching others the fundamentals of Python in a fun, interactive environment.
+        Join our 4-week computer science camp. High school volunteers teaching middle schoolers the fundamentals of Python in a fun, interactive environment.
       
     </motion.p>
       <motion.div
@@ -61,7 +61,7 @@ const HeroSection = () =>
       className="flex items-center justify-center gap-3">
       
         <Link to="/join">
-          <Button variant="hero" size="lg">
+          <Button variant="hero" size="lg" className="rounded-full px-8">
             Join Now <ArrowRight className="w-4 h-4" />
           </Button>
         </Link>
@@ -77,9 +77,9 @@ const features = [
 
 
 const AboutSection = () =>
-<section id="about" className="py-32 px-4 relative overflow-hidden">
+<section id="about" className="py-24 px-4 relative overflow-hidden">
     <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
-      <span className="text-[12rem] md:text-[16rem] font-medium tracking-tight text-foreground/[0.03] leading-none">Mission</span>
+      <span className="text-[12rem] md:text-[16rem] font-bold tracking-tight text-foreground/[0.03] leading-none">Mission</span>
     </div>
     <div className="container max-w-5xl mx-auto text-center relative z-10">
       <motion.h2
@@ -87,7 +87,7 @@ const AboutSection = () =>
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={transition}
-      className="text-5xl md:text-6xl font-medium mb-4">
+      className="text-3xl md:text-4xl font-bold mb-4">
       
         Our Mission
       </motion.h2>
@@ -109,7 +109,7 @@ const AboutSection = () =>
               <f.icon className="w-5 h-5 text-primary" />
             </div>
             <h3 className="font-medium mb-2">{f.title}</h3>
-            <p className="text-ui-sm text-muted-foreground">{f.desc}</p>
+            <p className="text-sm text-muted-foreground">{f.desc}</p>
           </motion.div>
       )}
       </div>
@@ -125,37 +125,43 @@ const stats = [
 
 
 const ImpactSection = () =>
-<section id="impact" className="py-32 px-4 bg-secondary/30 relative overflow-hidden">
-    <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
-      <span className="text-[12rem] md:text-[16rem] font-medium tracking-tight text-foreground/[0.03] leading-none">Impact</span>
-    </div>
-    <div className="container max-w-5xl mx-auto text-center relative z-10">
-      <motion.h2
-      initial={{ opacity: 0, y: 8 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={transition}
-      className="text-5xl md:text-6xl font-medium mb-4">
-      
-        Our Impact in Numbers
-      </motion.h2>
-      <p className="text-muted-foreground max-w-xl mx-auto mb-14">
-        Since starting Kid2Kid CS, we've seen incredible growth in both our students' coding abilities and our volunteers' leadership skills.
-      </p>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-        {stats.map((s, i) =>
-      <motion.div
-        key={s.label}
-        initial={{ opacity: 0, y: 12 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ ...transition, delay: i * 0.08 }}
-        className="p-6 rounded-lg bg-card shadow-subtle">
-        
-            <div className="text-section font-medium font-mono text-primary">{s.value}</div>
-            <div className="text-ui-sm text-muted-foreground mt-1">{s.label}</div>
-          </motion.div>
-      )}
+<section id="impact" className="py-24 px-4">
+    <div className="container max-w-5xl mx-auto">
+      <div className="rounded-3xl bg-primary p-8 md:p-12 text-primary-foreground">
+        <div className="flex flex-col md:flex-row gap-8 md:gap-12 items-start">
+          <div className="flex-1">
+            <motion.h2
+            initial={{ opacity: 0, y: 8 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={transition}
+            className="text-3xl md:text-4xl font-bold mb-4">
+              Our Impact in Numbers
+            </motion.h2>
+            <p className="text-primary-foreground/70 max-w-md mb-6">
+              Since starting Kid2Kid CS, we've seen incredible growth in both our students' coding abilities and our volunteers' leadership skills.
+            </p>
+            <Link to="/join">
+              <Button variant="secondary" className="rounded-full">
+                Join the Movement
+              </Button>
+            </Link>
+          </div>
+          <div className="grid grid-cols-2 gap-4 flex-1">
+            {stats.map((s, i) =>
+          <motion.div
+            key={s.label}
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ ...transition, delay: i * 0.08 }}
+            className="p-5 rounded-2xl bg-primary-foreground/10 border border-primary-foreground/20">
+              <div className="text-3xl font-bold font-mono">{s.value}</div>
+              <div className="text-sm text-primary-foreground/70 mt-1">{s.label}</div>
+            </motion.div>
+          )}
+          </div>
+        </div>
       </div>
     </div>
   </section>;
@@ -169,9 +175,9 @@ const timeline = [
 
 
 const HistorySection = () =>
-<section id="history" className="py-32 px-4 relative overflow-hidden">
+<section id="history" className="py-24 px-4 relative overflow-hidden">
     <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
-      <span className="text-[12rem] md:text-[16rem] font-medium tracking-tight text-foreground/[0.03] leading-none">History</span>
+      <span className="text-[12rem] md:text-[16rem] font-bold tracking-tight text-foreground/[0.03] leading-none">History</span>
     </div>
     <div className="container max-w-4xl mx-auto text-center relative z-10">
       <motion.h2
@@ -179,7 +185,7 @@ const HistorySection = () =>
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={transition}
-      className="text-5xl md:text-6xl font-medium mb-14">
+      className="text-3xl md:text-4xl font-bold mb-14">
       
         How We Started
       </motion.h2>
@@ -196,9 +202,9 @@ const HistorySection = () =>
           className={`flex items-center gap-6 ${i % 2 === 0 ? "flex-row" : "flex-row-reverse"}`}>
           
               <div className={`flex-1 ${i % 2 === 0 ? "text-right" : "text-left"}`}>
-                <div className="text-ui-sm font-mono text-primary">{t.year}</div>
+                <div className="text-sm font-mono text-primary">{t.year}</div>
                 <div className="font-medium">{t.title}</div>
-                <div className="text-ui-sm text-muted-foreground">{t.desc}</div>
+                <div className="text-sm text-muted-foreground">{t.desc}</div>
               </div>
               <div className="w-3 h-3 rounded-full bg-primary ring-4 ring-background z-10 shrink-0" />
               <div className="flex-1" />
@@ -212,7 +218,7 @@ const HistorySection = () =>
 
 const Footer = () =>
 <footer className="py-8 px-4 border-t border-border">
-    <div className="container max-w-6xl mx-auto flex items-center justify-between text-ui-sm text-muted-foreground">
+    <div className="container max-w-6xl mx-auto flex items-center justify-between text-sm text-muted-foreground">
       <div className="flex items-center gap-2">
         <Code2 className="w-4 h-4" />
         <span>Kid2Kid CS</span>
