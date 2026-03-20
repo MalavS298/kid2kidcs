@@ -25,41 +25,43 @@ import AdminPairing from "./pages/admin/AdminPairing";
 const queryClient = new QueryClient();
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/join" element={<JoinPage />} />
-          <Route path="/join/student" element={<StudentApplication />} />
-          <Route path="/join/volunteer" element={<VolunteerApplication />} />
+  <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/join" element={<JoinPage />} />
+            <Route path="/join/student" element={<StudentApplication />} />
+            <Route path="/join/volunteer" element={<VolunteerApplication />} />
 
-          <Route path="/student" element={<StudentLayout />}>
-            <Route index element={<StudentHome />} />
-            <Route path="week/:weekId/content" element={<WeekContent />} />
-            <Route path="week/:weekId/exercise" element={<WeekExercise />} />
-            <Route path="meetings" element={<StudentMeetings />} />
-          </Route>
+            <Route path="/student" element={<StudentLayout />}>
+              <Route index element={<StudentHome />} />
+              <Route path="week/:weekId/content" element={<WeekContent />} />
+              <Route path="week/:weekId/exercise" element={<WeekExercise />} />
+              <Route path="meetings" element={<StudentMeetings />} />
+            </Route>
 
-          <Route path="/teacher" element={<TeacherLayout />}>
-            <Route index element={<TeacherHome />} />
-            <Route path="meetings" element={<TeacherMeetings />} />
-            <Route path="manage" element={<TeacherManage />} />
-          </Route>
+            <Route path="/teacher" element={<TeacherLayout />}>
+              <Route index element={<TeacherHome />} />
+              <Route path="meetings" element={<TeacherMeetings />} />
+              <Route path="manage" element={<TeacherManage />} />
+            </Route>
 
-          <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<AdminDashboard />} />
-            <Route path="pairing" element={<AdminPairing />} />
-          </Route>
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<AdminDashboard />} />
+              <Route path="pairing" element={<AdminPairing />} />
+            </Route>
 
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  </ThemeProvider>
 );
 
 export default App;
