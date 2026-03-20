@@ -21,9 +21,12 @@ const Navbar = () =>
         <a href="#impact" className="hover:text-foreground transition-colors">Impact</a>
         <a href="#history" className="hover:text-foreground transition-colors">History</a>
       </div>
-      <Link to="/login">
-        <Button size="sm">Sign In</Button>
-      </Link>
+      <div className="flex items-center gap-2">
+        <ThemeToggle />
+        <Link to="/login">
+          <Button size="sm">Sign In</Button>
+        </Link>
+      </div>
     </div>
   </nav>;
 
