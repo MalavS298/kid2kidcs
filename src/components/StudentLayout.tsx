@@ -2,6 +2,7 @@ import { useState, createContext, useContext } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { Code2, Home, BookOpen, Calendar, ChevronDown, ChevronRight, FileText, Code, LogOut, Lock, Settings } from "lucide-react";
 import SettingsPanel from "@/components/SettingsPanel";
+import PairingPending from "@/components/PairingPending";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
