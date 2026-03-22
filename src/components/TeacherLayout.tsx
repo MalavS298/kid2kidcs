@@ -17,6 +17,7 @@ const TeacherLayout = () => {
 
   const links = [
     { to: "/teacher", icon: Home, label: "Home" },
+    { to: "/teacher/content", icon: FileText, label: "Content" },
     { to: "/teacher/meetings", icon: Calendar, label: "Meetings" },
     { to: "/teacher/manage", icon: Users, label: "Manage" },
   ];

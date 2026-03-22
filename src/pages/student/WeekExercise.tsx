@@ -43,6 +43,15 @@ const WeekExercise = () => {
     }
     setIsRunning(false);
   }, [code, runCode]);
+  if (weekNum > unlockedWeeks) {
+    return (
+      <div className="h-screen flex flex-col items-center justify-center text-center px-4">
+        <Lock className="w-10 h-10 text-muted-foreground/30 mb-4" />
+        <h2 className="text-xl font-medium mb-2">Week {weekId} is Locked</h2>
+        <p className="text-muted-foreground text-sm">Your teacher hasn't unlocked this week yet.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-background">
