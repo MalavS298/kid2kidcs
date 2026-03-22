@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
-import { Code2, Home, Calendar, Users, LogOut, Settings } from "lucide-react";
+import { Code2, Home, Calendar, Users, LogOut, Settings, FileText } from "lucide-react";
 import { cn } from "@/lib/utils";
 import SettingsPanel from "@/components/SettingsPanel";
 
