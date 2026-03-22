@@ -24,6 +24,8 @@ const StudentLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [settingsOpen, setSettingsOpen] = useState(false);
 
+  const user = JSON.parse(localStorage.getItem("k2k_user") || '{"name":"Student","email":""}');
+
   // In production, this comes from the DB (set by teacher). Using localStorage for demo.
   const [unlockedWeeks] = useState(() => {
     const stored = localStorage.getItem("k2k_unlocked_weeks");
@@ -36,6 +38,10 @@ const StudentLayout = () => {
   };
 
   const isActive = (path: string) => location.pathname === path;
+
+  if (user.pending) {
+    return <PairingPending name={user.name} email={user.email} role="student" />;
+  }
 
   return (
     <div className="min-h-screen flex bg-background">

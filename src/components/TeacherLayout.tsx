@@ -3,11 +3,13 @@ import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { Code2, Home, Calendar, Users, LogOut, Settings, FileText } from "lucide-react";
 import { cn } from "@/lib/utils";
 import SettingsPanel from "@/components/SettingsPanel";
+import PairingPending from "@/components/PairingPending";
 
 const TeacherLayout = () => {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem("k2k_user") || '{"name":"Teacher","email":""}');
   const isActive = (path: string) => location.pathname === path;
 
   const handleLogout = () => {
