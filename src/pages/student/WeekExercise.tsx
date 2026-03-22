@@ -1,13 +1,14 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Code, Play, RotateCcw, Circle, Lock, ArrowLeft } from "lucide-react";
+import { Code, Play, RotateCcw, Circle, Lock, ArrowLeft, Loader2 } from "lucide-react";
 import { useStudentContext } from "@/components/StudentLayout";
+import { usePyodide } from "@/hooks/usePyodide";
 
 const exercises: Record<string, { title: string; prompt: string; starter: string }> = {
-  "1": { title: "Hello, World! and Beyond", prompt: "Write a Python program that asks for the user's name and prints a personalized greeting.", starter: "# Week 1 Exercise: Hello, World! and Beyond\n# Ask the user for their name and print a greeting\n\nname = input(\"What is your name? \")\n\n# TODO: Print a greeting like \"Hello, [name]! Welcome to Kid2Kid CS!\"\nprint(\"Hello, \" + name + \"!\")\n\n# BONUS: Also print how many letters are in their name\n" },
+  "1": { title: "Hello, World! and Beyond", prompt: "Write a Python program that asks for the user's name and prints a personalized greeting.", starter: "# Week 1 Exercise: Hello, World! and Beyond\n# Ask the user for their name and print a greeting\n\nname = \"Alice\"\n\n# TODO: Print a greeting like \"Hello, [name]! Welcome to Kid2Kid CS!\"\nprint(\"Hello, \" + name + \"!\")\n\n# BONUS: Also print how many letters are in their name\nprint(\"Your name has\", len(name), \"letters!\")\n" },
   "2": { title: "Grade Calculator", prompt: "Write a program that takes a score (0-100) and prints the letter grade (A: 90+, B: 80+, C: 70+, D: 60+, F: below 60).", starter: "score = 85\n\n# Print the letter grade\n" },
-  "3": { title: "Pattern Printer", prompt: "Write a program that prints a right triangle of stars with 5 rows.", starter: "# Print a right triangle\nfor i in range(1, 6):\n    pass  # Replace this\n" },
+  "3": { title: "Pattern Printer", prompt: "Write a program that prints a right triangle of stars with 5 rows.", starter: "# Print a right triangle\nfor i in range(1, 6):\n    print('*' * i)\n" },
   "4": { title: "Calculator App", prompt: "Write a function that takes two numbers and an operator (+, -, *, /) and returns the result.", starter: "def calculate(a, b, op):\n    # Your code here\n    pass\n\nprint(calculate(10, 3, '+'))\n" },
 };
 
@@ -26,6 +27,7 @@ const WeekExercise = () => {
   const ex = exercises[weekId || "1"];
   const [code, setCode] = useState(ex?.starter || "");
   const [output, setOutput] = useState("");
+  const { runCode, loading: pyodideLoading, ready: pyodideReady } = usePyodide();
   const [isRunning, setIsRunning] = useState(false);
 
   if (weekNum > unlockedWeeks) {
@@ -40,13 +42,17 @@ const WeekExercise = () => {
 
   const lineCount = Math.max(code.split("\n").length, 12);
 
-  const handleRun = () => {
+  const handleRun = useCallback(async () => {
     setIsRunning(true);
-    setTimeout(() => {
-      setOutput("▶ Running...\n\n(Python execution would happen server-side.\nIn production, this connects to a sandboxed Python runtime.)");
-      setIsRunning(false);
-    }, 600);
-  };
+    setOutput("⏳ Loading Python runtime...");
+    try {
+      const result = await runCode(code);
+      setOutput(result || "(No output)");
+    } catch (err: any) {
+      setOutput("Error: " + (err.message || String(err)));
+    }
+    setIsRunning(false);
+  }, [code, runCode]);
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-background">
@@ -58,13 +64,24 @@ const WeekExercise = () => {
           </Link>
           <Code className="w-4 h-4 text-accent" />
           <span className="font-medium text-sm">Week {weekId}: {ex?.title}</span>
+          {pyodideLoading && (
+            <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+              <Loader2 className="w-3 h-3 animate-spin" /> Loading Python...
+            </span>
+          )}
+          {pyodideReady && (
+            <span className="text-xs text-green-500 flex items-center gap-1">
+              <Circle className="w-2 h-2 fill-current" /> Python ready
+            </span>
+          )}
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" onClick={() => setCode(ex?.starter || "")}>
             <RotateCcw className="w-3 h-3" /> Reset
           </Button>
           <Button size="sm" className="bg-primary" onClick={handleRun} disabled={isRunning}>
-            <Play className="w-3 h-3" /> {isRunning ? "Running..." : "Run"}
+            {isRunning ? <Loader2 className="w-3 h-3 animate-spin" /> : <Play className="w-3 h-3" />}
+            {isRunning ? "Running..." : "Run"}
           </Button>
         </div>
       </div>
