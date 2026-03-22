@@ -24,6 +24,10 @@ const TeacherLayout = () => {
     { to: "/teacher/manage", icon: Users, label: "Manage" },
   ];
 
+  if (user.pending) {
+    return <PairingPending name={user.name} email={user.email} role="teacher" />;
+  }
+
   return (
     <div className="min-h-screen flex bg-background">
       <aside className="w-64 h-screen sticky top-0 flex flex-col border-r border-border bg-sidebar">
