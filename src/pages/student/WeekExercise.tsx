@@ -30,16 +30,6 @@ const WeekExercise = () => {
   const { runCode, loading: pyodideLoading, ready: pyodideReady } = usePyodide();
   const [isRunning, setIsRunning] = useState(false);
 
-  if (weekNum > unlockedWeeks) {
-    return (
-      <div className="h-screen flex flex-col items-center justify-center text-center px-4">
-        <Lock className="w-10 h-10 text-muted-foreground/30 mb-4" />
-        <h2 className="text-xl font-medium mb-2">Week {weekId} is Locked</h2>
-        <p className="text-muted-foreground text-sm">Your teacher hasn't unlocked this week yet.</p>
-      </div>
-    );
-  }
-
   const lineCount = Math.max(code.split("\n").length, 12);
 
   const handleRun = useCallback(async () => {
