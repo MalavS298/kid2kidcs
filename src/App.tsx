@@ -19,6 +19,7 @@ import TeacherLayout from "./components/TeacherLayout";
 import TeacherHome from "./pages/teacher/TeacherHome";
 import TeacherMeetings from "./pages/teacher/TeacherMeetings";
 import TeacherManage from "./pages/teacher/TeacherManage";
+import TeacherContent from "./pages/teacher/TeacherContent";
 import AdminLayout from "./components/AdminLayout";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminPairing from "./pages/admin/AdminPairing";
@@ -48,6 +49,7 @@ const App = () => (
 
             <Route path="/teacher" element={<TeacherLayout />}>
               <Route index element={<TeacherHome />} />
+              <Route path="content" element={<TeacherContent />} />
               <Route path="meetings" element={<TeacherMeetings />} />
               <Route path="manage" element={<TeacherManage />} />
             </Route>

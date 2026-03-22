@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
-import { Code2, Home, Calendar, Users, LogOut, Settings } from "lucide-react";
+import { Code2, Home, Calendar, Users, LogOut, Settings, FileText } from "lucide-react";
 import { cn } from "@/lib/utils";
 import SettingsPanel from "@/components/SettingsPanel";
 
@@ -17,6 +17,7 @@ const TeacherLayout = () => {
 
   const links = [
     { to: "/teacher", icon: Home, label: "Home" },
+    { to: "/teacher/content", icon: FileText, label: "Content" },
     { to: "/teacher/meetings", icon: Calendar, label: "Meetings" },
     { to: "/teacher/manage", icon: Users, label: "Manage" },
   ];

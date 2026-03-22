@@ -32,7 +32,9 @@ const Navbar = () =>
 
 
 const HeroSection = () =>
-<section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden bg-gradient-to-b from-background via-background to-secondary/30 pt-14">
+<section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden bg-gradient-to-b from-primary/8 via-background to-secondary/30 pt-14">
+    <div className="absolute inset-x-0 top-0 h-64 bg-gradient-to-b from-primary/10 to-transparent pointer-events-none" />
+    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full bg-primary/5 blur-3xl pointer-events-none" />
     <div className="relative z-10 text-center px-4 max-w-3xl mx-auto">
       <motion.h1
       initial={{ opacity: 0, y: 12 }}
