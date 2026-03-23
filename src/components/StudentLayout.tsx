@@ -82,9 +82,10 @@ const StudentLayout = () => {
             <div key={w.id}>
               <button
                 onClick={() => !locked && setOpenWeek(openWeek === w.id ? null : w.id)}
+                disabled={locked}
                 className={cn(
                   "w-full flex items-center gap-2 px-3 py-2 rounded-md text-ui-sm transition-colors",
-                  locked ? "text-muted-foreground/40 cursor-not-allowed" : "text-muted-foreground hover:bg-secondary"
+                  locked ? "text-muted-foreground/40 cursor-not-allowed opacity-50" : "text-muted-foreground hover:bg-secondary"
                 )}
               >
                 {locked ? <Lock className="w-4 h-4 shrink-0" /> : <BookOpen className="w-4 h-4 shrink-0" />}

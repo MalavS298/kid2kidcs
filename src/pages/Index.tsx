@@ -240,6 +240,7 @@ const Index = () =>
     <ImpactSection />
     <HistorySection />
     <Footer />
+    <HomeChatbot />
   </div>;
 
 
