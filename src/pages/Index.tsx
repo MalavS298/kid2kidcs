@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Code2, BookOpen, Users, Monitor, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import HomeChatbot from "@/components/HomeChatbot";
 
 
 const transition = { type: "tween" as const, ease: [0.2, 0, 0, 1] as [number, number, number, number], duration: 0.5 };
