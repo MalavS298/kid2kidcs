@@ -3,6 +3,7 @@ import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { Code2, Home, BookOpen, Calendar, ChevronDown, ChevronRight, FileText, Code, LogOut, Lock, Settings } from "lucide-react";
 import SettingsPanel from "@/components/SettingsPanel";
 import PairingPending from "@/components/PairingPending";
+import DashboardChat from "@/components/DashboardChat";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
@@ -140,6 +141,7 @@ const StudentLayout = () => {
         </nav>
 
         <div className="p-2 border-t border-border space-y-1">
+          <DashboardChat currentName={user.name} currentRole="student" partnerName={user.teacher || ""} />
           <button onClick={() => setSettingsOpen(true)} className="w-full flex items-center gap-2 px-3 py-2 rounded-md text-ui-sm text-muted-foreground hover:bg-secondary transition-colors">
             <Settings className="w-4 h-4 shrink-0" />
             {sidebarOpen && <span>Settings</span>}

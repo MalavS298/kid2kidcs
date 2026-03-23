@@ -113,6 +113,36 @@ export type Database = {
         }
         Relationships: []
       }
+      messages: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          read: boolean
+          receiver_name: string
+          sender_name: string
+          sender_role: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          read?: boolean
+          receiver_name: string
+          sender_name: string
+          sender_role: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          read?: boolean
+          receiver_name?: string
+          sender_name?: string
+          sender_role?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
