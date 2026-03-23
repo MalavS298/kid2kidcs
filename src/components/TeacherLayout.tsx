@@ -51,6 +51,7 @@ const TeacherLayout = () => {
           ))}
         </nav>
         <div className="p-2 border-t border-border space-y-1">
+          <DashboardChat currentName={user.name} currentRole="teacher" partnerName={user.student || ""} />
           <button onClick={() => setSettingsOpen(true)} className="w-full flex items-center gap-2 px-3 py-2 rounded-md text-ui-sm text-muted-foreground hover:bg-secondary transition-colors">
             <Settings className="w-4 h-4" /> Settings
           </button>
