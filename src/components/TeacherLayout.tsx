@@ -4,6 +4,7 @@ import { Code2, Home, Calendar, Users, LogOut, Settings, FileText } from "lucide
 import { cn } from "@/lib/utils";
 import SettingsPanel from "@/components/SettingsPanel";
 import PairingPending from "@/components/PairingPending";
+import DashboardChat from "@/components/DashboardChat";
 
 const TeacherLayout = () => {
   const [settingsOpen, setSettingsOpen] = useState(false);
