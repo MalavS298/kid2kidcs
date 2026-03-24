@@ -141,7 +141,7 @@ const StudentLayout = () => {
         </nav>
 
         <div className="p-2 border-t border-border space-y-1">
-          <DashboardChat currentName={user.name} currentRole="student" partnerName={user.teacher || ""} />
+          
           <button onClick={() => setSettingsOpen(true)} className="w-full flex items-center gap-2 px-3 py-2 rounded-md text-ui-sm text-muted-foreground hover:bg-secondary transition-colors">
             <Settings className="w-4 h-4 shrink-0" />
             {sidebarOpen && <span>Settings</span>}
@@ -154,10 +154,11 @@ const StudentLayout = () => {
         <SettingsPanel open={settingsOpen} onClose={() => setSettingsOpen(false)} />
       </aside>
 
-      <main className="flex-1 min-h-screen">
+      <main className="flex-1 min-h-screen relative">
         <StudentContext.Provider value={{ unlockedWeeks }}>
           <Outlet />
         </StudentContext.Provider>
+        <DashboardChat currentName={user.name} currentRole="student" partnerName={user.teacher || ""} />
       </main>
     </div>
   );
