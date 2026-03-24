@@ -1,15 +1,8 @@
 import { useState, useEffect } from "react";
-import { Users, Clock, BookOpen, TrendingUp, Check, X, Shield } from "lucide-react";
+import { Users, Clock, Check, X, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-
-const metrics = [
-  { icon: Users, label: "Total Students", value: "3", color: "text-primary", bg: "bg-primary/10" },
-  { icon: Shield, label: "Total Teachers", value: "2", color: "text-[hsl(270,70%,55%)]", bg: "bg-[hsl(270,70%,55%)]/10" },
-  { icon: Clock, label: "Hours Volunteered", value: "0", color: "text-[hsl(25,95%,53%)]", bg: "bg-[hsl(25,95%,53%)]/10" },
-  { icon: Users, label: "Active Pairings", value: "0", color: "text-[hsl(160,84%,39%)]", bg: "bg-[hsl(160,84%,39%)]/10" },
-];
 
 type Application = {
   id: string;
@@ -24,9 +17,20 @@ type Application = {
   created_at: string;
 };
 
+const parseDuration = (d: string): number => {
+  const match = d.match(/(\d+)/);
+  return match ? parseInt(match[1], 10) : 1;
+};
+
 const AdminDashboard = () => {
   const [applications, setApplications] = useState<Application[]>([]);
   const [loading, setLoading] = useState(true);
+  const [metrics, setMetrics] = useState([
+    { icon: Users, label: "Total Students", value: "0", color: "text-primary", bg: "bg-primary/10" },
+    { icon: Shield, label: "Total Teachers", value: "0", color: "text-[hsl(270,70%,55%)]", bg: "bg-[hsl(270,70%,55%)]/10" },
+    { icon: Clock, label: "Hours Volunteered", value: "0", color: "text-[hsl(25,95%,53%)]", bg: "bg-[hsl(25,95%,53%)]/10" },
+    { icon: Users, label: "Active Pairings", value: "0", color: "text-[hsl(160,84%,39%)]", bg: "bg-[hsl(160,84%,39%)]/10" },
+  ]);
 
   const fetchApplications = async () => {
     const { data } = await supabase
@@ -37,13 +41,34 @@ const AdminDashboard = () => {
     setLoading(false);
   };
 
-  useEffect(() => { fetchApplications(); }, []);
+  const fetchMetrics = async () => {
+    const [appsRes, meetingsRes] = await Promise.all([
+      supabase.from("applications").select("*").eq("status", "approved"),
+      supabase.from("meetings").select("*").eq("status", "completed"),
+    ]);
+    const apps = appsRes.data || [];
+    const meetings = meetingsRes.data || [];
+    const students = apps.filter(a => a.type === "student").length;
+    const teachers = apps.filter(a => a.type === "volunteer").length;
+    const totalHours = meetings.reduce((sum, m) => sum + parseDuration(m.duration), 0);
+    const pairings = new Set(meetings.map(m => `${m.teacher_name}-${m.student_name}`)).size;
+
+    setMetrics([
+      { icon: Users, label: "Total Students", value: String(students), color: "text-primary", bg: "bg-primary/10" },
+      { icon: Shield, label: "Total Teachers", value: String(teachers), color: "text-[hsl(270,70%,55%)]", bg: "bg-[hsl(270,70%,55%)]/10" },
+      { icon: Clock, label: "Hours Volunteered", value: String(totalHours), color: "text-[hsl(25,95%,53%)]", bg: "bg-[hsl(25,95%,53%)]/10" },
+      { icon: Users, label: "Active Pairings", value: String(pairings), color: "text-[hsl(160,84%,39%)]", bg: "bg-[hsl(160,84%,39%)]/10" },
+    ]);
+  };
+
+  useEffect(() => { fetchApplications(); fetchMetrics(); }, []);
 
   const updateStatus = async (id: string, status: string) => {
     const { error } = await supabase.from("applications").update({ status }).eq("id", id);
     if (error) { toast.error("Failed to update."); return; }
     toast.success(`Application ${status}.`);
     fetchApplications();
+    fetchMetrics();
   };
 
   return (

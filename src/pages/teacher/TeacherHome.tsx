@@ -1,12 +1,38 @@
-import { Clock, Users, Calendar, TrendingUp } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Clock, Users, Calendar } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+
+const parseDuration = (d: string): number => {
+  const match = d.match(/(\d+)/);
+  return match ? parseInt(match[1], 10) : 1;
+};
 
 const TeacherHome = () => {
   const user = JSON.parse(localStorage.getItem("k2k_user") || '{"name":"Teacher"}');
+  const [hours, setHours] = useState(0);
+  const [sessions, setSessions] = useState(0);
+  const [students, setStudents] = useState(0);
+
+  useEffect(() => {
+    const fetch = async () => {
+      const { data } = await supabase
+        .from("meetings")
+        .select("*")
+        .eq("teacher_name", user.name)
+        .eq("status", "completed");
+      if (data) {
+        setHours(data.reduce((sum, m) => sum + parseDuration(m.duration), 0));
+        setSessions(data.length);
+        setStudents(new Set(data.map(m => m.student_name)).size);
+      }
+    };
+    fetch();
+  }, [user.name]);
 
   const statCards = [
-    { icon: Clock, label: "Volunteer Hours", value: "0", bg: "bg-primary" },
-    { icon: Calendar, label: "Sessions Held", value: "0", bg: "bg-[hsl(25,95%,53%)]" },
-    { icon: Users, label: "Total Students", value: "0", bg: "bg-[hsl(160,84%,39%)]" },
+    { icon: Clock, label: "Volunteer Hours", value: String(hours), bg: "bg-primary" },
+    { icon: Calendar, label: "Sessions Held", value: String(sessions), bg: "bg-[hsl(25,95%,53%)]" },
+    { icon: Users, label: "Total Students", value: String(students), bg: "bg-[hsl(160,84%,39%)]" },
   ];
 
   return (
