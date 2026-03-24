@@ -21,6 +21,8 @@ type Meeting = {
   zoom_start_url: string | null;
   zoom_meeting_id: string | null;
   zoom_password: string | null;
+  teacher_joined: boolean;
+  student_joined: boolean;
 };
 
 const TeacherMeetings = () => {
