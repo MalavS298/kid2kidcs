@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { Calendar, Clock, User, Video, ExternalLink, Loader2 } from "lucide-react";
+import { Calendar, Clock, User, Video, ExternalLink, Loader2, Check } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -14,14 +15,16 @@ type Meeting = {
   zoom_join_url: string | null;
   zoom_meeting_id: string | null;
   zoom_password: string | null;
+  teacher_joined: boolean;
+  student_joined: boolean;
 };
 
 const StudentMeetings = () => {
   const [meetings, setMeetings] = useState<Meeting[]>([]);
   const [loading, setLoading] = useState(true);
+  const { toast } = useToast();
 
-  useEffect(() => {
-    const fetchMeetings = async () => {
+  const fetchMeetings = async () => {
       const { data, error } = await supabase
         .from("meetings")
         .select("*")
@@ -29,10 +32,10 @@ const StudentMeetings = () => {
 
       if (error) console.error("Error fetching meetings:", error);
       else setMeetings(data || []);
-      setLoading(false);
-    };
-    fetchMeetings();
-  }, []);
+    setLoading(false);
+  };
+
+  useEffect(() => { fetchMeetings(); }, []);
 
   if (loading) {
     return (
@@ -72,10 +75,27 @@ const StudentMeetings = () => {
                     </Button>
                   </a>
                 )}
+                {m.status === "scheduled" && !m.student_joined && (
+                  <Button size="sm" variant="outline" className="gap-1 text-primary border-primary/20" onClick={async () => {
+                    await supabase.from("meetings").update({ student_joined: true } as any).eq("id", m.id);
+                    if (m.teacher_joined) {
+                      await supabase.from("meetings").update({ status: "completed" } as any).eq("id", m.id);
+                      toast({ title: "Meeting verified!", description: "Both attendees confirmed. Session recorded." });
+                    } else {
+                      toast({ title: "Attendance marked", description: "Waiting for teacher to confirm." });
+                    }
+                    fetchMeetings();
+                  }}>
+                    <Check className="w-3 h-3" /> Mark Attended
+                  </Button>
+                )}
+                {m.student_joined && !m.teacher_joined && m.status === "scheduled" && (
+                  <span className="text-[11px] px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-600">Waiting for teacher</span>
+                )}
                 <span className={`text-[11px] uppercase tracking-wider px-2 py-0.5 rounded-full ${
-                  m.status === "scheduled" ? "bg-accent/10 text-accent" : "bg-green-500/10 text-green-600"
+                  m.status === "completed" ? "bg-green-500/10 text-green-600" : m.student_joined ? "bg-amber-500/10 text-amber-600" : "bg-accent/10 text-accent"
                 }`}>
-                  {m.status}
+                  {m.status === "completed" ? "verified ✓" : m.status}
                 </span>
               </div>
             </div>
