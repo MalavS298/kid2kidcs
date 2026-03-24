@@ -32,10 +32,10 @@ const StudentMeetings = () => {
 
       if (error) console.error("Error fetching meetings:", error);
       else setMeetings(data || []);
-      setLoading(false);
-    };
-    fetchMeetings();
-  }, []);
+    setLoading(false);
+  };
+
+  useEffect(() => { fetchMeetings(); }, []);
 
   if (loading) {
     return (
