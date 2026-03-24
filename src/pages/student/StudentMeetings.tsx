@@ -22,9 +22,9 @@ type Meeting = {
 const StudentMeetings = () => {
   const [meetings, setMeetings] = useState<Meeting[]>([]);
   const [loading, setLoading] = useState(true);
+  const { toast } = useToast();
 
-  useEffect(() => {
-    const fetchMeetings = async () => {
+  const fetchMeetings = async () => {
       const { data, error } = await supabase
         .from("meetings")
         .select("*")
