@@ -73,7 +73,9 @@ export type Database = {
           scheduled_date: string
           scheduled_time: string
           status: string
+          student_joined: boolean
           student_name: string
+          teacher_joined: boolean
           teacher_name: string
           updated_at: string
           zoom_join_url: string | null
@@ -88,7 +90,9 @@ export type Database = {
           scheduled_date: string
           scheduled_time: string
           status?: string
+          student_joined?: boolean
           student_name: string
+          teacher_joined?: boolean
           teacher_name: string
           updated_at?: string
           zoom_join_url?: string | null
@@ -103,7 +107,9 @@ export type Database = {
           scheduled_date?: string
           scheduled_time?: string
           status?: string
+          student_joined?: boolean
           student_name?: string
+          teacher_joined?: boolean
           teacher_name?: string
           updated_at?: string
           zoom_join_url?: string | null
