@@ -22,6 +22,7 @@ import TeacherManage from "./pages/teacher/TeacherManage";
 import TeacherContent from "./pages/teacher/TeacherContent";
 import AdminLayout from "./components/AdminLayout";
 import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminContent from "./pages/admin/AdminContent";
 import AdminPairing from "./pages/admin/AdminPairing";
 
 const queryClient = new QueryClient();
