@@ -17,6 +17,7 @@ const AdminLayout = () => {
 
   const links = [
     { to: "/admin", icon: LayoutDashboard, label: "Dashboard" },
+    { to: "/admin/content", icon: Home, label: "Mass Content" },
     { to: "/admin/pairing", icon: Users, label: "Pairing" },
   ];
 
