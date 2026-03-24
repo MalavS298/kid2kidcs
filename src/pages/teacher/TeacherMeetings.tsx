@@ -154,16 +154,34 @@ const TeacherMeetings = () => {
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                {m.zoom_start_url && (
+                {m.zoom_start_url && m.status === "scheduled" && (
                   <a href={m.zoom_start_url} target="_blank" rel="noopener noreferrer">
                     <Button size="sm" variant="outline" className="gap-1">
                       <Video className="w-3 h-3" /> Start <ExternalLink className="w-3 h-3" />
                     </Button>
                   </a>
                 )}
+                {m.status === "scheduled" && !m.teacher_joined && (
+                  <Button size="sm" variant="outline" className="gap-1 text-primary border-primary/20" onClick={async () => {
+                    await supabase.from("meetings").update({ teacher_joined: true } as any).eq("id", m.id);
+                    // Check if student also joined → auto-complete
+                    if (m.student_joined) {
+                      await supabase.from("meetings").update({ status: "completed" } as any).eq("id", m.id);
+                      toast({ title: "Meeting completed!", description: "Both attendees confirmed. Hours recorded." });
+                    } else {
+                      toast({ title: "Attendance marked", description: "Waiting for student to confirm attendance." });
+                    }
+                    fetchMeetings();
+                  }}>
+                    <Check className="w-3 h-3" /> Mark Attended
+                  </Button>
+                )}
+                {m.teacher_joined && !m.student_joined && m.status === "scheduled" && (
+                  <span className="text-[11px] px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-600">Waiting for student</span>
+                )}
                 <span className={`text-[11px] uppercase tracking-wider px-2 py-0.5 rounded-full ${
-                  m.status === "scheduled" ? "bg-accent/10 text-accent" : "bg-green-500/10 text-green-600"
-                }`}>{m.status}</span>
+                  m.status === "completed" ? "bg-green-500/10 text-green-600" : m.teacher_joined ? "bg-amber-500/10 text-amber-600" : "bg-accent/10 text-accent"
+                }`}>{m.status === "completed" ? "verified ✓" : m.status}</span>
               </div>
             </div>
           ))}
