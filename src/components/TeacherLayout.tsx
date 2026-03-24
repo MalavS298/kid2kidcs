@@ -61,7 +61,10 @@ const TeacherLayout = () => {
         </div>
         <SettingsPanel open={settingsOpen} onClose={() => setSettingsOpen(false)} />
       </aside>
-      <main className="flex-1 min-h-screen"><Outlet /></main>
+      <main className="flex-1 min-h-screen relative">
+        <Outlet />
+        <DashboardChat currentName={user.name} currentRole="teacher" partnerName={user.student || ""} />
+      </main>
     </div>
   );
 };

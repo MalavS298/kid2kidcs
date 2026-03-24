@@ -154,10 +154,11 @@ const StudentLayout = () => {
         <SettingsPanel open={settingsOpen} onClose={() => setSettingsOpen(false)} />
       </aside>
 
-      <main className="flex-1 min-h-screen">
+      <main className="flex-1 min-h-screen relative">
         <StudentContext.Provider value={{ unlockedWeeks }}>
           <Outlet />
         </StudentContext.Provider>
+        <DashboardChat currentName={user.name} currentRole="student" partnerName={user.teacher || ""} />
       </main>
     </div>
   );
