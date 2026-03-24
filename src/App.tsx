@@ -57,6 +57,7 @@ const App = () => (
 
             <Route path="/admin" element={<AdminLayout />}>
               <Route index element={<AdminDashboard />} />
+              <Route path="content" element={<AdminContent />} />
               <Route path="pairing" element={<AdminPairing />} />
             </Route>
 
