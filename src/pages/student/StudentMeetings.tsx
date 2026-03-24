@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { Calendar, Clock, User, Video, ExternalLink, Loader2 } from "lucide-react";
+import { Calendar, Clock, User, Video, ExternalLink, Loader2, Check } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 
