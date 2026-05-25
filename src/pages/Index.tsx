@@ -33,9 +33,11 @@ const Navbar = () =>
 
 
 const HeroSection = () =>
-<section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden bg-gradient-to-b from-primary/8 via-background to-secondary/30 pt-14">
-    <div className="absolute inset-x-0 top-0 h-64 bg-gradient-to-b from-primary/10 to-transparent pointer-events-none" />
-    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full bg-primary/5 blur-3xl pointer-events-none" />
+<section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden bg-gradient-to-b from-primary/10 via-background to-secondary/30 dark:from-primary/25 dark:via-background dark:to-accent/10 pt-14">
+    <div className="absolute inset-x-0 top-0 h-64 bg-gradient-to-b from-primary/15 dark:from-primary/30 to-transparent pointer-events-none" />
+    <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full bg-primary/10 dark:bg-primary/30 blur-3xl pointer-events-none" />
+    <div className="absolute bottom-0 right-10 w-[400px] h-[400px] rounded-full bg-accent/10 dark:bg-accent/25 blur-3xl pointer-events-none" />
+    <div className="absolute bottom-20 left-10 w-[350px] h-[350px] rounded-full bg-destructive/10 dark:bg-destructive/20 blur-3xl pointer-events-none" />
     <div className="relative z-10 text-center px-4 max-w-3xl mx-auto">
       <motion.h1
       initial={{ opacity: 0, y: 12 }}
@@ -83,7 +85,7 @@ const features = [
 const AboutSection = () =>
 <section id="about" className="py-24 px-4 relative overflow-hidden">
     <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
-      <span className="text-[12rem] md:text-[16rem] font-bold tracking-tight text-foreground/[0.03] leading-none">Mission</span>
+      <span className="text-[12rem] md:text-[16rem] font-bold tracking-tight text-foreground/[0.03] dark:text-foreground/[0.06] leading-none">Mission</span>
     </div>
     <div className="container max-w-5xl mx-auto text-center relative z-10">
       <motion.h2
@@ -181,7 +183,7 @@ const timeline = [
 const HistorySection = () =>
 <section id="history" className="py-24 px-4 relative overflow-hidden">
     <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
-      <span className="text-[12rem] md:text-[16rem] font-bold tracking-tight text-foreground/[0.03] leading-none">History</span>
+      <span className="text-[12rem] md:text-[16rem] font-bold tracking-tight text-foreground/[0.03] dark:text-foreground/[0.06] leading-none">History</span>
     </div>
     <div className="container max-w-4xl mx-auto text-center relative z-10">
       <motion.h2
