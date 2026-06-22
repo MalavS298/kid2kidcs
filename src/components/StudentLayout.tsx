@@ -75,6 +75,14 @@ const StudentLayout = () => {
             {sidebarOpen && <span>Meetings</span>}
           </Link>
 
+          <Link to="/student/sandbox" className={cn(
+            "flex items-center gap-2 px-3 py-2 rounded-md text-ui-sm transition-colors",
+            isActive("/student/sandbox") ? "bg-card shadow-subtle text-foreground border-l-2 border-primary" : "text-muted-foreground hover:bg-secondary"
+          )}>
+            <FlaskConical className="w-4 h-4 shrink-0" />
+            {sidebarOpen && <span>Sandbox</span>}
+          </Link>
+
           {sidebarOpen && <div className="text-[11px] uppercase tracking-wider text-muted-foreground px-3 pt-4 pb-1">Weekly Plan</div>}
 
           {weeks.map(w => {
