@@ -15,11 +15,13 @@ import StudentHome from "./pages/student/StudentHome";
 import WeekContent from "./pages/student/WeekContent";
 import WeekExercise from "./pages/student/WeekExercise";
 import StudentMeetings from "./pages/student/StudentMeetings";
+import StudentSandbox from "./pages/student/StudentSandbox";
 import TeacherLayout from "./components/TeacherLayout";
 import TeacherHome from "./pages/teacher/TeacherHome";
 import TeacherMeetings from "./pages/teacher/TeacherMeetings";
 import TeacherManage from "./pages/teacher/TeacherManage";
 import TeacherContent from "./pages/teacher/TeacherContent";
+import TeacherSandbox from "./pages/teacher/TeacherSandbox";
 import AdminLayout from "./components/AdminLayout";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminContent from "./pages/admin/AdminContent";
@@ -46,6 +48,7 @@ const App = () => (
               <Route path="week/:weekId/content" element={<WeekContent />} />
               <Route path="week/:weekId/exercise" element={<WeekExercise />} />
               <Route path="meetings" element={<StudentMeetings />} />
+              <Route path="sandbox" element={<StudentSandbox />} />
             </Route>
 
             <Route path="/teacher" element={<TeacherLayout />}>
@@ -53,6 +56,7 @@ const App = () => (
               <Route path="content" element={<TeacherContent />} />
               <Route path="meetings" element={<TeacherMeetings />} />
               <Route path="manage" element={<TeacherManage />} />
+              <Route path="sandbox" element={<TeacherSandbox />} />
             </Route>
 
             <Route path="/admin" element={<AdminLayout />}>

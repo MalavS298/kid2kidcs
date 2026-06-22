@@ -1,6 +1,6 @@
 import { useState, createContext, useContext } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
-import { Code2, Home, BookOpen, Calendar, ChevronDown, ChevronRight, FileText, Code, LogOut, Lock, Settings } from "lucide-react";
+import { Code2, Home, BookOpen, Calendar, ChevronDown, ChevronRight, FileText, Code, LogOut, Lock, Settings, FlaskConical } from "lucide-react";
 import SettingsPanel from "@/components/SettingsPanel";
 import PairingPending from "@/components/PairingPending";
 import DashboardChat from "@/components/DashboardChat";
@@ -73,6 +73,14 @@ const StudentLayout = () => {
           )}>
             <Calendar className="w-4 h-4 shrink-0" />
             {sidebarOpen && <span>Meetings</span>}
+          </Link>
+
+          <Link to="/student/sandbox" className={cn(
+            "flex items-center gap-2 px-3 py-2 rounded-md text-ui-sm transition-colors",
+            isActive("/student/sandbox") ? "bg-card shadow-subtle text-foreground border-l-2 border-primary" : "text-muted-foreground hover:bg-secondary"
+          )}>
+            <FlaskConical className="w-4 h-4 shrink-0" />
+            {sidebarOpen && <span>Sandbox</span>}
           </Link>
 
           {sidebarOpen && <div className="text-[11px] uppercase tracking-wider text-muted-foreground px-3 pt-4 pb-1">Weekly Plan</div>}
