@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
-import { Code2, Home, Calendar, Users, LogOut, Settings, FileText } from "lucide-react";
+import { Code2, Home, Calendar, Users, LogOut, Settings, FileText, FlaskConical } from "lucide-react";
 import { cn } from "@/lib/utils";
 import SettingsPanel from "@/components/SettingsPanel";
 import PairingPending from "@/components/PairingPending";
@@ -23,6 +23,7 @@ const TeacherLayout = () => {
     { to: "/teacher/content", icon: FileText, label: "Content" },
     { to: "/teacher/meetings", icon: Calendar, label: "Meetings" },
     { to: "/teacher/manage", icon: Users, label: "Manage" },
+    { to: "/teacher/sandbox", icon: FlaskConical, label: "Sandbox" },
   ];
 
   if (user.pending) {
