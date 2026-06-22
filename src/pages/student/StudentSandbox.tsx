@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Play, Save, Plus, Loader2, FlaskConical, Trash2, FileCode } from "lucide-react";
+import { Play, Save, Plus, Loader2, FlaskConical, Trash2, FileCode, Circle, RotateCcw } from "lucide-react";
 import { usePyodide } from "@/hooks/usePyodide";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
