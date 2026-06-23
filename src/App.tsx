@@ -10,6 +10,7 @@ import LoginPage from "./pages/LoginPage";
 import JoinPage from "./pages/JoinPage";
 import StudentApplication from "./pages/join/StudentApplication";
 import VolunteerApplication from "./pages/join/VolunteerApplication";
+import WWRoboticsApplication from "./pages/join/WWRoboticsApplication";
 import StudentLayout from "./components/StudentLayout";
 import StudentHome from "./pages/student/StudentHome";
 import WeekContent from "./pages/student/WeekContent";
@@ -26,6 +27,7 @@ import AdminLayout from "./components/AdminLayout";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminContent from "./pages/admin/AdminContent";
 import AdminPairing from "./pages/admin/AdminPairing";
+import AdminWWRobotics from "./pages/admin/AdminWWRobotics";
 
 const queryClient = new QueryClient();
 
@@ -42,6 +44,7 @@ const App = () => (
             <Route path="/join" element={<JoinPage />} />
             <Route path="/join/student" element={<StudentApplication />} />
             <Route path="/join/volunteer" element={<VolunteerApplication />} />
+            <Route path="/join/ww-robotics" element={<WWRoboticsApplication />} />
 
             <Route path="/student" element={<StudentLayout />}>
               <Route index element={<StudentHome />} />
@@ -63,6 +66,7 @@ const App = () => (
               <Route index element={<AdminDashboard />} />
               <Route path="content" element={<AdminContent />} />
               <Route path="pairing" element={<AdminPairing />} />
+              <Route path="ww-robotics" element={<AdminWWRobotics />} />
             </Route>
 
             <Route path="*" element={<NotFound />} />
