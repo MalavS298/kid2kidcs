@@ -37,7 +37,8 @@ const AdminDashboard = () => {
       .from("applications")
       .select("*")
       .order("created_at", { ascending: false });
-    setApplications((data as Application[]) || []);
+    const filtered = ((data as Application[]) || []).filter(a => a.school !== "Westwood Robotics - Python");
+    setApplications(filtered);
     setLoading(false);
   };
 
