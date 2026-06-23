@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
-import { GraduationCap, Heart, ArrowRight, Bot } from "lucide-react";
+import { GraduationCap, Heart, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
+import wwLogo from "@/assets/ww-robotics-logo.png.asset.json";
 
 const JoinPage = () => (
   <div className="min-h-screen bg-gradient-to-b from-primary/5 via-background to-background flex flex-col items-center justify-center px-4 py-16">
