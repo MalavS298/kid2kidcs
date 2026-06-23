@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { Bot, Check, X, Users, ClipboardList, FlaskConical, FileCode, User as UserIcon, RefreshCw } from "lucide-react";
+import { Check, X, Users, ClipboardList, FlaskConical, FileCode, User as UserIcon, RefreshCw } from "lucide-react";
+import wwLogo from "@/assets/ww-robotics-logo.png.asset.json";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -76,7 +77,7 @@ const AdminWWRobotics = () => {
   const pending = apps.filter(a => a.status === "pending");
   const approved = apps.filter(a => a.status === "approved");
 
-  const tabs: { id: Tab; label: string; icon: typeof Bot }[] = [
+  const tabs: { id: Tab; label: string; icon: typeof ClipboardList }[] = [
     { id: "accept", label: "Accept", icon: ClipboardList },
     { id: "manage", label: "Manage", icon: Users },
     { id: "sandbox", label: "Sandbox", icon: FlaskConical },
@@ -85,8 +86,8 @@ const AdminWWRobotics = () => {
   return (
     <div className="p-8 max-w-6xl">
       <div className="flex items-center gap-3 mb-2">
-        <div className="w-11 h-11 rounded-xl bg-orange-500 flex items-center justify-center">
-          <Bot className="w-6 h-6 text-white" />
+        <div className="w-11 h-11 rounded-xl bg-black flex items-center justify-center overflow-hidden">
+          <img src={wwLogo.url} alt="Westwood Robotics" className="w-9 h-9 object-contain" />
         </div>
         <div>
           <h1 className="text-2xl font-bold">Westwood Robotics – Python</h1>
