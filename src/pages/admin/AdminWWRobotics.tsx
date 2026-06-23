@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { Bot, Check, X, Users, ClipboardList, FlaskConical, FileCode, User as UserIcon, RefreshCw } from "lucide-react";
+import { Check, X, Users, ClipboardList, FlaskConical, FileCode, User as UserIcon, RefreshCw } from "lucide-react";
+import wwLogo from "@/assets/ww-robotics-logo.png.asset.json";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";

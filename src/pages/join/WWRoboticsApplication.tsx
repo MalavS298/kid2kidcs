@@ -4,9 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Bot, ShieldCheck } from "lucide-react";
+import { ShieldCheck } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import wwLogo from "@/assets/ww-robotics-logo.png.asset.json";
 
 export const WW_PROGRAM = "Westwood Robotics - Python";
 
@@ -96,8 +97,8 @@ const WWRoboticsApplication = () => {
     <div className="min-h-screen bg-gradient-to-b from-orange-500/10 via-background to-background flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-lg">
         <Link to="/" className="flex items-center justify-center gap-2 mb-10">
-          <div className="w-10 h-10 rounded-md bg-orange-500 flex items-center justify-center">
-            <Bot className="w-5 h-5 text-white" />
+          <div className="w-10 h-10 rounded-md bg-black flex items-center justify-center overflow-hidden">
+            <img src={wwLogo.url} alt="Westwood Robotics" className="w-8 h-8 object-contain" />
           </div>
           <span className="text-xl font-medium">Westwood Robotics <span className="text-orange-500">Python</span></span>
         </Link>
