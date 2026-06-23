@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Code2, GraduationCap, Heart, ArrowRight } from "lucide-react";
+import { GraduationCap, Heart, ArrowRight, Bot } from "lucide-react";
 import { motion } from "framer-motion";
 
 const JoinPage = () => (
@@ -16,7 +16,7 @@ const JoinPage = () => (
       </p>
     </motion.div>
 
-    <div className="grid md:grid-cols-2 gap-6 w-full max-w-2xl mb-10">
+    <div className="grid md:grid-cols-3 gap-6 w-full max-w-4xl mb-10">
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15, duration: 0.4 }}>
         <Link to="/join/student" className="block">
           <div className="rounded-2xl border border-border bg-card p-8 hover:shadow-card transition-all duration-200 group h-full">
@@ -34,7 +34,7 @@ const JoinPage = () => (
         </Link>
       </motion.div>
 
-      <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25, duration: 0.4 }}>
+      <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.4 }}>
         <Link to="/join/volunteer" className="block">
           <div className="rounded-2xl border border-border bg-card p-8 hover:shadow-card transition-all duration-200 group h-full">
             <div className="w-14 h-14 rounded-2xl bg-accent/10 flex items-center justify-center mb-5 group-hover:bg-accent/15 transition-colors">
@@ -46,6 +46,23 @@ const JoinPage = () => (
             </p>
             <span className="inline-flex items-center gap-1.5 text-sm font-medium text-accent group-hover:gap-2.5 transition-all">
               Apply as Volunteer <ArrowRight className="w-4 h-4" />
+            </span>
+          </div>
+        </Link>
+      </motion.div>
+
+      <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25, duration: 0.4 }}>
+        <Link to="/join/ww-robotics" className="block">
+          <div className="rounded-2xl border-2 border-orange-500/30 bg-card p-8 hover:shadow-card transition-all duration-200 group h-full">
+            <div className="w-14 h-14 rounded-2xl bg-orange-500/10 flex items-center justify-center mb-5 group-hover:bg-orange-500/20 transition-colors">
+              <Bot className="w-7 h-7 text-orange-500" />
+            </div>
+            <h2 className="text-xl font-bold mb-2">Westwood Robotics – Python</h2>
+            <p className="text-muted-foreground text-sm leading-relaxed mb-5">
+              For students enrolled in the Westwood High School Robotics Python camp.
+            </p>
+            <span className="inline-flex items-center gap-1.5 text-sm font-medium text-orange-500 group-hover:gap-2.5 transition-all">
+              Apply via WW Robotics <ArrowRight className="w-4 h-4" />
             </span>
           </div>
         </Link>
