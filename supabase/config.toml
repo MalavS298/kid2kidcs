@@ -1,6 +1,6 @@
 project_id = "ibbptofzbdwybijnmixo"
 
-[functions.create-zoom-meeting]
+[functions.create-google-meet]
 verify_jwt = false
 
 [functions.chat-home]
