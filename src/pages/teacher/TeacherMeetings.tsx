@@ -123,7 +123,7 @@ const TeacherMeetings = () => {
           <div className="flex gap-2">
             <Button type="submit" size="sm" disabled={loading}>
               {loading && <Loader2 className="w-3 h-3 animate-spin" />}
-              {loading ? "Creating..." : "Confirm & Create Zoom"}
+              {loading ? "Creating..." : "Confirm & Create Meet"}
             </Button>
             <Button type="button" variant="ghost" size="sm" onClick={() => setShowForm(false)}>Cancel</Button>
           </div>
