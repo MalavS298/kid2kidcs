@@ -114,3 +114,14 @@
     background-clip: text;
   }
 }
+
+@keyframes chrome-spin {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+.chrome-border-wrapper {
+  background: linear-gradient(90deg, #4285F4, #EA4335, #FBBC05, #34A853, #4285F4, #EA4335, #FBBC05, #34A853);
+  background-size: 200% 200%;
+  animation: chrome-spin 3s linear infinite;
+}
