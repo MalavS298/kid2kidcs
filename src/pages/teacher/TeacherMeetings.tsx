@@ -58,7 +58,7 @@ const TeacherMeetings = () => {
     setLoading(true);
     try {
       const startTime = `${form.date}T${form.time}:00`;
-      const { data, error } = await supabase.functions.invoke("create-zoom-meeting", {
+      const { data, error } = await supabase.functions.invoke("create-google-meet", {
         body: {
           topic: `Kid2Kid CS - ${form.student}`,
           start_time: startTime,
@@ -71,7 +71,7 @@ const TeacherMeetings = () => {
       if (error) throw error;
       if (!data.success) throw new Error(data.error);
 
-      toast({ title: "Meeting scheduled!", description: `Zoom meeting created for ${form.student}` });
+      toast({ title: "Meeting scheduled!", description: `Google Meet created for ${form.student}` });
       setForm({ student: "", date: "", time: "" });
       setShowForm(false);
       fetchMeetings();
@@ -88,7 +88,7 @@ const TeacherMeetings = () => {
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-section font-medium mb-1">Meetings</h1>
-          <p className="text-muted-foreground">Manage your lesson schedule with Zoom.</p>
+          <p className="text-muted-foreground">Manage your lesson schedule with Google Meet.</p>
         </div>
         <Button onClick={() => setShowForm(!showForm)} size="sm">
           <Plus className="w-3 h-3" /> Schedule Lesson
@@ -123,7 +123,7 @@ const TeacherMeetings = () => {
           <div className="flex gap-2">
             <Button type="submit" size="sm" disabled={loading}>
               {loading && <Loader2 className="w-3 h-3 animate-spin" />}
-              {loading ? "Creating..." : "Confirm & Create Zoom"}
+              {loading ? "Creating..." : "Confirm & Create Meet"}
             </Button>
             <Button type="button" variant="ghost" size="sm" onClick={() => setShowForm(false)}>Cancel</Button>
           </div>

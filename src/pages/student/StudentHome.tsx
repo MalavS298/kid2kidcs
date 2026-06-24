@@ -150,7 +150,7 @@ const StudentHome = () => {
                 </div>
                 {nextMeeting.zoom_join_url && (
                   <a href={nextMeeting.zoom_join_url} target="_blank" rel="noopener noreferrer">
-                    <Button size="sm">Join Zoom <ArrowRight className="w-3 h-3" /></Button>
+                    <Button size="sm">Join Meet <ArrowRight className="w-3 h-3" /></Button>
                   </a>
                 )}
               </div>

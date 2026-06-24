@@ -13,7 +13,7 @@ About Kid2Kid CS:
 - High-school student volunteers teach middle-school students (grades 6-8).
 - Curriculum: Week 1 Variables & Types, Week 2 Conditionals, Week 3 Loops, Week 4 Functions.
 - Each week has a lesson notebook (Jupyter .ipynb) plus a coding exercise that starts with 3 MCQ questions before unlocking the code editor.
-- Sessions are weekly 1-hour Zoom meetings scheduled in-app. Volunteer hours are only awarded when BOTH the student AND teacher mark attendance.
+- Sessions are weekly 1-hour Google Meet meetings scheduled in-app. Volunteer hours are only awarded when BOTH the student AND teacher mark attendance.
 - To join, visitors click "Join Now" and apply as either a Student or a Volunteer. Admins review and pair them.
 - Volunteer teachers must be in high school (grades 9-12) with some Python experience.
 - Contact email for anything you cannot answer: kid2kidcs@outlook.com.
