@@ -58,7 +58,7 @@ const TeacherMeetings = () => {
     setLoading(true);
     try {
       const startTime = `${form.date}T${form.time}:00`;
-      const { data, error } = await supabase.functions.invoke("create-zoom-meeting", {
+      const { data, error } = await supabase.functions.invoke("create-google-meet", {
         body: {
           topic: `Kid2Kid CS - ${form.student}`,
           start_time: startTime,
@@ -71,7 +71,7 @@ const TeacherMeetings = () => {
       if (error) throw error;
       if (!data.success) throw new Error(data.error);
 
-      toast({ title: "Meeting scheduled!", description: `Zoom meeting created for ${form.student}` });
+      toast({ title: "Meeting scheduled!", description: `Google Meet created for ${form.student}` });
       setForm({ student: "", date: "", time: "" });
       setShowForm(false);
       fetchMeetings();
