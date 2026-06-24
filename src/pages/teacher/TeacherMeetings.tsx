@@ -88,7 +88,7 @@ const TeacherMeetings = () => {
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-section font-medium mb-1">Meetings</h1>
-          <p className="text-muted-foreground">Manage your lesson schedule with Zoom.</p>
+          <p className="text-muted-foreground">Manage your lesson schedule with Google Meet.</p>
         </div>
         <Button onClick={() => setShowForm(!showForm)} size="sm">
           <Plus className="w-3 h-3" /> Schedule Lesson
