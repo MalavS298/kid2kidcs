@@ -41,7 +41,7 @@ const WestwoodJoinDialog = ({ children }: Props) => {
             <label className="flex items-start gap-2.5 cursor-pointer">
               <Checkbox checked={isWW} onCheckedChange={(v) => setIsWW(!!v)} className="mt-0.5" />
               <span className="text-sm text-muted-foreground">
-                Yes — I'm signing up for the Westwood Robotics Python camp directly through this website (I did <span className="font-medium text-foreground">not</span> already sign up through the other form).
+                Yes — I'm signing up for the Westwood Robotics Python camp through this website.
               </span>
             </label>
           </div>
