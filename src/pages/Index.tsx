@@ -148,11 +148,11 @@ const ImpactSection = () =>
             <p className="text-primary-foreground/70 max-w-md mb-6">
               Since starting Kid2Kid CS, we've seen incredible growth in both our students' coding abilities and our volunteers' leadership skills.
             </p>
-            <Link to="/join">
+            <WestwoodJoinDialog>
               <Button variant="secondary" className="rounded-full">
                 Join the Movement
               </Button>
-            </Link>
+            </WestwoodJoinDialog>
           </div>
           <div className="grid grid-cols-2 gap-4 flex-1">
             {stats.map((s, i) =>
