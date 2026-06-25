@@ -3,8 +3,6 @@ import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import { ShieldCheck } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import wwLogo from "@/assets/ww-robotics-logo.png.asset.json";
@@ -12,8 +10,7 @@ import wwLogo from "@/assets/ww-robotics-logo.png.asset.json";
 export const WW_PROGRAM = "Westwood Robotics - Python";
 
 const WWRoboticsApplication = () => {
-  const [step, setStep] = useState(0); // 0 eligibility, 1 student, 2 parent, 3 account
-  const [acknowledged, setAcknowledged] = useState(false);
+  const [step, setStep] = useState(1); // 1 student, 2 parent, 3 account
 
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
