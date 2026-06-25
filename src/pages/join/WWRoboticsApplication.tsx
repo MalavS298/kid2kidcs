@@ -3,8 +3,6 @@ import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import { ShieldCheck } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import wwLogo from "@/assets/ww-robotics-logo.png.asset.json";
@@ -12,8 +10,7 @@ import wwLogo from "@/assets/ww-robotics-logo.png.asset.json";
 export const WW_PROGRAM = "Westwood Robotics - Python";
 
 const WWRoboticsApplication = () => {
-  const [step, setStep] = useState(0); // 0 eligibility, 1 student, 2 parent, 3 account
-  const [acknowledged, setAcknowledged] = useState(false);
+  const [step, setStep] = useState(1); // 1 student, 2 parent, 3 account
 
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
@@ -78,16 +75,16 @@ const WWRoboticsApplication = () => {
 
   const StepIndicator = () => (
     <div className="flex items-center gap-0 mb-8">
-      {[0, 1, 2, 3].map((i, idx) => (
+      {[1, 2, 3].map((i, idx) => (
         <div key={i} className="flex items-center flex-1 last:flex-none">
           <div
             className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
               step >= i ? "bg-orange-500 text-white" : "bg-secondary text-muted-foreground"
             }`}
           >
-            {i + 1}
+            {i}
           </div>
-          {idx < 3 && <div className={`flex-1 h-0.5 ${step > i ? "bg-orange-500" : "bg-border"}`} />}
+          {idx < 2 && <div className={`flex-1 h-0.5 ${step > i ? "bg-orange-500" : "bg-border"}`} />}
         </div>
       ))}
     </div>
@@ -106,37 +103,6 @@ const WWRoboticsApplication = () => {
         <div className="rounded-2xl bg-card shadow-subtle p-8 border border-orange-500/20">
           <StepIndicator />
 
-          {step === 0 && (
-            <>
-              <div className="flex items-center gap-2 mb-1">
-                <ShieldCheck className="w-4 h-4 text-orange-500" />
-                <span className="text-sm font-medium text-orange-500">Eligibility Check</span>
-              </div>
-              <h2 className="text-2xl font-bold mb-1">Before you start</h2>
-              <p className="text-sm text-muted-foreground mb-6">
-                This track is only for students enrolled through Westwood High School Robotics.
-              </p>
-
-              <label className="flex items-start gap-3 p-4 rounded-lg border border-border bg-secondary/30 cursor-pointer">
-                <Checkbox
-                  checked={acknowledged}
-                  onCheckedChange={(v) => setAcknowledged(!!v)}
-                  className="mt-0.5 data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500"
-                />
-                <span className="text-sm leading-relaxed">
-                  I have signed up for the camp through Westwood High School.
-                </span>
-              </label>
-
-              <Button
-                onClick={() => setStep(1)}
-                disabled={!acknowledged}
-                className="w-full h-11 rounded-lg text-base mt-6 bg-orange-500 hover:bg-orange-600 text-white"
-              >
-                Continue
-              </Button>
-            </>
-          )}
 
           {step === 1 && (
             <>
