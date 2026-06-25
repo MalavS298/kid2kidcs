@@ -67,11 +67,11 @@ const HeroSection = () =>
       transition={{ ...transition, delay: 0.4 }}
       className="flex items-center justify-center gap-3">
       
-        <Link to="/join">
+        <WestwoodJoinDialog>
           <Button variant="hero" size="lg" className="rounded-full px-8">
             Join Now <ArrowRight className="w-4 h-4" />
           </Button>
-        </Link>
+        </WestwoodJoinDialog>
       </motion.div>
     </div>
   </section>;
