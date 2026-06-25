@@ -1,11 +1,16 @@
 import { useEffect, useState } from "react";
-import { Check, X, Users, ClipboardList, FlaskConical, FileCode, User as UserIcon, RefreshCw } from "lucide-react";
+import { Check, X, Users, ClipboardList, FlaskConical, FileCode, User as UserIcon, RefreshCw, Calendar, Clock, Plus, Video, ExternalLink, Loader2 } from "lucide-react";
 import wwLogo from "@/assets/ww-robotics-logo.png.asset.json";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
+
+const WW_ADMIN_NAME = "Westwood Admin";
 
 const PROGRAM = "Westwood Robotics - Python";
 
