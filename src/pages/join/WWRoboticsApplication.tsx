@@ -75,16 +75,16 @@ const WWRoboticsApplication = () => {
 
   const StepIndicator = () => (
     <div className="flex items-center gap-0 mb-8">
-      {[0, 1, 2, 3].map((i, idx) => (
+      {[1, 2, 3].map((i, idx) => (
         <div key={i} className="flex items-center flex-1 last:flex-none">
           <div
             className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
               step >= i ? "bg-orange-500 text-white" : "bg-secondary text-muted-foreground"
             }`}
           >
-            {i + 1}
+            {i}
           </div>
-          {idx < 3 && <div className={`flex-1 h-0.5 ${step > i ? "bg-orange-500" : "bg-border"}`} />}
+          {idx < 2 && <div className={`flex-1 h-0.5 ${step > i ? "bg-orange-500" : "bg-border"}`} />}
         </div>
       ))}
     </div>
