@@ -1,11 +1,16 @@
 import { useEffect, useState } from "react";
-import { Check, X, Users, ClipboardList, FlaskConical, FileCode, User as UserIcon, RefreshCw } from "lucide-react";
+import { Check, X, Users, ClipboardList, FlaskConical, FileCode, User as UserIcon, RefreshCw, Calendar, Clock, Plus, Video, ExternalLink, Loader2 } from "lucide-react";
 import wwLogo from "@/assets/ww-robotics-logo.png.asset.json";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
+
+const WW_ADMIN_NAME = "Westwood Admin";
 
 const PROGRAM = "Westwood Robotics - Python";
 
@@ -29,7 +34,21 @@ type Snippet = {
   updated_at: string;
 };
 
-type Tab = "accept" | "manage" | "sandbox";
+type Meeting = {
+  id: string;
+  student_name: string;
+  teacher_name: string;
+  scheduled_date: string;
+  scheduled_time: string;
+  duration: string;
+  status: string;
+  zoom_join_url: string | null;
+  zoom_start_url: string | null;
+  teacher_joined: boolean;
+  student_joined: boolean;
+};
+
+type Tab = "accept" | "manage" | "meetings" | "sandbox";
 
 const AdminWWRobotics = () => {
   const [tab, setTab] = useState<Tab>("accept");
@@ -37,6 +56,10 @@ const AdminWWRobotics = () => {
   const [loading, setLoading] = useState(true);
   const [snippets, setSnippets] = useState<Snippet[]>([]);
   const [active, setActive] = useState<Snippet | null>(null);
+  const [meetings, setMeetings] = useState<Meeting[]>([]);
+  const [showForm, setShowForm] = useState(false);
+  const [form, setForm] = useState({ student: "", date: "", time: "" });
+  const [creating, setCreating] = useState(false);
 
   const load = async () => {
     setLoading(true);
@@ -64,8 +87,18 @@ const AdminWWRobotics = () => {
     setActive(prev => (data || []).find(s => s.id === prev?.id) || (data || [])[0] || null);
   };
 
+  const loadMeetings = async () => {
+    const { data } = await supabase
+      .from("meetings")
+      .select("*")
+      .eq("teacher_name", WW_ADMIN_NAME)
+      .order("scheduled_date", { ascending: true });
+    setMeetings((data as Meeting[]) || []);
+  };
+
   useEffect(() => { load(); }, []);
   useEffect(() => { if (tab === "sandbox") loadSnippets(); }, [tab, apps]);
+  useEffect(() => { if (tab === "meetings") loadMeetings(); }, [tab]);
 
   const updateStatus = async (id: string, status: string) => {
     const { error } = await supabase.from("applications").update({ status }).eq("id", id);
@@ -74,12 +107,52 @@ const AdminWWRobotics = () => {
     load();
   };
 
+  const scheduleMeeting = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!form.student || !form.date || !form.time) return;
+    setCreating(true);
+    try {
+      const startTime = `${form.date}T${form.time}:00`;
+      const { data, error } = await supabase.functions.invoke("create-google-meet", {
+        body: {
+          topic: `Westwood Robotics - ${form.student}`,
+          start_time: startTime,
+          duration: 60,
+          student_name: form.student,
+          teacher_name: WW_ADMIN_NAME,
+        },
+      });
+      if (error) throw error;
+      if (!data.success) throw new Error(data.error);
+      toast.success(`Google Meet created for ${form.student}`);
+      setForm({ student: "", date: "", time: "" });
+      setShowForm(false);
+      loadMeetings();
+    } catch (err: any) {
+      toast.error(err.message || "Failed to create meeting");
+    } finally {
+      setCreating(false);
+    }
+  };
+
+  const markAdminAttended = async (m: Meeting) => {
+    await supabase.from("meetings").update({ teacher_joined: true } as any).eq("id", m.id);
+    if (m.student_joined) {
+      await supabase.from("meetings").update({ status: "completed" } as any).eq("id", m.id);
+      toast.success("Meeting completed. Hours recorded.");
+    } else {
+      toast.success("Attendance marked. Waiting for student.");
+    }
+    loadMeetings();
+  };
+
   const pending = apps.filter(a => a.status === "pending");
   const approved = apps.filter(a => a.status === "approved");
 
   const tabs: { id: Tab; label: string; icon: typeof ClipboardList }[] = [
     { id: "accept", label: "Accept", icon: ClipboardList },
     { id: "manage", label: "Manage", icon: Users },
+    { id: "meetings", label: "Meetings", icon: Calendar },
     { id: "sandbox", label: "Sandbox", icon: FlaskConical },
   ];
 
@@ -174,6 +247,95 @@ const AdminWWRobotics = () => {
           )}
         </div>
       )}
+
+      {tab === "meetings" && (
+        <div>
+          <div className="flex items-center justify-between mb-4">
+            <p className="text-sm text-muted-foreground">Schedule and join Google Meet sessions for WW Robotics students. The admin runs every meeting.</p>
+            <Button onClick={() => setShowForm(!showForm)} size="sm" className="bg-orange-500 hover:bg-orange-600">
+              <Plus className="w-3 h-3 mr-1" /> Schedule Meeting
+            </Button>
+          </div>
+
+          {showForm && (
+            <form onSubmit={scheduleMeeting} className="rounded-xl bg-card shadow-subtle p-5 mb-6 space-y-4 border border-orange-500/20">
+              <div className="grid grid-cols-3 gap-4">
+                <div>
+                  <Label>Student</Label>
+                  <Select value={form.student} onValueChange={v => setForm({ ...form, student: v })}>
+                    <SelectTrigger><SelectValue placeholder="Select student" /></SelectTrigger>
+                    <SelectContent>
+                      {approved.length === 0 ? (
+                        <div className="px-2 py-1.5 text-xs text-muted-foreground">No approved students yet.</div>
+                      ) : approved.map(a => (
+                        <SelectItem key={a.id} value={a.name}>{a.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label>Date</Label>
+                  <Input type="date" value={form.date} onChange={e => setForm({ ...form, date: e.target.value })} required />
+                </div>
+                <div>
+                  <Label>Time</Label>
+                  <Input type="time" value={form.time} onChange={e => setForm({ ...form, time: e.target.value })} required />
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <Button type="submit" size="sm" disabled={creating}>
+                  {creating && <Loader2 className="w-3 h-3 animate-spin mr-1" />}
+                  {creating ? "Creating..." : "Confirm & Create Meet"}
+                </Button>
+                <Button type="button" variant="ghost" size="sm" onClick={() => setShowForm(false)}>Cancel</Button>
+              </div>
+            </form>
+          )}
+
+          {meetings.length === 0 ? (
+            <div className="text-center py-12 text-sm text-muted-foreground">No meetings scheduled yet.</div>
+          ) : (
+            <div className="space-y-3">
+              {meetings.map(m => (
+                <div key={m.id} className="rounded-lg bg-card shadow-subtle p-4 flex items-center gap-4">
+                  <div className={`w-2 h-2 rounded-full shrink-0 ${m.status === "scheduled" ? "bg-orange-500" : "bg-green-500"}`} />
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 text-sm font-medium">
+                      <UserIcon className="w-3 h-3" /> {m.student_name}
+                    </div>
+                    <div className="flex items-center gap-3 text-[12px] text-muted-foreground mt-0.5">
+                      <span className="flex items-center gap-1"><Calendar className="w-3 h-3" /> {m.scheduled_date}</span>
+                      <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {m.scheduled_time}</span>
+                      <span>{m.duration}</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {m.zoom_start_url && m.status === "scheduled" && (
+                      <a href={m.zoom_start_url} target="_blank" rel="noopener noreferrer">
+                        <Button size="sm" variant="outline" className="gap-1">
+                          <Video className="w-3 h-3" /> Join <ExternalLink className="w-3 h-3" />
+                        </Button>
+                      </a>
+                    )}
+                    {m.status === "scheduled" && !m.teacher_joined && (
+                      <Button size="sm" variant="outline" className="gap-1 text-orange-600 border-orange-200" onClick={() => markAdminAttended(m)}>
+                        <Check className="w-3 h-3" /> Mark Attended
+                      </Button>
+                    )}
+                    {m.teacher_joined && !m.student_joined && m.status === "scheduled" && (
+                      <span className="text-[11px] px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-600">Waiting for student</span>
+                    )}
+                    <span className={`text-[11px] uppercase tracking-wider px-2 py-0.5 rounded-full ${
+                      m.status === "completed" ? "bg-green-500/10 text-green-600" : m.teacher_joined ? "bg-amber-500/10 text-amber-600" : "bg-orange-500/10 text-orange-600"
+                    }`}>{m.status === "completed" ? "verified ✓" : m.status}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
 
       {tab === "sandbox" && (
         <div>
