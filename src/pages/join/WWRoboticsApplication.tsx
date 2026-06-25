@@ -103,37 +103,6 @@ const WWRoboticsApplication = () => {
         <div className="rounded-2xl bg-card shadow-subtle p-8 border border-orange-500/20">
           <StepIndicator />
 
-          {step === 0 && (
-            <>
-              <div className="flex items-center gap-2 mb-1">
-                <ShieldCheck className="w-4 h-4 text-orange-500" />
-                <span className="text-sm font-medium text-orange-500">Eligibility Check</span>
-              </div>
-              <h2 className="text-2xl font-bold mb-1">Before you start</h2>
-              <p className="text-sm text-muted-foreground mb-6">
-                This track is only for students enrolled through Westwood High School Robotics.
-              </p>
-
-              <label className="flex items-start gap-3 p-4 rounded-lg border border-border bg-secondary/30 cursor-pointer">
-                <Checkbox
-                  checked={acknowledged}
-                  onCheckedChange={(v) => setAcknowledged(!!v)}
-                  className="mt-0.5 data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500"
-                />
-                <span className="text-sm leading-relaxed">
-                  I have signed up for the camp through Westwood High School.
-                </span>
-              </label>
-
-              <Button
-                onClick={() => setStep(1)}
-                disabled={!acknowledged}
-                className="w-full h-11 rounded-lg text-base mt-6 bg-orange-500 hover:bg-orange-600 text-white"
-              >
-                Continue
-              </Button>
-            </>
-          )}
 
           {step === 1 && (
             <>
