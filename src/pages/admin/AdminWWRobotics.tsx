@@ -34,7 +34,21 @@ type Snippet = {
   updated_at: string;
 };
 
-type Tab = "accept" | "manage" | "sandbox";
+type Meeting = {
+  id: string;
+  student_name: string;
+  teacher_name: string;
+  scheduled_date: string;
+  scheduled_time: string;
+  duration: string;
+  status: string;
+  zoom_join_url: string | null;
+  zoom_start_url: string | null;
+  teacher_joined: boolean;
+  student_joined: boolean;
+};
+
+type Tab = "accept" | "manage" | "meetings" | "sandbox";
 
 const AdminWWRobotics = () => {
   const [tab, setTab] = useState<Tab>("accept");
@@ -42,6 +56,10 @@ const AdminWWRobotics = () => {
   const [loading, setLoading] = useState(true);
   const [snippets, setSnippets] = useState<Snippet[]>([]);
   const [active, setActive] = useState<Snippet | null>(null);
+  const [meetings, setMeetings] = useState<Meeting[]>([]);
+  const [showForm, setShowForm] = useState(false);
+  const [form, setForm] = useState({ student: "", date: "", time: "" });
+  const [creating, setCreating] = useState(false);
 
   const load = async () => {
     setLoading(true);
@@ -69,8 +87,18 @@ const AdminWWRobotics = () => {
     setActive(prev => (data || []).find(s => s.id === prev?.id) || (data || [])[0] || null);
   };
 
+  const loadMeetings = async () => {
+    const { data } = await supabase
+      .from("meetings")
+      .select("*")
+      .eq("teacher_name", WW_ADMIN_NAME)
+      .order("scheduled_date", { ascending: true });
+    setMeetings((data as Meeting[]) || []);
+  };
+
   useEffect(() => { load(); }, []);
   useEffect(() => { if (tab === "sandbox") loadSnippets(); }, [tab, apps]);
+  useEffect(() => { if (tab === "meetings") loadMeetings(); }, [tab]);
 
   const updateStatus = async (id: string, status: string) => {
     const { error } = await supabase.from("applications").update({ status }).eq("id", id);
@@ -79,12 +107,52 @@ const AdminWWRobotics = () => {
     load();
   };
 
+  const scheduleMeeting = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!form.student || !form.date || !form.time) return;
+    setCreating(true);
+    try {
+      const startTime = `${form.date}T${form.time}:00`;
+      const { data, error } = await supabase.functions.invoke("create-google-meet", {
+        body: {
+          topic: `Westwood Robotics - ${form.student}`,
+          start_time: startTime,
+          duration: 60,
+          student_name: form.student,
+          teacher_name: WW_ADMIN_NAME,
+        },
+      });
+      if (error) throw error;
+      if (!data.success) throw new Error(data.error);
+      toast.success(`Google Meet created for ${form.student}`);
+      setForm({ student: "", date: "", time: "" });
+      setShowForm(false);
+      loadMeetings();
+    } catch (err: any) {
+      toast.error(err.message || "Failed to create meeting");
+    } finally {
+      setCreating(false);
+    }
+  };
+
+  const markAdminAttended = async (m: Meeting) => {
+    await supabase.from("meetings").update({ teacher_joined: true } as any).eq("id", m.id);
+    if (m.student_joined) {
+      await supabase.from("meetings").update({ status: "completed" } as any).eq("id", m.id);
+      toast.success("Meeting completed. Hours recorded.");
+    } else {
+      toast.success("Attendance marked. Waiting for student.");
+    }
+    loadMeetings();
+  };
+
   const pending = apps.filter(a => a.status === "pending");
   const approved = apps.filter(a => a.status === "approved");
 
   const tabs: { id: Tab; label: string; icon: typeof ClipboardList }[] = [
     { id: "accept", label: "Accept", icon: ClipboardList },
     { id: "manage", label: "Manage", icon: Users },
+    { id: "meetings", label: "Meetings", icon: Calendar },
     { id: "sandbox", label: "Sandbox", icon: FlaskConical },
   ];
 
