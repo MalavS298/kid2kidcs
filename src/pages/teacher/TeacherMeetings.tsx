@@ -2,12 +2,9 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Calendar, Clock, Plus, User, Video, ExternalLink, Loader2, Check } from "lucide-react";
+import { Calendar, Clock, Plus, User, Video, ExternalLink, Loader2, Check, Users } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-
-const assignedStudents = ["Alex Chen", "Sam Lee"];
 
 type Meeting = {
   id: string;
@@ -26,55 +23,56 @@ type Meeting = {
 };
 
 const TeacherMeetings = () => {
+  const user = JSON.parse(localStorage.getItem("k2k_user") || '{"name":"Teacher"}');
+  const teacherName: string = user.name || "Teacher";
+
   const [meetings, setMeetings] = useState<Meeting[]>([]);
+  const [pairedStudents, setPairedStudents] = useState<string[]>([]);
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({ student: "", date: "", time: "" });
+  const [form, setForm] = useState({ date: "", time: "" });
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
   const { toast } = useToast();
 
-  const fetchMeetings = async () => {
-    const { data, error } = await supabase
-      .from("meetings")
-      .select("*")
-      .order("scheduled_date", { ascending: true });
-
-    if (error) {
-      console.error("Error fetching meetings:", error);
-    } else {
-      setMeetings(data || []);
-    }
+  const fetchAll = async () => {
+    const [{ data: meets }, { data: pairs }] = await Promise.all([
+      supabase.from("meetings").select("*").eq("teacher_name", teacherName).order("scheduled_date", { ascending: true }),
+      supabase.from("pairings").select("student_name").eq("teacher_name", teacherName),
+    ]);
+    setMeetings(meets || []);
+    setPairedStudents((pairs || []).map((p: any) => p.student_name));
     setFetching(false);
   };
 
-  useEffect(() => {
-    fetchMeetings();
-  }, []);
+  useEffect(() => { fetchAll(); }, []);
 
   const handleSchedule = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.student || !form.date || !form.time) return;
+    if (!form.date || !form.time || pairedStudents.length === 0) return;
 
     setLoading(true);
     try {
       const startTime = `${form.date}T${form.time}:00`;
       const { data, error } = await supabase.functions.invoke("create-google-meet", {
         body: {
-          topic: `Kid2Kid CS - ${form.student}`,
+          topic: `Kid2Kid CS - ${teacherName}'s group`,
           start_time: startTime,
           duration: 60,
-          student_name: form.student,
-          teacher_name: "Teacher",
+          student_names: pairedStudents,
+          teacher_name: teacherName,
         },
       });
 
       if (error) throw error;
       if (!data.success) throw new Error(data.error);
 
-      toast({ title: "Meeting scheduled!", description: `Google Meet created for ${form.student}` });
-      setForm({ student: "", date: "", time: "" });
+      toast({
+        title: "Meeting scheduled!",
+        description: `Google Meet sent to ${pairedStudents.length} student${pairedStudents.length === 1 ? "" : "s"}.`,
+      });
+      setForm({ date: "", time: "" });
       setShowForm(false);
-      fetchMeetings();
+      fetchAll();
     } catch (err: any) {
       console.error("Error scheduling:", err);
       toast({ title: "Error", description: err.message || "Failed to create meeting", variant: "destructive" });
@@ -97,20 +95,18 @@ const TeacherMeetings = () => {
 
       {showForm && (
         <form onSubmit={handleSchedule} className="rounded-lg bg-card shadow-subtle p-5 mb-6 space-y-4">
-          <div className="grid grid-cols-3 gap-4">
+          <div className="rounded-md bg-secondary/40 p-3 flex items-start gap-2 text-ui-sm">
+            <Users className="w-4 h-4 mt-0.5 text-muted-foreground shrink-0" />
             <div>
-              <Label>Student</Label>
-              <Select value={form.student} onValueChange={v => setForm({ ...form, student: v })}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select student" />
-                </SelectTrigger>
-                <SelectContent>
-                  {assignedStudents.map(s => (
-                    <SelectItem key={s} value={s}>{s}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <div className="font-medium">This meeting will go to all your paired students</div>
+              <div className="text-[12px] text-muted-foreground mt-0.5">
+                {pairedStudents.length === 0
+                  ? "You don't have any paired students yet. Ask an admin to pair you with up to 3 students."
+                  : pairedStudents.join(" · ")}
+              </div>
             </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
             <div>
               <Label>Date</Label>
               <Input type="date" value={form.date} onChange={e => setForm({ ...form, date: e.target.value })} required />
@@ -121,9 +117,9 @@ const TeacherMeetings = () => {
             </div>
           </div>
           <div className="flex gap-2">
-            <Button type="submit" size="sm" disabled={loading}>
+            <Button type="submit" size="sm" disabled={loading || pairedStudents.length === 0}>
               {loading && <Loader2 className="w-3 h-3 animate-spin" />}
-              {loading ? "Creating..." : "Confirm & Create Meet"}
+              {loading ? "Creating..." : `Confirm & Create Meet${pairedStudents.length > 1 ? ` (×${pairedStudents.length})` : ""}`}
             </Button>
             <Button type="button" variant="ghost" size="sm" onClick={() => setShowForm(false)}>Cancel</Button>
           </div>
@@ -171,7 +167,7 @@ const TeacherMeetings = () => {
                     } else {
                       toast({ title: "Attendance marked", description: "Waiting for student to confirm attendance." });
                     }
-                    fetchMeetings();
+                    fetchAll();
                   }}>
                     <Check className="w-3 h-3" /> Mark Attended
                   </Button>

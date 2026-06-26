@@ -58,7 +58,7 @@ const AdminWWRobotics = () => {
   const [active, setActive] = useState<Snippet | null>(null);
   const [meetings, setMeetings] = useState<Meeting[]>([]);
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({ student: "", date: "", time: "" });
+  const [form, setForm] = useState({ date: "", time: "" });
   const [creating, setCreating] = useState(false);
 
   const load = async () => {
@@ -109,23 +109,28 @@ const AdminWWRobotics = () => {
 
   const scheduleMeeting = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.student || !form.date || !form.time) return;
+    if (!form.date || !form.time) return;
+    const recipients = approved.map(a => a.name);
+    if (recipients.length === 0) {
+      toast.error("No approved Westwood Robotics students to send the meeting to.");
+      return;
+    }
     setCreating(true);
     try {
       const startTime = `${form.date}T${form.time}:00`;
       const { data, error } = await supabase.functions.invoke("create-google-meet", {
         body: {
-          topic: `Westwood Robotics - ${form.student}`,
+          topic: `Westwood Robotics - Python session`,
           start_time: startTime,
           duration: 60,
-          student_name: form.student,
+          student_names: recipients,
           teacher_name: WW_ADMIN_NAME,
         },
       });
       if (error) throw error;
       if (!data.success) throw new Error(data.error);
-      toast.success(`Google Meet created for ${form.student}`);
-      setForm({ student: "", date: "", time: "" });
+      toast.success(`Google Meet sent to ${recipients.length} Westwood Robotics student${recipients.length === 1 ? "" : "s"}.`);
+      setForm({ date: "", time: "" });
       setShowForm(false);
       loadMeetings();
     } catch (err: any) {
@@ -259,20 +264,17 @@ const AdminWWRobotics = () => {
 
           {showForm && (
             <form onSubmit={scheduleMeeting} className="rounded-xl bg-card shadow-subtle p-5 mb-6 space-y-4 border border-orange-500/20">
-              <div className="grid grid-cols-3 gap-4">
-                <div>
-                  <Label>Student</Label>
-                  <Select value={form.student} onValueChange={v => setForm({ ...form, student: v })}>
-                    <SelectTrigger><SelectValue placeholder="Select student" /></SelectTrigger>
-                    <SelectContent>
-                      {approved.length === 0 ? (
-                        <div className="px-2 py-1.5 text-xs text-muted-foreground">No approved students yet.</div>
-                      ) : approved.map(a => (
-                        <SelectItem key={a.id} value={a.name}>{a.name}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+              <div className="rounded-md bg-orange-500/10 border border-orange-500/20 p-3 text-sm">
+                <div className="font-medium text-orange-700 dark:text-orange-400">
+                  This meeting will be sent to all approved Westwood Robotics students
                 </div>
+                <div className="text-xs text-muted-foreground mt-1">
+                  {approved.length === 0
+                    ? "No approved students yet — approve students in the Accept tab first."
+                    : `${approved.length} recipient${approved.length === 1 ? "" : "s"}: ${approved.map(a => a.name).join(", ")}`}
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label>Date</Label>
                   <Input type="date" value={form.date} onChange={e => setForm({ ...form, date: e.target.value })} required />
