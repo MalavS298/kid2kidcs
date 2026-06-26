@@ -79,6 +79,18 @@ serve(async (req) => {
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 
+    const rows = students.map((s) => ({
+      teacher_name: teacher_name || 'Teacher',
+      student_name: s,
+      scheduled_date: start_time.split('T')[0],
+      scheduled_time: start_time.split('T')[1]?.substring(0, 5) || '00:00',
+      zoom_meeting_id: gcalData.id,
+      zoom_join_url: meetLink,
+      zoom_start_url: meetLink,
+      zoom_password: null,
+      status: 'scheduled',
+    }));
+
     const dbResponse = await fetch(`${supabaseUrl}/rest/v1/meetings`, {
       method: 'POST',
       headers: {
@@ -87,17 +99,7 @@ serve(async (req) => {
         'Content-Type': 'application/json',
         'Prefer': 'return=representation',
       },
-      body: JSON.stringify({
-        teacher_name: teacher_name || 'Teacher',
-        student_name: student_name || 'Student',
-        scheduled_date: start_time.split('T')[0],
-        scheduled_time: start_time.split('T')[1]?.substring(0, 5) || '00:00',
-        zoom_meeting_id: gcalData.id,
-        zoom_join_url: meetLink,
-        zoom_start_url: meetLink,
-        zoom_password: null,
-        status: 'scheduled',
-      }),
+      body: JSON.stringify(rows),
     });
 
     const dbData = await dbResponse.json();
@@ -107,7 +109,9 @@ serve(async (req) => {
 
     return new Response(JSON.stringify({
       success: true,
+      meetings: dbData,
       meeting: dbData[0],
+      count: dbData.length,
       meet: {
         event_id: gcalData.id,
         join_url: meetLink,
