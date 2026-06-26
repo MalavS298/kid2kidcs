@@ -95,20 +95,18 @@ const TeacherMeetings = () => {
 
       {showForm && (
         <form onSubmit={handleSchedule} className="rounded-lg bg-card shadow-subtle p-5 mb-6 space-y-4">
-          <div className="grid grid-cols-3 gap-4">
+          <div className="rounded-md bg-secondary/40 p-3 flex items-start gap-2 text-ui-sm">
+            <Users className="w-4 h-4 mt-0.5 text-muted-foreground shrink-0" />
             <div>
-              <Label>Student</Label>
-              <Select value={form.student} onValueChange={v => setForm({ ...form, student: v })}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select student" />
-                </SelectTrigger>
-                <SelectContent>
-                  {assignedStudents.map(s => (
-                    <SelectItem key={s} value={s}>{s}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <div className="font-medium">This meeting will go to all your paired students</div>
+              <div className="text-[12px] text-muted-foreground mt-0.5">
+                {pairedStudents.length === 0
+                  ? "You don't have any paired students yet. Ask an admin to pair you with up to 3 students."
+                  : pairedStudents.join(" · ")}
+              </div>
             </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
             <div>
               <Label>Date</Label>
               <Input type="date" value={form.date} onChange={e => setForm({ ...form, date: e.target.value })} required />
@@ -119,9 +117,9 @@ const TeacherMeetings = () => {
             </div>
           </div>
           <div className="flex gap-2">
-            <Button type="submit" size="sm" disabled={loading}>
+            <Button type="submit" size="sm" disabled={loading || pairedStudents.length === 0}>
               {loading && <Loader2 className="w-3 h-3 animate-spin" />}
-              {loading ? "Creating..." : "Confirm & Create Meet"}
+              {loading ? "Creating..." : `Confirm & Create Meet${pairedStudents.length > 1 ? ` (×${pairedStudents.length})` : ""}`}
             </Button>
             <Button type="button" variant="ghost" size="sm" onClick={() => setShowForm(false)}>Cancel</Button>
           </div>
