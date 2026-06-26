@@ -57,8 +57,7 @@ const AdminWWRobotics = () => {
   const [snippets, setSnippets] = useState<Snippet[]>([]);
   const [active, setActive] = useState<Snippet | null>(null);
   const [meetings, setMeetings] = useState<Meeting[]>([]);
-  const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({ student: "", date: "", time: "" });
+  const [form, setForm] = useState({ date: "", time: "" });
   const [creating, setCreating] = useState(false);
 
   const load = async () => {
