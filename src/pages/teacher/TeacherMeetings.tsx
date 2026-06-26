@@ -167,7 +167,7 @@ const TeacherMeetings = () => {
                     } else {
                       toast({ title: "Attendance marked", description: "Waiting for student to confirm attendance." });
                     }
-                    fetchMeetings();
+                    fetchAll();
                   }}>
                     <Check className="w-3 h-3" /> Mark Attended
                   </Button>
