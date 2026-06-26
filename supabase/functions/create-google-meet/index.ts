@@ -13,7 +13,11 @@ serve(async (req) => {
   }
 
   try {
-    const { topic, start_time, duration, student_name, teacher_name } = await req.json();
+    const { topic, start_time, duration, student_name, student_names, teacher_name } = await req.json();
+
+    const students: string[] = Array.isArray(student_names) && student_names.length > 0
+      ? student_names
+      : [student_name || 'Student'];
 
     if (!topic || !start_time) {
       return new Response(JSON.stringify({ error: 'topic and start_time are required' }), {
