@@ -149,6 +149,30 @@ export type Database = {
         }
         Relationships: []
       }
+      pairings: {
+        Row: {
+          created_at: string
+          id: string
+          student_name: string
+          teacher_name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          student_name: string
+          teacher_name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          student_name?: string
+          teacher_name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       sandbox_snippets: {
         Row: {
           code: string
