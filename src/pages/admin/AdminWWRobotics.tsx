@@ -109,23 +109,28 @@ const AdminWWRobotics = () => {
 
   const scheduleMeeting = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.student || !form.date || !form.time) return;
+    if (!form.date || !form.time) return;
+    const recipients = approved.map(a => a.name);
+    if (recipients.length === 0) {
+      toast.error("No approved Westwood Robotics students to send the meeting to.");
+      return;
+    }
     setCreating(true);
     try {
       const startTime = `${form.date}T${form.time}:00`;
       const { data, error } = await supabase.functions.invoke("create-google-meet", {
         body: {
-          topic: `Westwood Robotics - ${form.student}`,
+          topic: `Westwood Robotics - Python session`,
           start_time: startTime,
           duration: 60,
-          student_name: form.student,
+          student_names: recipients,
           teacher_name: WW_ADMIN_NAME,
         },
       });
       if (error) throw error;
       if (!data.success) throw new Error(data.error);
-      toast.success(`Google Meet created for ${form.student}`);
-      setForm({ student: "", date: "", time: "" });
+      toast.success(`Google Meet sent to ${recipients.length} Westwood Robotics student${recipients.length === 1 ? "" : "s"}.`);
+      setForm({ date: "", time: "" });
       setShowForm(false);
       loadMeetings();
     } catch (err: any) {
