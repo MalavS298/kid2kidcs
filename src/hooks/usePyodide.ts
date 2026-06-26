@@ -54,14 +54,19 @@ export const usePyodide = () => {
     });
 
     try {
-      // Wrap input() to return empty string (can't do interactive input in browser)
+      // Wrap input() to use the browser's prompt() so students can type values
+      (pyodide as any).globals.set("_js_prompt", (msg: string) => {
+        const v = window.prompt(msg ?? "");
+        return v === null ? "" : v;
+      });
       await pyodide.runPythonAsync(`
 import builtins
-_original_input = builtins.input
-def _mock_input(prompt=""):
+def _browser_input(prompt=""):
     print(prompt, end="")
-    return ""
-builtins.input = _mock_input
+    val = _js_prompt(str(prompt))
+    print(val)
+    return val
+builtins.input = _browser_input
 `);
       const result = await pyodide.runPythonAsync(code);
       if (result !== undefined && result !== null) {

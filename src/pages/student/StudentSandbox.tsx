@@ -130,20 +130,44 @@ const StudentSandbox = () => {
     toast.success("Deleted.");
   };
 
-  // Tab key inserts spaces
+  // Tab inserts 4 spaces; Enter auto-indents (and adds an extra indent after lines ending in ':')
   const onKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    const ta = textareaRef.current;
+    if (!ta) return;
+    const start = ta.selectionStart;
+    const end = ta.selectionEnd;
+
     if (e.key === "Tab") {
       e.preventDefault();
-      const ta = textareaRef.current!;
-      const start = ta.selectionStart;
-      const end = ta.selectionEnd;
+      e.stopPropagation();
       const next = code.substring(0, start) + "    " + code.substring(end);
       setCode(next);
       requestAnimationFrame(() => {
+        ta.focus();
         ta.selectionStart = ta.selectionEnd = start + 4;
+      });
+      return;
+    }
+
+    if (e.key === "Enter") {
+      e.preventDefault();
+      const lineStart = code.lastIndexOf("\n", start - 1) + 1;
+      const currentLine = code.substring(lineStart, start);
+      const indentMatch = currentLine.match(/^[ \t]*/);
+      let indent = indentMatch ? indentMatch[0] : "";
+      if (currentLine.trimEnd().endsWith(":")) indent += "    ";
+      const insert = "\n" + indent;
+      const next = code.substring(0, start) + insert + code.substring(end);
+      setCode(next);
+      const pos = start + insert.length;
+      requestAnimationFrame(() => {
+        ta.focus();
+        ta.selectionStart = ta.selectionEnd = pos;
       });
     }
   };
+
+
 
   return (
     <div className="p-8 max-w-7xl mx-auto">
