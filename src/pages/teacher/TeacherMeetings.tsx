@@ -2,12 +2,9 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Calendar, Clock, Plus, User, Video, ExternalLink, Loader2, Check } from "lucide-react";
+import { Calendar, Clock, Plus, User, Video, ExternalLink, Loader2, Check, Users } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-
-const assignedStudents = ["Alex Chen", "Sam Lee"];
 
 type Meeting = {
   id: string;
@@ -26,55 +23,56 @@ type Meeting = {
 };
 
 const TeacherMeetings = () => {
+  const user = JSON.parse(localStorage.getItem("k2k_user") || '{"name":"Teacher"}');
+  const teacherName: string = user.name || "Teacher";
+
   const [meetings, setMeetings] = useState<Meeting[]>([]);
+  const [pairedStudents, setPairedStudents] = useState<string[]>([]);
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({ student: "", date: "", time: "" });
+  const [form, setForm] = useState({ date: "", time: "" });
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
   const { toast } = useToast();
 
-  const fetchMeetings = async () => {
-    const { data, error } = await supabase
-      .from("meetings")
-      .select("*")
-      .order("scheduled_date", { ascending: true });
-
-    if (error) {
-      console.error("Error fetching meetings:", error);
-    } else {
-      setMeetings(data || []);
-    }
+  const fetchAll = async () => {
+    const [{ data: meets }, { data: pairs }] = await Promise.all([
+      supabase.from("meetings").select("*").eq("teacher_name", teacherName).order("scheduled_date", { ascending: true }),
+      supabase.from("pairings").select("student_name").eq("teacher_name", teacherName),
+    ]);
+    setMeetings(meets || []);
+    setPairedStudents((pairs || []).map((p: any) => p.student_name));
     setFetching(false);
   };
 
-  useEffect(() => {
-    fetchMeetings();
-  }, []);
+  useEffect(() => { fetchAll(); }, []);
 
   const handleSchedule = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.student || !form.date || !form.time) return;
+    if (!form.date || !form.time || pairedStudents.length === 0) return;
 
     setLoading(true);
     try {
       const startTime = `${form.date}T${form.time}:00`;
       const { data, error } = await supabase.functions.invoke("create-google-meet", {
         body: {
-          topic: `Kid2Kid CS - ${form.student}`,
+          topic: `Kid2Kid CS - ${teacherName}'s group`,
           start_time: startTime,
           duration: 60,
-          student_name: form.student,
-          teacher_name: "Teacher",
+          student_names: pairedStudents,
+          teacher_name: teacherName,
         },
       });
 
       if (error) throw error;
       if (!data.success) throw new Error(data.error);
 
-      toast({ title: "Meeting scheduled!", description: `Google Meet created for ${form.student}` });
-      setForm({ student: "", date: "", time: "" });
+      toast({
+        title: "Meeting scheduled!",
+        description: `Google Meet sent to ${pairedStudents.length} student${pairedStudents.length === 1 ? "" : "s"}.`,
+      });
+      setForm({ date: "", time: "" });
       setShowForm(false);
-      fetchMeetings();
+      fetchAll();
     } catch (err: any) {
       console.error("Error scheduling:", err);
       toast({ title: "Error", description: err.message || "Failed to create meeting", variant: "destructive" });
