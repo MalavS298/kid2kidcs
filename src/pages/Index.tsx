@@ -57,9 +57,7 @@ const HeroSection = () =>
       animate={{ opacity: 1, y: 0 }}
       transition={{ ...transition, delay: 0.3 }}
       className="text-muted-foreground text-lg max-w-xl mx-auto mb-8">
-      
-        Join our 4-week computer science camp. High school volunteers teaching middle schoolers the fundamentals of Python in a fun, interactive environment.
-      
+      Join our 4-week computer science camp. High school volunteers teaching others the fundamentals of Python in a fun, interactive environment.
     </motion.p>
       <motion.div
       initial={{ opacity: 0, y: 12 }}
