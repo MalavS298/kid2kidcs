@@ -3,6 +3,7 @@ import { Users, Clock, Check, X, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { emailStudentApproved, emailVolunteerApproved } from "@/lib/notifyEmails";
 
 type Application = {
   id: string;
@@ -65,9 +66,14 @@ const AdminDashboard = () => {
   useEffect(() => { fetchApplications(); fetchMetrics(); }, []);
 
   const updateStatus = async (id: string, status: string) => {
+    const app = applications.find(a => a.id === id);
     const { error } = await supabase.from("applications").update({ status }).eq("id", id);
     if (error) { toast.error("Failed to update."); return; }
     toast.success(`Application ${status}.`);
+    if (status === "approved" && app) {
+      if (app.type === "student") emailStudentApproved(app.email, app.name);
+      else if (app.type === "volunteer") emailVolunteerApproved(app.email, app.name);
+    }
     fetchApplications();
     fetchMetrics();
   };

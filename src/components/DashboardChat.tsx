@@ -19,7 +19,8 @@ interface ChatMessage {
 interface DashboardChatProps {
   currentName: string;
   currentRole: "student" | "teacher";
-  partnerName: string;
+  /** For student: their teacher's name. For teacher: ignored (fetched from pairings). */
+  partnerName?: string;
 }
 
 const DashboardChat = ({ currentName, currentRole, partnerName }: DashboardChatProps) => {
@@ -27,23 +28,70 @@ const DashboardChat = ({ currentName, currentRole, partnerName }: DashboardChatP
   const [input, setInput] = useState("");
   const [open, setOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [teacherName, setTeacherName] = useState<string>(partnerName || "");
+  const [studentNames, setStudentNames] = useState<string[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  // Resolve circle (teacher + students) from pairings.
+  const loadCircle = async () => {
+    if (currentRole === "teacher") {
+      const { data } = await supabase
+        .from("pairings")
+        .select("student_name")
+        .eq("teacher_name", currentName);
+      setStudentNames((data || []).map((p: any) => p.student_name));
+      setTeacherName(currentName);
+    } else {
+      // student
+      const { data } = await supabase
+        .from("pairings")
+        .select("teacher_name")
+        .eq("student_name", currentName)
+        .maybeSingle();
+      setTeacherName((data as any)?.teacher_name || partnerName || "");
+      setStudentNames([currentName]);
+    }
+  };
+
   const fetchMessages = async () => {
+    if (!teacherName) return;
+    // Group conversation = teacher <-> all students
+    const participants = [teacherName, ...studentNames];
+    if (participants.length < 2) return;
     const { data } = await supabase
       .from("messages")
       .select("*")
-      .or(
-        `and(sender_name.eq.${currentName},receiver_name.eq.${partnerName}),and(sender_name.eq.${partnerName},receiver_name.eq.${currentName})`
-      )
+      .in("sender_name", participants)
+      .in("receiver_name", participants)
       .order("created_at", { ascending: true });
-    if (data) {
-      setMessages(data as ChatMessage[]);
-      const unread = data.filter(
-        (m: any) => m.receiver_name === currentName && !m.read
-      ).length;
-      setUnreadCount(unread);
+    if (!data) return;
+    // Dedupe broadcasts: teacher messages get inserted once per student.
+    // Key on (sender, content, created_at trimmed to second).
+    const seen = new Set<string>();
+    const filtered: ChatMessage[] = [];
+    for (const m of data as ChatMessage[]) {
+      // For the teacher's view, dedupe by sender+content+timestamp(sec).
+      if (currentRole === "teacher") {
+        const ts = new Date(m.created_at).toISOString().slice(0, 19);
+        const k = `${m.sender_name}|${m.content}|${ts}`;
+        if (seen.has(k)) continue;
+        seen.add(k);
+        filtered.push(m);
+      } else {
+        // Student only sees messages where they are sender or receiver.
+        if (m.sender_name === currentName || m.receiver_name === currentName) {
+          filtered.push(m);
+        }
+      }
     }
+    setMessages(filtered);
+    const unread = filtered.filter(
+      (m) =>
+        !m.read &&
+        ((currentRole === "teacher" && m.receiver_name === currentName) ||
+          (currentRole === "student" && m.receiver_name === currentName))
+    ).length;
+    setUnreadCount(unread);
   };
 
   const markAsRead = async () => {
@@ -51,10 +99,13 @@ const DashboardChat = ({ currentName, currentRole, partnerName }: DashboardChatP
       .from("messages")
       .update({ read: true })
       .eq("receiver_name", currentName)
-      .eq("sender_name", partnerName)
       .eq("read", false);
     setUnreadCount(0);
   };
+
+  useEffect(() => {
+    loadCircle();
+  }, [currentName, currentRole, partnerName]);
 
   useEffect(() => {
     fetchMessages();
@@ -67,7 +118,7 @@ const DashboardChat = ({ currentName, currentRole, partnerName }: DashboardChatP
       )
       .subscribe();
     return () => { supabase.removeChannel(channel); };
-  }, [currentName, partnerName]);
+  }, [teacherName, studentNames.join(",")]);
 
   useEffect(() => {
     if (open) {
@@ -82,17 +133,39 @@ const DashboardChat = ({ currentName, currentRole, partnerName }: DashboardChatP
     if (!input.trim()) return;
     const msg = input.trim();
     setInput("");
-    await supabase.from("messages").insert({
-      sender_name: currentName,
-      sender_role: currentRole,
-      receiver_name: partnerName,
-      content: msg,
-    });
+    if (currentRole === "teacher") {
+      // Broadcast to all paired students as one message.
+      if (studentNames.length === 0) return;
+      const rows = studentNames.map((s) => ({
+        sender_name: currentName,
+        sender_role: "teacher",
+        receiver_name: s,
+        content: msg,
+      }));
+      await supabase.from("messages").insert(rows);
+    } else {
+      if (!teacherName) return;
+      await supabase.from("messages").insert({
+        sender_name: currentName,
+        sender_role: "student",
+        receiver_name: teacherName,
+        content: msg,
+      });
+    }
   };
+
+  const headerLabel =
+    currentRole === "teacher"
+      ? studentNames.length > 0
+        ? `Group chat · ${studentNames.join(", ")}`
+        : "Your students"
+      : `Chat with ${teacherName || "your volunteer"}`;
+
+  const hasPartner =
+    currentRole === "teacher" ? studentNames.length > 0 : !!teacherName;
 
   return (
     <>
-      {/* Floating button */}
       <div className="fixed bottom-6 right-6 z-50">
         <button
           onClick={() => setOpen(!open)}
@@ -107,7 +180,6 @@ const DashboardChat = ({ currentName, currentRole, partnerName }: DashboardChatP
         </button>
       </div>
 
-      {/* Chat panel */}
       <AnimatePresence>
         {open && (
           <motion.div
@@ -117,20 +189,18 @@ const DashboardChat = ({ currentName, currentRole, partnerName }: DashboardChatP
             transition={{ duration: 0.2 }}
             className="fixed bottom-24 right-6 z-50 w-[380px] max-h-[500px] rounded-2xl border border-border bg-card shadow-xl flex flex-col overflow-hidden"
           >
-            {/* Header */}
             <div className="px-4 py-3 border-b border-border bg-primary/5 flex items-center gap-2">
               <MessageCircle className="w-4 h-4 text-primary" />
-              <span className="font-medium text-sm text-foreground">
-                Chat with {partnerName || "your partner"}
-              </span>
+              <span className="font-medium text-sm text-foreground truncate">{headerLabel}</span>
             </div>
 
-            {!partnerName ? (
+            {!hasPartner ? (
               <div className="flex-1 flex items-center justify-center text-center px-6 py-12">
                 <div>
                   <MessageCircle className="w-10 h-10 text-muted-foreground/20 mx-auto mb-3" />
                   <p className="text-sm text-muted-foreground">
-                    You haven't been paired yet. Once paired, you'll be able to message your {currentRole === "student" ? "teacher" : "student"} here.
+                    You haven't been paired yet. Once paired, you'll be able to message your{" "}
+                    {currentRole === "student" ? "volunteer" : "students"} here.
                   </p>
                 </div>
               </div>
@@ -140,7 +210,7 @@ const DashboardChat = ({ currentName, currentRole, partnerName }: DashboardChatP
                   {messages.length === 0 ? (
                     <div className="h-full flex items-center justify-center py-12">
                       <p className="text-sm text-muted-foreground text-center">
-                        No messages yet. Say hello to {partnerName}! 👋
+                        No messages yet. Say hello! 👋
                       </p>
                     </div>
                   ) : (
@@ -154,6 +224,11 @@ const DashboardChat = ({ currentName, currentRole, partnerName }: DashboardChatP
                               ? "bg-primary text-primary-foreground rounded-br-sm"
                               : "bg-secondary text-foreground rounded-bl-sm"
                           )}>
+                            {!isMine && currentRole === "teacher" && (
+                              <p className="text-[10px] font-medium text-muted-foreground mb-0.5">
+                                {msg.sender_name}
+                              </p>
+                            )}
                             <p>{msg.content}</p>
                             <p className={cn(
                               "text-[10px] mt-1",

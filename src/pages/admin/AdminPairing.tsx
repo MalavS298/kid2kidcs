@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Users, Link as LinkIcon, Loader2, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { emailStudentPaired, emailVolunteerPaired } from "@/lib/notifyEmails";
 
 const WW_PROGRAM = "Westwood Robotics - Python";
 const MAX_STUDENTS_PER_TEACHER = 3;
@@ -69,6 +70,19 @@ const AdminPairing = () => {
       return;
     }
     toast.success(`Paired ${selectedTeacher} with ${selectedStudent}`);
+
+    // Send pairing emails
+    const teacherApp = apps.find(a => a.name === selectedTeacher && a.type === "volunteer");
+    const studentApp = apps.find(a => a.name === selectedStudent && a.type === "student");
+    if (studentApp) emailStudentPaired(studentApp.email, studentApp.name, selectedTeacher);
+    if (teacherApp) {
+      const allStudents = [
+        ...pairings.filter(p => p.teacher_name === selectedTeacher).map(p => p.student_name),
+        selectedStudent,
+      ];
+      emailVolunteerPaired(teacherApp.email, teacherApp.name, allStudents);
+    }
+
     setSelectedTeacher(null);
     setSelectedStudent(null);
     load();
