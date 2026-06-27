@@ -123,10 +123,11 @@ const AboutSection = () =>
 
 
 const stats = [
-{ value: "500+", label: "Students Taught" },
-{ value: "2,000+", label: "Volunteer Hours" },
-{ value: "50k+", label: "Lines of Code" },
-{ value: "12", label: "Partner Schools" }];
+{ value: "20", label: "Students in Pilot Cohort" },
+{ value: "1", label: "Partner Program" },
+{ value: "2026", label: "Year Founded" },
+{ value: "∞", label: "Ambition to Grow" }];
+
 
 
 const ImpactSection = () =>
@@ -144,7 +145,7 @@ const ImpactSection = () =>
               Our Impact in Numbers
             </motion.h2>
             <p className="text-primary-foreground/70 max-w-md mb-6">
-              Since starting Kid2Kid CS, we've seen incredible growth in both our students' coding abilities and our volunteers' leadership skills.
+              We're just getting started. Our mission is to spread coding and robotics to everyone — one cohort at a time.
             </p>
             <WestwoodJoinDialog>
               <Button variant="secondary" className="rounded-full">
@@ -173,10 +174,11 @@ const ImpactSection = () =>
 
 
 const timeline = [
-{ year: "2022", title: "The Idea", desc: "Founded by two high school students" },
-{ year: "2023", title: "First Cohort", desc: "Launched pilot program with 20 students" },
-{ year: "2024", title: "Going Digital", desc: "Built our custom learning platform" },
-{ year: "2025", title: "Expansion", desc: "Reaching students nationwide" }];
+{ year: "Feb 2026", title: "The Idea", desc: "We wanted to spread robotics and coding to all" },
+{ year: "Feb 2026", title: "Building the Platform", desc: "Started coding this website from scratch" },
+{ year: "Summer 2026", title: "First Cohort", desc: "Launched our pilot program with 20 students" },
+{ year: "Beyond", title: "Expansion", desc: "Growing to reach more students everywhere" }];
+
 
 
 const HistorySection = () =>
