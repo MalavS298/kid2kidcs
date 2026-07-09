@@ -64,9 +64,12 @@ const StudentApplication = () => {
 
   const StepIndicator = () => (
     <div className="flex items-center gap-0 mb-8">
-      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${step >= 1 ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground"}`}>1</div>
-      <div className={`flex-1 h-0.5 ${step >= 2 ? "bg-primary" : "bg-border"}`} />
-      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${step >= 2 ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground"}`}>2</div>
+      {[1, 2, 3].map((n, i) => (
+        <div key={n} className="flex items-center flex-1 last:flex-none">
+          <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${step >= n ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground"}`}>{n}</div>
+          {i < 2 && <div className={`flex-1 h-0.5 mx-1 ${step > n ? "bg-primary" : "bg-border"}`} />}
+        </div>
+      ))}
     </div>
   );
 
