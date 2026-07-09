@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Code2, GraduationCap } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import AvailabilityPicker from "@/components/AvailabilityPicker";
 
 const StudentApplication = () => {
   const [step, setStep] = useState(1);
