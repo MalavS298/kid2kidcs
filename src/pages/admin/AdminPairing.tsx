@@ -137,7 +137,7 @@ const AdminPairing = () => {
                 >
                   <div className="font-medium">{t.name}</div>
                   <div className="text-[12px] text-muted-foreground">
-                    {teacherCount(t.name)}/{MAX_STUDENTS_PER_TEACHER} students · {t.email}
+                    {teacherCount(t.name)}/{MAX_STUDENTS_PER_TEACHER} students · {(t.availability?.length || 0)} slots · {t.email}
                   </div>
                 </button>
               ))}
