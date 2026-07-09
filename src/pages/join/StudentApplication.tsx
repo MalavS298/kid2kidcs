@@ -13,6 +13,7 @@ const StudentApplication = () => {
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
   const [email, setEmail] = useState("");
+  const [availability, setAvailability] = useState<string[]>([]);
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
