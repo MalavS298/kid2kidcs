@@ -48,17 +48,27 @@ const WWRoboticsApplication = () => {
       });
       if (error) throw error;
 
-      const parentInfo = `Parent: ${parentName} | Email: ${parentEmail} | Phone: ${parentPhone}`;
-      const { error: appError } = await supabase.from("applications").insert({
+      const { data: appRow, error: appError } = await supabase.from("applications").insert({
         type: "student",
         name: name.trim(),
         age: parseInt(age),
         email: email.trim(),
         school: WW_PROGRAM,
-        why_join: parentInfo,
+        why_join: "Westwood Robotics enrollment (parent contact stored securely)",
         user_id: data.user?.id,
-      });
+      }).select("id").single();
       if (appError) throw appError;
+
+      // Send parent PII to a locked table via edge function (never exposed to public reads).
+      await supabase.functions.invoke("store-parent-contact", {
+        body: {
+          application_id: appRow?.id,
+          student_email: email.trim(),
+          parent_name: parentName.trim(),
+          parent_email: parentEmail.trim(),
+          parent_phone: parentPhone.trim(),
+        },
+      });
 
       localStorage.setItem(
         "k2k_user",
