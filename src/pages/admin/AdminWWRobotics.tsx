@@ -101,9 +101,13 @@ const AdminWWRobotics = () => {
   useEffect(() => { if (tab === "meetings") loadMeetings(); }, [tab]);
 
   const updateStatus = async (id: string, status: string) => {
+    const app = apps.find(a => a.id === id);
     const { error } = await supabase.from("applications").update({ status }).eq("id", id);
     if (error) return toast.error("Failed to update.");
     toast.success(`Application ${status}.`);
+    if (status === "approved" && app?.email) {
+      emailWestwoodStudentApproved(app.email, app.name);
+    }
     load();
   };
 
