@@ -47,8 +47,9 @@ const StudentApplication = () => {
         name: name.trim(),
         age: parseInt(age),
         email: email.trim(),
+        availability,
         user_id: data.user?.id,
-      });
+      } as any);
       if (appError) throw appError;
 
       localStorage.setItem("k2k_user", JSON.stringify({ email, role: "student", name, pending: true }));
