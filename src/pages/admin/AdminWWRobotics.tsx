@@ -9,6 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
+import { emailWestwoodStudentApproved } from "@/lib/notifyEmails";
 
 const WW_ADMIN_NAME = "Westwood Admin";
 
