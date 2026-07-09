@@ -63,8 +63,9 @@ const VolunteerApplication = () => {
         why_join: whyJoin.trim(),
         acknowledge_true_info: ackTrue,
         acknowledge_commitment: ackCommit,
+        availability,
         user_id: data.user?.id,
-      });
+      } as any);
       if (appError) throw appError;
 
       localStorage.setItem("k2k_user", JSON.stringify({ email, role: "teacher", name, pending: true }));
