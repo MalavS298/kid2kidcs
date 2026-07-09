@@ -8,3 +8,5 @@ verify_jwt = false
 
 [functions.send-notification-email]
 verify_jwt = false
+[functions.store-parent-contact]
+verify_jwt = false
