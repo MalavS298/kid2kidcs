@@ -19,6 +19,7 @@ export type Database = {
           acknowledge_commitment: boolean
           acknowledge_true_info: boolean
           age: number
+          availability: string[]
           created_at: string
           email: string
           id: string
@@ -35,6 +36,7 @@ export type Database = {
           acknowledge_commitment?: boolean
           acknowledge_true_info?: boolean
           age: number
+          availability?: string[]
           created_at?: string
           email: string
           id?: string
@@ -51,6 +53,7 @@ export type Database = {
           acknowledge_commitment?: boolean
           acknowledge_true_info?: boolean
           age?: number
+          availability?: string[]
           created_at?: string
           email?: string
           id?: string
