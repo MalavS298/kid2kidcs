@@ -17,6 +17,7 @@ type Application = {
   school: string | null;
   prior_experience: string | null;
   status: string;
+  availability: string[] | null;
 };
 
 type Pairing = {
