@@ -113,6 +113,23 @@ const StudentApplication = () => {
                 <Button type="submit" className="w-full h-11 rounded-lg text-base">Continue</Button>
               </form>
             </>
+          ) : step === 2 ? (
+            <>
+              <h2 className="text-2xl font-bold mb-1">Your Availability</h2>
+              <p className="text-sm text-muted-foreground mb-6">We use this to pair you with a volunteer whose schedule overlaps yours.</p>
+              <AvailabilityPicker value={availability} onChange={setAvailability} />
+              <div className="flex gap-3 mt-6">
+                <Button type="button" variant="outline" className="flex-1" onClick={() => setStep(1)}>← Back</Button>
+                <Button
+                  type="button"
+                  className="flex-1"
+                  disabled={availability.length === 0}
+                  onClick={() => setStep(3)}
+                >
+                  Continue
+                </Button>
+              </div>
+            </>
           ) : (
             <>
               <h2 className="text-2xl font-bold mb-1">Create Your Account</h2>
@@ -129,8 +146,8 @@ const StudentApplication = () => {
                 <Button type="submit" className="w-full h-11 rounded-lg text-base" disabled={loading}>
                   {loading ? "Submitting…" : "Submit Application"}
                 </Button>
-                <button type="button" onClick={() => setStep(1)} className="w-full text-sm text-muted-foreground hover:text-foreground transition-colors">
-                  ← Back to form
+                <button type="button" onClick={() => setStep(2)} className="w-full text-sm text-muted-foreground hover:text-foreground transition-colors">
+                  ← Back to availability
                 </button>
               </form>
             </>
