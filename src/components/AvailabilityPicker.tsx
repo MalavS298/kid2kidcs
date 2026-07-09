@@ -16,7 +16,7 @@ const AvailabilityPicker = ({ value, onChange, accent = "primary" }: Props) => {
     onChange(value.includes(key) ? value.filter(k => k !== key) : [...value, key]);
   };
 
-  const on = `bg-${accent} text-${accent}-foreground border-${accent}`;
+  const on = "bg-primary text-primary-foreground border-primary";
   const off = "bg-secondary/50 hover:bg-secondary border-transparent text-muted-foreground";
 
   return (
