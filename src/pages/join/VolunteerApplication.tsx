@@ -8,6 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Code2, Heart } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import AvailabilityPicker from "@/components/AvailabilityPicker";
 
 const VolunteerApplication = () => {
   const [step, setStep] = useState(1);
@@ -19,6 +20,7 @@ const VolunteerApplication = () => {
   const [whyJoin, setWhyJoin] = useState("");
   const [ackTrue, setAckTrue] = useState(false);
   const [ackCommit, setAckCommit] = useState(false);
+  const [availability, setAvailability] = useState<string[]>([]);
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
