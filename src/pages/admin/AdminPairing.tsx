@@ -56,7 +56,14 @@ const AdminPairing = () => {
 
   // Hide teachers already at 3 students; hide students already paired (1 pairing each).
   const availableTeachers = allTeachers.filter(t => teacherCount(t.name) < MAX_STUDENTS_PER_TEACHER);
-  const availableStudents = allStudents.filter(s => !studentPaired(s.name));
+  const selectedTeacherApp = availableTeachers.find(t => t.name === selectedTeacher);
+  const teacherSlots = new Set(selectedTeacherApp?.availability || []);
+  const overlapCount = (s: Application) =>
+    (s.availability || []).filter(slot => teacherSlots.has(slot)).length;
+
+  const availableStudents = allStudents
+    .filter(s => !studentPaired(s.name))
+    .sort((a, b) => overlapCount(b) - overlapCount(a));
 
   const handlePair = async () => {
     if (!selectedTeacher || !selectedStudent) return;
