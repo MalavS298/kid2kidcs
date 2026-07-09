@@ -62,4 +62,14 @@ export const emailVolunteerPaired = (email: string, teacherName: string, student
     `<p>Hi ${teacherName},</p>
      <p>You've been paired with <strong>${studentNames.join(", ")}</strong>.</p>
      <p>Hop into the Kid2Kid CS website to start a group chat and figure out a common time to meet.</p>`
+   );
+
+export const emailWestwoodStudentApproved = (email: string, name: string) =>
+  send(
+    email,
+    "You're in — Westwood Robotics Python camp approved 🎉",
+    `<p>Hi ${name},</p>
+     <p>You have been <strong>approved</strong> for the Westwood Robotics Python camp with Kid2Kid CS!</p>
+     <p>Head to your dashboard to join classes — meetings scheduled by your admin will show up there automatically.</p>
+     <p><a href="https://kid2kidcs.lovable.app/login" style="display:inline-block;background:#F97316;color:#ffffff;padding:10px 18px;border-radius:8px;text-decoration:none;font-weight:600;">Go to your dashboard</a></p>`
   );
