@@ -8,6 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Code2, Heart } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import AvailabilityPicker from "@/components/AvailabilityPicker";
 
 const VolunteerApplication = () => {
   const [step, setStep] = useState(1);
@@ -19,6 +20,7 @@ const VolunteerApplication = () => {
   const [whyJoin, setWhyJoin] = useState("");
   const [ackTrue, setAckTrue] = useState(false);
   const [ackCommit, setAckCommit] = useState(false);
+  const [availability, setAvailability] = useState<string[]>([]);
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -61,8 +63,9 @@ const VolunteerApplication = () => {
         why_join: whyJoin.trim(),
         acknowledge_true_info: ackTrue,
         acknowledge_commitment: ackCommit,
+        availability,
         user_id: data.user?.id,
-      });
+      } as any);
       if (appError) throw appError;
 
       localStorage.setItem("k2k_user", JSON.stringify({ email, role: "teacher", name, pending: true }));
@@ -77,9 +80,12 @@ const VolunteerApplication = () => {
 
   const StepIndicator = () => (
     <div className="flex items-center gap-0 mb-8">
-      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${step >= 1 ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground"}`}>1</div>
-      <div className={`flex-1 h-0.5 ${step >= 2 ? "bg-primary" : "bg-border"}`} />
-      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${step >= 2 ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground"}`}>2</div>
+      {[1, 2, 3].map((n, i) => (
+        <div key={n} className="flex items-center flex-1 last:flex-none">
+          <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${step >= n ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground"}`}>{n}</div>
+          {i < 2 && <div className={`flex-1 h-0.5 mx-1 ${step > n ? "bg-primary" : "bg-border"}`} />}
+        </div>
+      ))}
     </div>
   );
 
@@ -151,6 +157,23 @@ const VolunteerApplication = () => {
                 <Button type="submit" className="w-full h-11 rounded-lg text-base">Continue</Button>
               </form>
             </>
+          ) : step === 2 ? (
+            <>
+              <h2 className="text-2xl font-bold mb-1">Your Availability</h2>
+              <p className="text-sm text-muted-foreground mb-6">We use this to pair you with students whose schedule overlaps yours.</p>
+              <AvailabilityPicker value={availability} onChange={setAvailability} />
+              <div className="flex gap-3 mt-6">
+                <Button type="button" variant="outline" className="flex-1" onClick={() => setStep(1)}>← Back</Button>
+                <Button
+                  type="button"
+                  className="flex-1"
+                  disabled={availability.length === 0}
+                  onClick={() => setStep(3)}
+                >
+                  Continue
+                </Button>
+              </div>
+            </>
           ) : (
             <>
               <h2 className="text-2xl font-bold mb-1">Create Your Account</h2>
@@ -167,8 +190,8 @@ const VolunteerApplication = () => {
                 <Button type="submit" className="w-full h-11 rounded-lg text-base" disabled={loading}>
                   {loading ? "Submitting…" : "Submit Application"}
                 </Button>
-                <button type="button" onClick={() => setStep(1)} className="w-full text-sm text-muted-foreground hover:text-foreground transition-colors">
-                  ← Back to form
+                <button type="button" onClick={() => setStep(2)} className="w-full text-sm text-muted-foreground hover:text-foreground transition-colors">
+                  ← Back to availability
                 </button>
               </form>
             </>

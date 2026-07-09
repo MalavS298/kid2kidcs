@@ -17,6 +17,7 @@ type Application = {
   school: string | null;
   prior_experience: string | null;
   status: string;
+  availability: string[] | null;
 };
 
 type Pairing = {
@@ -55,7 +56,14 @@ const AdminPairing = () => {
 
   // Hide teachers already at 3 students; hide students already paired (1 pairing each).
   const availableTeachers = allTeachers.filter(t => teacherCount(t.name) < MAX_STUDENTS_PER_TEACHER);
-  const availableStudents = allStudents.filter(s => !studentPaired(s.name));
+  const selectedTeacherApp = availableTeachers.find(t => t.name === selectedTeacher);
+  const teacherSlots = new Set(selectedTeacherApp?.availability || []);
+  const overlapCount = (s: Application) =>
+    (s.availability || []).filter(slot => teacherSlots.has(slot)).length;
+
+  const availableStudents = allStudents
+    .filter(s => !studentPaired(s.name))
+    .sort((a, b) => overlapCount(b) - overlapCount(a));
 
   const handlePair = async () => {
     if (!selectedTeacher || !selectedStudent) return;
@@ -129,7 +137,7 @@ const AdminPairing = () => {
                 >
                   <div className="font-medium">{t.name}</div>
                   <div className="text-[12px] text-muted-foreground">
-                    {teacherCount(t.name)}/{MAX_STUDENTS_PER_TEACHER} students · {t.email}
+                    {teacherCount(t.name)}/{MAX_STUDENTS_PER_TEACHER} students · {(t.availability?.length || 0)} slots · {t.email}
                   </div>
                 </button>
               ))}
@@ -142,18 +150,31 @@ const AdminPairing = () => {
             <div className="space-y-2 max-h-80 overflow-auto">
               {availableStudents.length === 0 ? (
                 <p className="text-xs text-muted-foreground p-3">All approved students are already paired.</p>
-              ) : availableStudents.map(s => (
-                <button
-                  key={s.id}
-                  onClick={() => setSelectedStudent(s.name)}
-                  className={`w-full text-left p-3 rounded-md text-ui-sm transition-colors ${
-                    selectedStudent === s.name ? "bg-primary/10 ring-1 ring-primary" : "bg-secondary/50 hover:bg-secondary"
-                  }`}
-                >
-                  <div className="font-medium">{s.name}</div>
-                  <div className="text-[12px] text-muted-foreground">Age {s.age} · {s.email}</div>
-                </button>
-              ))}
+              ) : availableStudents.map(s => {
+                const overlap = overlapCount(s);
+                const total = s.availability?.length || 0;
+                return (
+                  <button
+                    key={s.id}
+                    onClick={() => setSelectedStudent(s.name)}
+                    className={`w-full text-left p-3 rounded-md text-ui-sm transition-colors ${
+                      selectedStudent === s.name ? "bg-primary/10 ring-1 ring-primary" : "bg-secondary/50 hover:bg-secondary"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="font-medium">{s.name}</div>
+                      {selectedTeacher && (
+                        <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-mono ${
+                          overlap > 0 ? "bg-green-500/15 text-green-700 dark:text-green-400" : "bg-muted text-muted-foreground"
+                        }`}>
+                          {overlap} overlap
+                        </span>
+                      )}
+                    </div>
+                    <div className="text-[12px] text-muted-foreground">Age {s.age} · {total} slots · {s.email}</div>
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>

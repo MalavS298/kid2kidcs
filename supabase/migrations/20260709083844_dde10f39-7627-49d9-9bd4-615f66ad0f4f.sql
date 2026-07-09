@@ -1,0 +1,1 @@
+ALTER TABLE public.applications ADD COLUMN IF NOT EXISTS availability text[] NOT NULL DEFAULT '{}';
