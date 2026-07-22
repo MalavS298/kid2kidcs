@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import wwLogo from "@/assets/ww-robotics-logo.png.asset.json";
+import { emailAdminNewSignup } from "@/lib/notifyEmails";
 
 export const WW_PROGRAM = "Westwood Robotics - Python";
 
@@ -68,6 +69,11 @@ const WWRoboticsApplication = () => {
           parent_email: parentEmail.trim(),
           parent_phone: parentPhone.trim(),
         },
+      });
+
+      emailAdminNewSignup("Westwood Robotics Student", {
+        Name: name, Age: age, Email: email,
+        Parent: parentName, "Parent Email": parentEmail, "Parent Phone": parentPhone,
       });
 
       localStorage.setItem(

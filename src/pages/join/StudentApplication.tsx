@@ -7,6 +7,7 @@ import { Code2, GraduationCap } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import AvailabilityPicker from "@/components/AvailabilityPicker";
+import { emailAdminNewSignup } from "@/lib/notifyEmails";
 
 const StudentApplication = () => {
   const [step, setStep] = useState(1);
@@ -51,6 +52,8 @@ const StudentApplication = () => {
         user_id: data.user?.id,
       } as any);
       if (appError) throw appError;
+
+      emailAdminNewSignup("Student", { Name: name, Age: age, Email: email, Availability: availability.join(", ") });
 
       localStorage.setItem("k2k_user", JSON.stringify({ email, role: "student", name, pending: true }));
       toast.success("Application submitted!");
