@@ -73,3 +73,27 @@ export const emailWestwoodStudentApproved = (email: string, name: string) =>
      <p>Head to your dashboard to join classes — meetings scheduled by your admin will show up there automatically.</p>
      <p><a href="https://kid2kidcs.lovable.app/login" style="display:inline-block;background:#F97316;color:#ffffff;padding:10px 18px;border-radius:8px;text-decoration:none;font-weight:600;">Go to your dashboard</a></p>`
   );
+
+const ADMIN_INBOX = "slingshotftc@gmail.com";
+
+export const emailAdminNewSignup = (
+  kind: "Student" | "Volunteer" | "Westwood Robotics Student",
+  details: Record<string, string | number | undefined>
+) => {
+  const rows = Object.entries(details)
+    .filter(([, v]) => v !== undefined && v !== "")
+    .map(
+      ([k, v]) =>
+        `<tr><td style="padding:6px 12px;color:#64748b;font-size:13px;">${k}</td><td style="padding:6px 12px;font-weight:500;">${v}</td></tr>`
+    )
+    .join("");
+  return send(
+    ADMIN_INBOX,
+    `New ${kind} signup — Kid2Kid CS`,
+    `<p>A new <strong>${kind}</strong> just signed up on Kid2Kid CS.</p>
+     <table style="width:100%;border-collapse:collapse;margin-top:12px;border:1px solid #e5e7eb;border-radius:8px;overflow:hidden;">
+       ${rows}
+     </table>
+     <p style="margin-top:16px;">Review it in the admin dashboard.</p>`
+  );
+};
