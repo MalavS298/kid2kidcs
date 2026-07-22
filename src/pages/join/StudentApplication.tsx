@@ -53,6 +53,8 @@ const StudentApplication = () => {
       } as any);
       if (appError) throw appError;
 
+      emailAdminNewSignup("Student", { Name: name, Age: age, Email: email, Availability: availability.join(", ") });
+
       localStorage.setItem("k2k_user", JSON.stringify({ email, role: "student", name, pending: true }));
       toast.success("Application submitted!");
       navigate("/student");
