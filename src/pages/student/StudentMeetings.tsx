@@ -48,7 +48,8 @@ const StudentMeetings = () => {
   return (
     <div className="p-8 max-w-3xl">
       <h1 className="text-section font-medium mb-2">Meetings</h1>
-      <p className="text-muted-foreground mb-8">Your scheduled sessions with your teacher.</p>
+      <p className="text-muted-foreground mb-1">Your scheduled sessions with your teacher.</p>
+      <p className="text-ui-sm text-muted-foreground mb-8">You meet your volunteer <strong>once a week</strong> — one session per week for the 4 weeks of camp.</p>
 
       {meetings.length === 0 ? (
         <div className="text-center py-12 text-muted-foreground">
