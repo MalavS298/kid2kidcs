@@ -4,7 +4,6 @@ import { Code2, BookOpen, Users, Monitor, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import HomeChatbot from "@/components/HomeChatbot";
-import WestwoodJoinDialog from "@/components/WestwoodJoinDialog";
 
 
 const transition = { type: "tween" as const, ease: [0.2, 0, 0, 1] as [number, number, number, number], duration: 0.5 };
@@ -65,11 +64,11 @@ const HeroSection = () =>
       transition={{ ...transition, delay: 0.4 }}
       className="flex items-center justify-center gap-3">
       
-        <WestwoodJoinDialog>
+        <Link to="/join">
           <Button variant="hero" size="lg" className="rounded-full px-8">
             Join Now <ArrowRight className="w-4 h-4" />
           </Button>
-        </WestwoodJoinDialog>
+        </Link>
       </motion.div>
     </div>
   </section>;
@@ -147,11 +146,11 @@ const ImpactSection = () =>
             <p className="text-primary-foreground/70 max-w-md mb-6">
               We're just getting started. Our mission is to spread coding and robotics to everyone — one cohort at a time.
             </p>
-            <WestwoodJoinDialog>
+            <Link to="/join">
               <Button variant="secondary" className="rounded-full">
                 Join the Movement
               </Button>
-            </WestwoodJoinDialog>
+            </Link>
           </div>
           <div className="grid grid-cols-2 gap-4 flex-1">
             {stats.map((s, i) =>
