@@ -34,7 +34,8 @@ export const emailStudentApproved = (email: string, name: string) =>
     "Your Kid2Kid CS account has been approved 🎉",
     `<p>Hi ${name},</p>
      <p>Your account has been <strong>approved</strong> by Kid2Kid CS!</p>
-     <p>You'll be paired up shortly with the next available volunteer. We'll email you again as soon as you're matched.</p>`
+     <p>We're now matching you with a volunteer whose availability overlaps yours. You'll get one dedicated volunteer, and you'll meet once a week for the 4 weeks of camp.</p>
+     <p>We'll email you again the moment you're matched.</p>`
   );
 
 export const emailVolunteerApproved = (email: string, name: string) =>
@@ -43,7 +44,8 @@ export const emailVolunteerApproved = (email: string, name: string) =>
     "Your Kid2Kid CS volunteer account has been approved 🎉",
     `<p>Hi ${name},</p>
      <p>Your volunteer account has been <strong>approved</strong> by Kid2Kid CS!</p>
-     <p>You'll be paired up shortly with the next available students. We'll email you again as soon as you're matched.</p>`
+     <p>We're now matching you with a student whose availability overlaps yours. You'll teach one student, meeting once a week for the 4 weeks of camp.</p>
+     <p>We'll email you again the moment you're matched.</p>`
   );
 
 const CTA = (label: string, href: string) =>
