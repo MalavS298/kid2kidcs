@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { emailStudentApproved, emailVolunteerApproved } from "@/lib/notifyEmails";
+import { autoPair } from "@/lib/autoPair";
 
 type Application = {
   id: string;
@@ -73,6 +74,12 @@ const AdminDashboard = () => {
     if (status === "approved" && app) {
       if (app.type === "student") emailStudentApproved(app.email, app.name);
       else if (app.type === "volunteer") emailVolunteerApproved(app.email, app.name);
+
+      if (app.type === "student" || app.type === "volunteer") {
+        const match = await autoPair(app);
+        if (match) toast.success(`Auto-paired ${app.name} with ${match}.`);
+        else toast.info("No matching partner available yet — they'll be paired when one is approved.");
+      }
     }
     fetchApplications();
     fetchMetrics();

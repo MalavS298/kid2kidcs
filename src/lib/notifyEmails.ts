@@ -34,7 +34,8 @@ export const emailStudentApproved = (email: string, name: string) =>
     "Your Kid2Kid CS account has been approved 🎉",
     `<p>Hi ${name},</p>
      <p>Your account has been <strong>approved</strong> by Kid2Kid CS!</p>
-     <p>You'll be paired up shortly with the next available volunteer. We'll email you again as soon as you're matched.</p>`
+     <p>We're now matching you with a volunteer whose availability overlaps yours. You'll get one dedicated volunteer, and you'll meet once a week for the 4 weeks of camp.</p>
+     <p>We'll email you again the moment you're matched.</p>`
   );
 
 export const emailVolunteerApproved = (email: string, name: string) =>
@@ -43,25 +44,51 @@ export const emailVolunteerApproved = (email: string, name: string) =>
     "Your Kid2Kid CS volunteer account has been approved 🎉",
     `<p>Hi ${name},</p>
      <p>Your volunteer account has been <strong>approved</strong> by Kid2Kid CS!</p>
-     <p>You'll be paired up shortly with the next available students. We'll email you again as soon as you're matched.</p>`
+     <p>We're now matching you with a student whose availability overlaps yours. You'll teach one student, meeting once a week for the 4 weeks of camp.</p>
+     <p>We'll email you again the moment you're matched.</p>`
   );
 
-export const emailStudentPaired = (email: string, studentName: string, teacherName: string) =>
+const CTA = (label: string, href: string) =>
+  `<p><a href="${href}" style="display:inline-block;background:#4F46E5;color:#ffffff;padding:10px 18px;border-radius:8px;text-decoration:none;font-weight:600;">${label}</a></p>`;
+
+const WEEKLY_NOTE = `<p style="background:#F1F5F9;border-radius:8px;padding:12px 14px;font-size:14px;">
+  <strong>How often you meet:</strong> one session per week for the 4 weeks of camp. Pick a weekly time that works for both of you and stick with it.
+</p>`;
+
+export const emailStudentPaired = (
+  email: string,
+  studentName: string,
+  teacherName: string,
+  teacherEmail?: string
+) =>
   send(
     email,
     "You've been paired with your Kid2Kid CS volunteer!",
     `<p>Hi ${studentName},</p>
-     <p>Great news — you've been paired with <strong>${teacherName}</strong>!</p>
-     <p>You can now start chatting on the Kid2Kid CS website to figure out a time that works for both of you.</p>`
+     <p>Great news — you've been paired with <strong>${teacherName}</strong>${
+       teacherEmail ? ` (<a href="mailto:${teacherEmail}">${teacherEmail}</a>)` : ""
+     }.</p>
+     <p>Log in to the Kid2Kid CS portal and start chatting with them to agree on your weekly time, then schedule your first meeting right from the portal.</p>
+     ${WEEKLY_NOTE}
+     ${CTA("Open your dashboard", "https://kid2kidcs.lovable.app/login")}`
   );
 
-export const emailVolunteerPaired = (email: string, teacherName: string, studentNames: string[]) =>
+export const emailVolunteerPaired = (
+  email: string,
+  teacherName: string,
+  studentName: string,
+  studentEmail?: string
+) =>
   send(
     email,
     "You've been paired with your Kid2Kid CS student!",
     `<p>Hi ${teacherName},</p>
-     <p>You've been paired with <strong>${studentNames.join(", ")}</strong>.</p>
-     <p>Hop into the Kid2Kid CS website to start a group chat and figure out a common time to meet.</p>`
+     <p>You've been paired with <strong>${studentName}</strong>${
+       studentEmail ? ` (<a href="mailto:${studentEmail}">${studentEmail}</a>)` : ""
+     }.</p>
+     <p>Message them in the Kid2Kid CS portal to agree on a weekly time, then schedule your first meeting from your Meetings tab.</p>
+     ${WEEKLY_NOTE}
+     ${CTA("Open your dashboard", "https://kid2kidcs.lovable.app/login")}`
    );
 
 export const emailWestwoodStudentApproved = (email: string, name: string) =>

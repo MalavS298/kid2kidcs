@@ -87,6 +87,7 @@ const TeacherMeetings = () => {
         <div>
           <h1 className="text-section font-medium mb-1">Meetings</h1>
           <p className="text-muted-foreground">Manage your lesson schedule with Google Meet.</p>
+          <p className="text-ui-sm text-muted-foreground mt-1">Meet your student <strong>once a week</strong> — one session per week for the 4 weeks of camp.</p>
         </div>
         <Button onClick={() => setShowForm(!showForm)} size="sm">
           <Plus className="w-3 h-3" /> Schedule Lesson
