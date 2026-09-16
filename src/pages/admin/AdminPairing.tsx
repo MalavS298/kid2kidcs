@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { emailStudentPaired, emailVolunteerPaired } from "@/lib/notifyEmails";
 
 const WW_PROGRAM = "Westwood Robotics - Python";
-const MAX_STUDENTS_PER_TEACHER = 3;
+const MAX_STUDENTS_PER_TEACHER = 1;
 
 type Application = {
   id: string;
@@ -82,14 +82,8 @@ const AdminPairing = () => {
     // Send pairing emails
     const teacherApp = apps.find(a => a.name === selectedTeacher && a.type === "volunteer");
     const studentApp = apps.find(a => a.name === selectedStudent && a.type === "student");
-    if (studentApp) emailStudentPaired(studentApp.email, studentApp.name, selectedTeacher);
-    if (teacherApp) {
-      const allStudents = [
-        ...pairings.filter(p => p.teacher_name === selectedTeacher).map(p => p.student_name),
-        selectedStudent,
-      ];
-      emailVolunteerPaired(teacherApp.email, teacherApp.name, allStudents);
-    }
+    if (studentApp) emailStudentPaired(studentApp.email, studentApp.name, selectedTeacher, teacherApp?.email);
+    if (teacherApp) emailVolunteerPaired(teacherApp.email, teacherApp.name, selectedStudent, studentApp?.email);
 
     setSelectedTeacher(null);
     setSelectedStudent(null);
@@ -114,7 +108,7 @@ const AdminPairing = () => {
     <div className="p-8 max-w-5xl">
       <h1 className="text-section font-medium mb-2">Teacher-Student Pairing</h1>
       <p className="text-muted-foreground mb-8">
-        Each volunteer teaches up to {MAX_STUDENTS_PER_TEACHER} students. Each student gets exactly one volunteer.
+        One volunteer to one student. Pairs are created automatically on approval using overlapping availability — use this page to review or fix matches.
       </p>
 
       <div className="rounded-lg bg-card shadow-subtle p-6 mb-8">
