@@ -39,6 +39,13 @@ const HeroSection = () =>
     <div className="absolute bottom-0 right-10 w-[400px] h-[400px] rounded-full bg-accent/10 dark:bg-accent/25 blur-3xl pointer-events-none" />
     <div className="absolute bottom-20 left-10 w-[350px] h-[350px] rounded-full bg-destructive/10 dark:bg-destructive/20 blur-3xl pointer-events-none" />
     <div className="relative z-10 text-center px-4 max-w-3xl mx-auto">
+      <motion.p
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ ...transition, delay: 0.1 }}
+        className="text-sm font-mono text-primary mb-4 tracking-wide">
+        Built by Westwood Robotics — Slingshot #20240
+      </motion.p>
       <motion.h1
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
@@ -47,7 +54,7 @@ const HeroSection = () =>
       
         Where Kids Teach{" "}
         <br className="hidden md:block" />
-        <span className="bg-gradient-to-r from-primary via-accent to-destructive bg-clip-text text-transparent">
+        <span className="bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
           Kids to Code
         </span>
       </motion.h1>
@@ -56,7 +63,7 @@ const HeroSection = () =>
       animate={{ opacity: 1, y: 0 }}
       transition={{ ...transition, delay: 0.3 }}
       className="text-muted-foreground text-lg max-w-xl mx-auto mb-8">
-      Join our 4-week computer science camp. High school volunteers teaching others the fundamentals of Python in a fun, interactive environment.
+      Join our 4-week computer science camp by Slingshot #20240. High school volunteers teaching others the fundamentals of Python in a fun, interactive environment.
     </motion.p>
       <motion.div
       initial={{ opacity: 0, y: 12 }}
