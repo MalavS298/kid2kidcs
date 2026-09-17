@@ -37,7 +37,7 @@ const HeroSection = () =>
     <div className="absolute inset-x-0 top-0 h-64 bg-gradient-to-b from-primary/15 dark:from-primary/30 to-transparent pointer-events-none" />
     <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full bg-primary/10 dark:bg-primary/30 blur-3xl pointer-events-none" />
     <div className="absolute bottom-0 right-10 w-[400px] h-[400px] rounded-full bg-accent/10 dark:bg-accent/25 blur-3xl pointer-events-none" />
-    <div className="absolute bottom-20 left-10 w-[350px] h-[350px] rounded-full bg-destructive/10 dark:bg-destructive/20 blur-3xl pointer-events-none" />
+    <div className="absolute bottom-20 left-10 w-[350px] h-[350px] rounded-full bg-accent/15 dark:bg-accent/20 blur-3xl pointer-events-none" />
     <div className="relative z-10 text-center px-4 max-w-3xl mx-auto">
       <motion.p
         initial={{ opacity: 0, y: 12 }}
@@ -103,8 +103,9 @@ const AboutSection = () =>
         Our Mission
       </motion.h2>
       <p className="text-muted-foreground max-w-2xl mx-auto mb-14">
-        We believe every student deserves access to quality computer science education.
-        By pairing passionate high school volunteers with younger students, we create a supportive peer-to-learning environment.
+        Kid2Kid CS is run by Slingshot #20240, a Westwood High School FIRST Tech Challenge robotics team
+        dedicated to spreading robotics and coding to everyone. By pairing passionate high school volunteers
+        with younger students, we create a supportive peer-to-peer learning environment.
       </p>
       <div className="grid md:grid-cols-3 gap-6">
         {features.map((f, i) =>
@@ -151,7 +152,7 @@ const ImpactSection = () =>
               Our Impact in Numbers
             </motion.h2>
             <p className="text-primary-foreground/70 max-w-md mb-6">
-              We're just getting started. Our mission is to spread coding and robotics to everyone — one cohort at a time.
+              We're just getting started. Slingshot #20240's mission is to spread coding and robotics to everyone — one cohort at a time.
             </p>
             <Link to="/join">
               <Button variant="secondary" className="rounded-full">
@@ -234,9 +235,9 @@ const Footer = () =>
     <div className="container max-w-6xl mx-auto flex items-center justify-between text-sm text-muted-foreground">
       <div className="flex items-center gap-2">
         <Code2 className="w-4 h-4" />
-        <span>Kid2Kid CS</span>
+        <span>Kid2Kid CS — by Slingshot #20240</span>
       </div>
-      <span>© 2025 Kid2Kid CS. All rights reserved.</span>
+      <span>© 2026 Kid2Kid CS · Westwood Robotics Team Slingshot #20240</span>
     </div>
   </footer>;
 
