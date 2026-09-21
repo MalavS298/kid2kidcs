@@ -22,6 +22,7 @@ export type Database = {
           availability: string[]
           created_at: string
           email: string
+          event_id: string | null
           id: string
           name: string
           prior_experience: string | null
@@ -39,6 +40,7 @@ export type Database = {
           availability?: string[]
           created_at?: string
           email: string
+          event_id?: string | null
           id?: string
           name: string
           prior_experience?: string | null
@@ -56,6 +58,7 @@ export type Database = {
           availability?: string[]
           created_at?: string
           email?: string
+          event_id?: string | null
           id?: string
           name?: string
           prior_experience?: string | null
@@ -65,6 +68,41 @@ export type Database = {
           updated_at?: string
           user_id?: string | null
           why_join?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "applications_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "in_person_events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      in_person_events: {
+        Row: {
+          active: boolean
+          code: string
+          created_at: string
+          id: string
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          code: string
+          created_at?: string
+          id?: string
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          code?: string
+          created_at?: string
+          id?: string
+          name?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -180,6 +218,7 @@ export type Database = {
         Row: {
           code: string
           created_at: string
+          event_id: string | null
           id: string
           student_name: string
           teacher_name: string | null
@@ -189,6 +228,7 @@ export type Database = {
         Insert: {
           code?: string
           created_at?: string
+          event_id?: string | null
           id?: string
           student_name: string
           teacher_name?: string | null
@@ -198,13 +238,22 @@ export type Database = {
         Update: {
           code?: string
           created_at?: string
+          event_id?: string | null
           id?: string
           student_name?: string
           teacher_name?: string | null
           title?: string
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "sandbox_snippets_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "in_person_events"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {

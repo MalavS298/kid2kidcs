@@ -1,0 +1,13 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1790026897164,
+      "tag": "0000_in_person_events",
+      "breakpoints": true
+    }
+  ]
+}
