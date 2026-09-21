@@ -58,7 +58,7 @@ const AdminInPerson = () => {
     load();
   };
 
-  const students = apps.filter(a => !activeStudent || a.name === activeStudent);
+  const students = apps;
   const snippetsFor = (n: string) => snippets.filter(s => s.student_name === n);
 
   return (
