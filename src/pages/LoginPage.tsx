@@ -99,15 +99,17 @@ const LoginPage = () => {
         <div className="rounded-xl bg-card shadow-subtle p-6">
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <Label htmlFor="email">Username</Label>
-              <Input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="e.g., student123" className="mt-1 rounded-lg bg-secondary/50 border-0" />
+              <Label htmlFor="email">Email</Label>
+              <Input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@example.com" className="mt-1 rounded-lg bg-secondary/50 border-0" />
             </div>
             <div>
               <Label htmlFor="password">Password</Label>
               <Input id="password" type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••" className="mt-1 rounded-lg bg-secondary/50 border-0" />
             </div>
             {error && <p className="text-sm text-destructive">{error}</p>}
-            <Button type="submit" className="w-full rounded-full h-11 text-base">Sign In</Button>
+            <Button type="submit" disabled={loading} className="w-full rounded-full h-11 text-base">
+              {loading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />} Sign In
+            </Button>
           </form>
 
           <div className="relative my-5">
@@ -137,14 +139,12 @@ const LoginPage = () => {
           </div>
         </div>
 
-        <div className="mt-6 p-4 rounded-lg bg-secondary/50 text-sm">
-          <p className="font-medium mb-2">Demo Accounts</p>
-          <div className="space-y-1 text-muted-foreground font-mono text-xs">
-            <p>student@kid2kid.com / student</p>
-            <p>teacher@kid2kid.com / teacher</p>
-            <p>admin@kid2kid.com / admin</p>
-          </div>
-        </div>
+        <p className="mt-6 text-center text-sm text-muted-foreground">
+          Don't have an account?{" "}
+          <Link to="/join" className="font-medium text-foreground underline underline-offset-4 hover:text-primary transition-colors">
+            Join Kid2Kid CS
+          </Link>
+        </p>
       </div>
     </div>
   );
