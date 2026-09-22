@@ -53,6 +53,13 @@ const JoinPage = () => (
       </motion.div>
     </div>
 
+    <p className="text-sm text-muted-foreground mb-3">
+      Attending an in-person session?{" "}
+      <Link to="/join/code" className="font-medium text-foreground underline underline-offset-4 hover:text-primary transition-colors">
+        Join with a code
+      </Link>
+    </p>
+
     <p className="text-sm text-muted-foreground">
       Already have an account?{" "}
       <Link to="/login" className="font-medium text-foreground underline underline-offset-4 hover:text-primary transition-colors">
