@@ -103,7 +103,7 @@ const StudentSandbox = () => {
       } else {
         const { data, error } = await supabase
           .from("sandbox_snippets")
-          .insert({ student_name: user.name, teacher_name, title: title.trim(), code })
+          .insert({ student_name: user.name, teacher_name, title: title.trim(), code, event_id: user.eventId ?? null } as any)
           .select("id")
           .single();
         if (error) throw error;

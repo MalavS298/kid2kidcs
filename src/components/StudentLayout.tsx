@@ -26,9 +26,11 @@ const StudentLayout = () => {
   const [settingsOpen, setSettingsOpen] = useState(false);
 
   const user = JSON.parse(localStorage.getItem("k2k_user") || '{"name":"Student","email":""}');
+  const inPerson = !!user.inPerson;
 
   // In production, this comes from the DB (set by teacher). Using localStorage for demo.
   const [unlockedWeeks] = useState(() => {
+    if (inPerson) return 4; // In-person students get every week right away
     const stored = localStorage.getItem("k2k_unlocked_weeks");
     return stored ? parseInt(stored) : 2; // Default: weeks 1-2 unlocked
   });
@@ -40,7 +42,7 @@ const StudentLayout = () => {
 
   const isActive = (path: string) => location.pathname === path;
 
-  if (user.pending) {
+  if (user.pending && !inPerson) {
     return <PairingPending name={user.name} email={user.email} role="student" />;
   }
 
@@ -67,13 +69,15 @@ const StudentLayout = () => {
             {sidebarOpen && <span>Home</span>}
           </Link>
 
-          <Link to="/student/meetings" className={cn(
-            "flex items-center gap-2 px-3 py-2 rounded-md text-ui-sm transition-colors",
-            isActive("/student/meetings") ? "bg-card shadow-subtle text-foreground border-l-2 border-primary" : "text-muted-foreground hover:bg-secondary"
-          )}>
-            <Calendar className="w-4 h-4 shrink-0" />
-            {sidebarOpen && <span>Meetings</span>}
-          </Link>
+          {!inPerson && (
+            <Link to="/student/meetings" className={cn(
+              "flex items-center gap-2 px-3 py-2 rounded-md text-ui-sm transition-colors",
+              isActive("/student/meetings") ? "bg-card shadow-subtle text-foreground border-l-2 border-primary" : "text-muted-foreground hover:bg-secondary"
+            )}>
+              <Calendar className="w-4 h-4 shrink-0" />
+              {sidebarOpen && <span>Meetings</span>}
+            </Link>
+          )}
 
           <Link to="/student/sandbox" className={cn(
             "flex items-center gap-2 px-3 py-2 rounded-md text-ui-sm transition-colors",
@@ -166,7 +170,9 @@ const StudentLayout = () => {
         <StudentContext.Provider value={{ unlockedWeeks }}>
           <Outlet />
         </StudentContext.Provider>
-        <DashboardChat currentName={user.name} currentRole="student" partnerName={user.teacher || ""} />
+        {!inPerson && (
+          <DashboardChat currentName={user.name} currentRole="student" partnerName={user.teacher || ""} />
+        )}
       </main>
     </div>
   );
