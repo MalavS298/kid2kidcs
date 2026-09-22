@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { Calendar, User, Video, ArrowRight, Loader2, Palette, Check } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Calendar, User, Video, ArrowRight, Loader2, Palette, Check, FlaskConical, Code2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { supabase } from "@/integrations/supabase/client";
@@ -132,6 +133,24 @@ const StudentHome = () => {
         </Popover>
       </div>
 
+      {inPerson ? (
+        <div className="grid md:grid-cols-2 gap-6 mb-8">
+          <Link to="/student/sandbox" className="rounded-xl bg-card shadow-subtle p-6 hover:shadow-card transition-shadow">
+            <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-3">
+              <FlaskConical className="w-5 h-5 text-primary" />
+            </div>
+            <h2 className="font-bold mb-1">Python Sandbox</h2>
+            <p className="text-sm text-muted-foreground">Write and run code freely. Your saved work goes to your instructor.</p>
+          </Link>
+          <Link to="/student/week/1/exercise" className="rounded-xl bg-card shadow-subtle p-6 hover:shadow-card transition-shadow">
+            <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center mb-3">
+              <Code2 className="w-5 h-5 text-accent" />
+            </div>
+            <h2 className="font-bold mb-1">Practice Exercises</h2>
+            <p className="text-sm text-muted-foreground">All four weeks are open — start whenever you're ready.</p>
+          </Link>
+        </div>
+      ) : (
       <div className="grid md:grid-cols-3 gap-6 mb-8">
         {/* Upcoming Sessions */}
         <div className="md:col-span-2">
@@ -185,6 +204,7 @@ const StudentHome = () => {
           </div>
         </div>
       </div>
+      )}
 
       {/* Progress */}
       <div className="rounded-xl bg-card shadow-subtle p-6">
