@@ -9,6 +9,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { isInPerson, syncExerciseCode } from "@/lib/inPerson";
 
 interface MCQQuestion {
   question: string;
@@ -87,6 +88,15 @@ const WeekExercise = () => {
   useEffect(() => {
     localStorage.setItem(storageKey, code);
   }, [code, storageKey]);
+
+  // In-person students: auto-sync work to the admin dashboard (debounced)
+  useEffect(() => {
+    if (!isInPerson()) return;
+    const t = setTimeout(() => {
+      syncExerciseCode(weekId || "1", code).catch(() => {});
+    }, 1500);
+    return () => clearTimeout(t);
+  }, [code, weekId]);
 
   const lineCount = Math.max(code.split("\n").length, 12);
 
