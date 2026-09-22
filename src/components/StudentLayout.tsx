@@ -26,9 +26,11 @@ const StudentLayout = () => {
   const [settingsOpen, setSettingsOpen] = useState(false);
 
   const user = JSON.parse(localStorage.getItem("k2k_user") || '{"name":"Student","email":""}');
+  const inPerson = !!user.inPerson;
 
   // In production, this comes from the DB (set by teacher). Using localStorage for demo.
   const [unlockedWeeks] = useState(() => {
+    if (inPerson) return 4; // In-person students get every week right away
     const stored = localStorage.getItem("k2k_unlocked_weeks");
     return stored ? parseInt(stored) : 2; // Default: weeks 1-2 unlocked
   });
@@ -40,7 +42,7 @@ const StudentLayout = () => {
 
   const isActive = (path: string) => location.pathname === path;
 
-  if (user.pending) {
+  if (user.pending && !inPerson) {
     return <PairingPending name={user.name} email={user.email} role="student" />;
   }
 
