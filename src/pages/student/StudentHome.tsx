@@ -19,6 +19,7 @@ type Gradient = { from: string; via?: string; to: string };
 
 const StudentHome = () => {
   const user = JSON.parse(localStorage.getItem("k2k_user") || '{"name":"Student"}');
+  const inPerson = !!user.inPerson;
   const [nextMeeting, setNextMeeting] = useState<any>(null);
   const [loadingMeeting, setLoadingMeeting] = useState(true);
 
@@ -35,6 +36,7 @@ const StudentHome = () => {
   }, [gradient]);
 
   useEffect(() => {
+    if (inPerson) { setLoadingMeeting(false); return; }
     const fetchNext = async () => {
       const today = new Date().toISOString().split("T")[0];
       const { data } = await supabase
