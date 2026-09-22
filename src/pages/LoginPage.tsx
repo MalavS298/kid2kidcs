@@ -3,31 +3,70 @@ import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Code2, ArrowLeft } from "lucide-react";
+import { Code2, ArrowLeft, Loader2 } from "lucide-react";
 import { lovable } from "@/integrations/lovable";
+import { supabase } from "@/integrations/supabase/client";
 
-type Role = "student" | "teacher" | "admin";
-
-const DEMO_ACCOUNTS: Record<string, { password: string; role: Role; name: string }> = {
-  "student@kid2kid.com": { password: "student", role: "student", name: "Alex Chen" },
-  "teacher@kid2kid.com": { password: "teacher", role: "teacher", name: "Jordan Smith" },
-  "admin@kid2kid.com": { password: "admin", role: "admin", name: "Admin User" },
-};
+const ADMIN_EMAILS = ["slingshotftc@gmail.com", "kid2kidcs@outlook.com"];
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    const account = DEMO_ACCOUNTS[email];
-    if (account && account.password === password) {
-      localStorage.setItem("k2k_user", JSON.stringify({ email, role: account.role, name: account.name }));
-      navigate(`/${account.role}`);
-    } else {
-      setError("Invalid credentials. Try one of the demo accounts below.");
+    setError("");
+    setLoading(true);
+    try {
+      const cleanEmail = email.trim().toLowerCase();
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: cleanEmail,
+        password,
+      });
+      if (signInError) {
+        setError("That email or password doesn't match an account.");
+        return;
+      }
+
+      if (ADMIN_EMAILS.includes(cleanEmail)) {
+        localStorage.setItem("k2k_user", JSON.stringify({ email: cleanEmail, role: "admin", name: "Admin" }));
+        navigate("/admin");
+        return;
+      }
+
+      const { data: app } = await supabase
+        .from("applications")
+        .select("type, name, status, event_id")
+        .ilike("email", cleanEmail)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (!app) {
+        setError("We couldn't find an application for this account.");
+        return;
+      }
+
+      const role = app.type === "volunteer" ? "teacher" : "student";
+      localStorage.setItem(
+        "k2k_user",
+        JSON.stringify({
+          email: cleanEmail,
+          role,
+          name: app.name,
+          pending: app.status !== "approved",
+          inPerson: app.type === "in_person",
+          eventId: app.event_id ?? undefined,
+        })
+      );
+      navigate(`/${role}`);
+    } catch (err: any) {
+      setError(err.message || "Something went wrong signing in.");
+    } finally {
+      setLoading(false);
     }
   };
 
