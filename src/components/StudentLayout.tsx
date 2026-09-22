@@ -69,13 +69,15 @@ const StudentLayout = () => {
             {sidebarOpen && <span>Home</span>}
           </Link>
 
-          <Link to="/student/meetings" className={cn(
-            "flex items-center gap-2 px-3 py-2 rounded-md text-ui-sm transition-colors",
-            isActive("/student/meetings") ? "bg-card shadow-subtle text-foreground border-l-2 border-primary" : "text-muted-foreground hover:bg-secondary"
-          )}>
-            <Calendar className="w-4 h-4 shrink-0" />
-            {sidebarOpen && <span>Meetings</span>}
-          </Link>
+          {!inPerson && (
+            <Link to="/student/meetings" className={cn(
+              "flex items-center gap-2 px-3 py-2 rounded-md text-ui-sm transition-colors",
+              isActive("/student/meetings") ? "bg-card shadow-subtle text-foreground border-l-2 border-primary" : "text-muted-foreground hover:bg-secondary"
+            )}>
+              <Calendar className="w-4 h-4 shrink-0" />
+              {sidebarOpen && <span>Meetings</span>}
+            </Link>
+          )}
 
           <Link to="/student/sandbox" className={cn(
             "flex items-center gap-2 px-3 py-2 rounded-md text-ui-sm transition-colors",
@@ -168,7 +170,9 @@ const StudentLayout = () => {
         <StudentContext.Provider value={{ unlockedWeeks }}>
           <Outlet />
         </StudentContext.Provider>
-        <DashboardChat currentName={user.name} currentRole="student" partnerName={user.teacher || ""} />
+        {!inPerson && (
+          <DashboardChat currentName={user.name} currentRole="student" partnerName={user.teacher || ""} />
+        )}
       </main>
     </div>
   );
