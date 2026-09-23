@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { KeyRound, Plus, Loader2, FileCode, Users, Copy, Power } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-interface EventRow { id: string; name: string; code: string; active: boolean; created_at: string; }
+interface EventRow { id: string; name: string; code: string; active: boolean; created_at: string; unlocked_weeks: number; }
 interface AppRow { id: string; name: string; email: string; age: number; event_id: string | null; created_at: string; }
 interface Snippet { id: string; student_name: string; title: string; code: string; updated_at: string; }
 
@@ -58,6 +58,13 @@ const AdminInPerson = () => {
     load();
   };
 
+  const setWeeks = async (ev: EventRow, weeks: number) => {
+    setEvents(prev => prev.map(e => (e.id === ev.id ? { ...e, unlocked_weeks: weeks } : e)));
+    const { error } = await supabase.from("in_person_events").update({ unlocked_weeks: weeks } as any).eq("id", ev.id);
+    if (error) { toast.error(error.message); load(); return; }
+    toast.success(`Weeks 1-${weeks} unlocked for ${ev.name}.`);
+  };
+
   const students = apps;
   const snippetsFor = (n: string) => snippets.filter(s => s.student_name === n);
 
@@ -102,6 +109,30 @@ const AdminInPerson = () => {
                 <p className="text-xs text-muted-foreground mt-2">
                   {apps.filter(a => a.event_id === ev.id).length} student(s) joined
                 </p>
+
+                <div className="mt-4 pt-4 border-t border-border">
+                  <p className="text-[11px] uppercase tracking-wider text-muted-foreground mb-2">Lessons unlocked</p>
+                  <div className="flex gap-1.5">
+                    {[1, 2, 3, 4].map(w => {
+                      const on = (ev.unlocked_weeks ?? 1) >= w;
+                      return (
+                        <button
+                          key={w}
+                          onClick={() => setWeeks(ev, w)}
+                          className={cn(
+                            "flex-1 h-8 rounded-md text-xs font-medium border transition-colors",
+                            on ? "bg-primary text-primary-foreground border-primary" : "border-border text-muted-foreground hover:bg-secondary"
+                          )}
+                        >
+                          {w}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <p className="text-[11px] text-muted-foreground mt-2">
+                    Students in this session can reach weeks 1–{ev.unlocked_weeks ?? 1}.
+                  </p>
+                </div>
               </div>
             ))}
             {events.length === 0 && <p className="text-muted-foreground text-sm">No events yet.</p>}

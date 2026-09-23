@@ -1,0 +1,1 @@
+ALTER TABLE public.in_person_events ADD COLUMN IF NOT EXISTS unlocked_weeks integer NOT NULL DEFAULT 1;
