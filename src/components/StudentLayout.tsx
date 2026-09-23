@@ -1,4 +1,4 @@
-import { useState, createContext, useContext } from "react";
+import { useState, useEffect, createContext, useContext } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { Code2, Home, BookOpen, Calendar, ChevronDown, ChevronRight, FileText, Code, LogOut, Lock, Settings, FlaskConical } from "lucide-react";
 import SettingsPanel from "@/components/SettingsPanel";
@@ -7,6 +7,7 @@ import DashboardChat from "@/components/DashboardChat";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
+import { supabase } from "@/integrations/supabase/client";
 
 const weeks = [
   { id: 1, title: "Week 1: Variables & Types", pdf: "Introduction to Python", exercise: "Variable Swap" },
@@ -29,11 +30,28 @@ const StudentLayout = () => {
   const inPerson = !!user.inPerson;
 
   // In production, this comes from the DB (set by teacher). Using localStorage for demo.
-  const [unlockedWeeks] = useState(() => {
-    if (inPerson) return 4; // In-person students get every week right away
+  const [unlockedWeeks, setUnlockedWeeks] = useState(() => {
+    if (inPerson) return 1; // Controlled by the admin for the session
     const stored = localStorage.getItem("k2k_unlocked_weeks");
     return stored ? parseInt(stored) : 2; // Default: weeks 1-2 unlocked
   });
+
+  // In-person sessions: the admin controls how far students can go
+  useEffect(() => {
+    if (!inPerson || !user.eventId) return;
+    let cancelled = false;
+    const fetchWeeks = async () => {
+      const { data } = await supabase
+        .from("in_person_events")
+        .select("unlocked_weeks")
+        .eq("id", user.eventId)
+        .maybeSingle();
+      if (!cancelled && data) setUnlockedWeeks((data as any).unlocked_weeks ?? 1);
+    };
+    fetchWeeks();
+    const interval = setInterval(fetchWeeks, 15000);
+    return () => { cancelled = true; clearInterval(interval); };
+  }, [inPerson, user.eventId]);
 
   const handleLogout = () => {
     localStorage.removeItem("k2k_user");
