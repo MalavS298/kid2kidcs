@@ -15,6 +15,13 @@
       "when": 1790125342579,
       "tag": "0001_allow_in_person_application_type",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1790125576144,
+      "tag": "0002_add_unlocked_weeks_to_events",
+      "breakpoints": true
     }
   ]
 }
