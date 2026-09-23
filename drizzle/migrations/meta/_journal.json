@@ -8,6 +8,13 @@
       "when": 1790026897164,
       "tag": "0000_in_person_events",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1790125342579,
+      "tag": "0001_allow_in_person_application_type",
+      "breakpoints": true
     }
   ]
 }

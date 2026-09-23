@@ -1,0 +1,2 @@
+ALTER TABLE public.applications DROP CONSTRAINT applications_type_check;
+ALTER TABLE public.applications ADD CONSTRAINT applications_type_check CHECK (type IN ('student','volunteer','ww_robotics','in_person'));
