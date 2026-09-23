@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
-import { Code2, Home, Users, LogOut, LayoutDashboard, Settings, Bot, KeyRound } from "lucide-react";
+import { Code2, Home, Users, LogOut, LayoutDashboard, Settings, KeyRound } from "lucide-react";
 import { cn } from "@/lib/utils";
 import SettingsPanel from "@/components/SettingsPanel";
 
@@ -19,7 +19,6 @@ const AdminLayout = () => {
     { to: "/admin", icon: LayoutDashboard, label: "Dashboard" },
     { to: "/admin/content", icon: Home, label: "Mass Content" },
     { to: "/admin/pairing", icon: Users, label: "Pairing" },
-    { to: "/admin/ww-robotics", icon: Bot, label: "WW Robotics" },
     { to: "/admin/in-person", icon: KeyRound, label: "In-Person" },
   ];
 
