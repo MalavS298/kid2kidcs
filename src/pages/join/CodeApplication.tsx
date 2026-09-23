@@ -3,9 +3,17 @@ import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Code2, KeyRound, Loader2 } from "lucide-react";
+import { Code2, KeyRound, Loader2, Check, X } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+
+const passwordRules = [
+  { label: "At least 8 characters", test: (p: string) => p.length >= 8 },
+  { label: "One uppercase letter", test: (p: string) => /[A-Z]/.test(p) },
+  { label: "One lowercase letter", test: (p: string) => /[a-z]/.test(p) },
+  { label: "One number", test: (p: string) => /[0-9]/.test(p) },
+];
 
 const CodeApplication = () => {
   const [step, setStep] = useState(1);
@@ -55,8 +63,8 @@ const CodeApplication = () => {
       toast.error("Please fill out all fields.");
       return;
     }
-    if (password.length < 6) {
-      toast.error("Password must be at least 6 characters.");
+    if (!passwordRules.every(r => r.test(password))) {
+      toast.error("Please meet all the password requirements below.");
       return;
     }
     setLoading(true);
@@ -166,9 +174,31 @@ const CodeApplication = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="password">Password</Label>
-                <Input id="password" type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="At least 6 characters" />
+                <Input id="password" type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Create a password" />
+                <div className="rounded-lg border border-border bg-secondary/40 p-3 space-y-1.5">
+                  <div className="flex gap-1 mb-2">
+                    {passwordRules.map((r, i) => (
+                      <div
+                        key={i}
+                        className={cn(
+                          "h-1 flex-1 rounded-full transition-colors",
+                          r.test(password) ? "bg-primary" : "bg-border"
+                        )}
+                      />
+                    ))}
+                  </div>
+                  {passwordRules.map(r => {
+                    const ok = r.test(password);
+                    return (
+                      <div key={r.label} className={cn("flex items-center gap-2 text-xs transition-colors", ok ? "text-primary" : "text-muted-foreground")}>
+                        {ok ? <Check className="w-3.5 h-3.5" /> : <X className="w-3.5 h-3.5 opacity-50" />}
+                        <span>{r.label}</span>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
-              <Button type="submit" className="w-full" disabled={loading}>
+              <Button type="submit" className="w-full" disabled={loading || !passwordRules.every(r => r.test(password))}>
                 {loading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />} Start learning
               </Button>
             </form>
