@@ -69,24 +69,19 @@ const CodeApplication = () => {
     }
     setLoading(true);
     try {
-      const { data, error } = await supabase.auth.signUp({
-        email: email.trim(),
-        password,
-        options: { emailRedirectTo: window.location.origin },
+      const { data: res, error: fnError } = await supabase.functions.invoke("create-in-person-account", {
+        body: { code, name: name.trim(), age, email: email.trim(), password },
       });
-      if (error) throw error;
-
-      const { error: appError } = await supabase.from("applications").insert({
-        type: "in_person",
-        name: name.trim(),
-        age: parseInt(age),
-        email: email.trim(),
-        availability: [],
-        status: "approved",
-        event_id: eventId,
-        user_id: data.user?.id,
-      } as any);
-      if (appError) throw appError;
+      if (fnError || res?.error) {
+        let msg = res?.error;
+        try { msg = msg || (await (fnError as any)?.context?.json())?.error; } catch {}
+        throw new Error(msg || "Could not create your account.");
+      }
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: email.trim().toLowerCase(),
+        password,
+      });
+      if (signInError) throw signInError;
 
       localStorage.setItem(
         "k2k_user",
