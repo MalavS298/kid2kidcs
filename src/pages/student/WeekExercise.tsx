@@ -318,7 +318,21 @@ const WeekExercise = () => {
       <div className="flex-1 flex min-h-0">
         {/* Prompt panel */}
         <div className="w-72 border-r border-border p-5 overflow-y-auto bg-card shrink-0">
-          <div className="text-[11px] uppercase tracking-wider text-muted-foreground/60 mb-3">Exercise</div>
+          <div className="flex gap-2 mb-5">
+            {weekExercises.map((e, i) => (
+              <button
+                key={i}
+                onClick={() => setExIdx(i)}
+                className={cn(
+                  "flex-1 rounded-md border px-3 py-2 text-xs font-medium transition-colors",
+                  i === exIdx ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground hover:border-primary/50"
+                )}
+              >
+                Exercise {i + 1}
+              </button>
+            ))}
+          </div>
+          <div className="text-[11px] uppercase tracking-wider text-muted-foreground/60 mb-3">Exercise {exIdx + 1} of {weekExercises.length}</div>
           <h3 className="font-bold mb-3">{ex?.title}</h3>
           <p className="text-sm text-muted-foreground leading-relaxed">{ex?.prompt}</p>
         </div>
