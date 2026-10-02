@@ -3,8 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { KeyRound, Plus, Loader2, FileCode, Users, Copy, Power } from "lucide-react";
+import { KeyRound, Plus, Loader2, FileCode, Users, Copy, Power, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface EventRow { id: string; name: string; code: string; active: boolean; created_at: string; unlocked_weeks: number; }
 interface AppRow { id: string; name: string; email: string; age: number; event_id: string | null; created_at: string; }
@@ -25,6 +29,8 @@ const AdminInPerson = () => {
   const [creating, setCreating] = useState(false);
   const [activeStudent, setActiveStudent] = useState<string | null>(null);
   const [openSnippet, setOpenSnippet] = useState<Snippet | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<AppRow | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   const load = async () => {
     const [{ data: ev }, { data: ap }, { data: sn }] = await Promise.all([
@@ -63,6 +69,29 @@ const AdminInPerson = () => {
     const { error } = await supabase.from("in_person_events").update({ unlocked_weeks: weeks } as any).eq("id", ev.id);
     if (error) { toast.error(error.message); load(); return; }
     toast.success(`Weeks 1-${weeks} unlocked for ${ev.name}.`);
+  };
+
+  const deleteStudent = async () => {
+    if (!deleteTarget) return;
+    setDeleting(true);
+    try {
+      const { data: res, error: fnError } = await supabase.functions.invoke("delete-in-person-account", {
+        body: { applicationId: deleteTarget.id },
+      });
+      if (fnError || res?.error) {
+        let msg = res?.error;
+        try { msg = msg || (await (fnError as any)?.context?.json())?.error; } catch {}
+        throw new Error(msg || "Could not delete this student.");
+      }
+      toast.success(`${deleteTarget.name} has been removed.`);
+      setDeleteTarget(null);
+      setActiveStudent(null);
+      load();
+    } catch (err: any) {
+      toast.error(err.message || "Could not delete this student.");
+    } finally {
+      setDeleting(false);
+    }
   };
 
   const students = apps;
@@ -152,7 +181,16 @@ const AdminInPerson = () => {
                       <p className="font-medium">{s.name}</p>
                       <p className="text-sm text-muted-foreground">{s.email} · age {s.age} · {events.find(e => e.id === s.event_id)?.name || "—"}</p>
                     </div>
-                    <span className="text-sm text-muted-foreground">{list.length} saved file(s)</span>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <span className="text-sm text-muted-foreground">{list.length} saved file(s)</span>
+                      <button
+                        onClick={(e) => { e.stopPropagation(); setDeleteTarget(s); }}
+                        className="p-2 rounded-md text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+                        aria-label={`Delete ${s.name}`}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
                   </button>
                   {open && (
                     <div className="border-t border-border p-4 space-y-2">
@@ -180,6 +218,28 @@ const AdminInPerson = () => {
           </div>
         </>
       )}
+
+      <AlertDialog open={!!deleteTarget} onOpenChange={(open) => !open && !deleting && setDeleteTarget(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Remove {deleteTarget?.name}?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This permanently deletes their account, their application, and all of their saved code. This can't be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deleting}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={(e) => { e.preventDefault(); deleteStudent(); }}
+              disabled={deleting}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {deleting && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+              Yes, remove them
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
