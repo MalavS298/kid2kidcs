@@ -71,6 +71,29 @@ const AdminInPerson = () => {
     toast.success(`Weeks 1-${weeks} unlocked for ${ev.name}.`);
   };
 
+  const deleteStudent = async () => {
+    if (!deleteTarget) return;
+    setDeleting(true);
+    try {
+      const { data: res, error: fnError } = await supabase.functions.invoke("delete-in-person-account", {
+        body: { applicationId: deleteTarget.id },
+      });
+      if (fnError || res?.error) {
+        let msg = res?.error;
+        try { msg = msg || (await (fnError as any)?.context?.json())?.error; } catch {}
+        throw new Error(msg || "Could not delete this student.");
+      }
+      toast.success(`${deleteTarget.name} has been removed.`);
+      setDeleteTarget(null);
+      setActiveStudent(null);
+      load();
+    } catch (err: any) {
+      toast.error(err.message || "Could not delete this student.");
+    } finally {
+      setDeleting(false);
+    }
+  };
+
   const students = apps;
   const snippetsFor = (n: string) => snippets.filter(s => s.student_name === n);
 
@@ -158,7 +181,16 @@ const AdminInPerson = () => {
                       <p className="font-medium">{s.name}</p>
                       <p className="text-sm text-muted-foreground">{s.email} · age {s.age} · {events.find(e => e.id === s.event_id)?.name || "—"}</p>
                     </div>
-                    <span className="text-sm text-muted-foreground">{list.length} saved file(s)</span>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <span className="text-sm text-muted-foreground">{list.length} saved file(s)</span>
+                      <button
+                        onClick={(e) => { e.stopPropagation(); setDeleteTarget(s); }}
+                        className="p-2 rounded-md text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+                        aria-label={`Delete ${s.name}`}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
                   </button>
                   {open && (
                     <div className="border-t border-border p-4 space-y-2">
