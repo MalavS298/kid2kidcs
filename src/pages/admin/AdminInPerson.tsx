@@ -3,8 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { KeyRound, Plus, Loader2, FileCode, Users, Copy, Power } from "lucide-react";
+import { KeyRound, Plus, Loader2, FileCode, Users, Copy, Power, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface EventRow { id: string; name: string; code: string; active: boolean; created_at: string; unlocked_weeks: number; }
 interface AppRow { id: string; name: string; email: string; age: number; event_id: string | null; created_at: string; }
@@ -25,6 +29,8 @@ const AdminInPerson = () => {
   const [creating, setCreating] = useState(false);
   const [activeStudent, setActiveStudent] = useState<string | null>(null);
   const [openSnippet, setOpenSnippet] = useState<Snippet | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<AppRow | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   const load = async () => {
     const [{ data: ev }, { data: ap }, { data: sn }] = await Promise.all([
