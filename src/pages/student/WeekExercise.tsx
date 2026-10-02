@@ -22,29 +22,71 @@ const quizzes: Record<string, MCQQuestion[]> = {
     { question: "What is a variable in Python?", options: ["A loop", "A named container for storing data", "A function", "A type of error"], correct: 1 },
     { question: "Which of these is a valid variable name?", options: ["2name", "my-var", "my_var", "class"], correct: 2 },
     { question: "What does `len('hello')` return?", options: ["4", "5", "6", "'hello'"], correct: 1 },
+    { question: "Which function displays text on the screen?", options: ["show()", "display()", "print()", "write()"], correct: 2 },
+    { question: "What type of data is `\"42\"` (with quotes)?", options: ["Integer", "String", "Float", "Boolean"], correct: 1 },
+    { question: "What does `input()` do?", options: ["Prints text", "Reads text typed by the user", "Deletes a variable", "Ends the program"], correct: 1 },
+    { question: "What is the result of `\"Hi\" + \"There\"`?", options: ["Hi There", "HiThere", "Error", "Hi+There"], correct: 1 },
+    { question: "Which symbol starts a comment in Python?", options: ["//", "#", "/*", "--"], correct: 1 },
+    { question: "What does `int(\"7\")` give you?", options: ["\"7\"", "7", "7.0", "Error"], correct: 1 },
+    { question: "What is `type(3.5)`?", options: ["int", "str", "float", "bool"], correct: 2 },
   ],
   "2": [
     { question: "What keyword starts a conditional in Python?", options: ["for", "while", "if", "def"], correct: 2 },
     { question: "What does `elif` stand for?", options: ["else if", "eliminate if", "elevate if", "else finally"], correct: 0 },
     { question: "Which operator checks equality?", options: ["=", "==", "!=", "==="], correct: 1 },
+    { question: "Which operator means 'not equal'?", options: ["<>", "!=", "=!", "~="], correct: 1 },
+    { question: "What is `5 > 3 and 2 > 4`?", options: ["True", "False", "Error", "None"], correct: 1 },
+    { question: "What is `5 > 3 or 2 > 4`?", options: ["True", "False", "Error", "None"], correct: 0 },
+    { question: "What must come at the end of an `if` line?", options: [";", ":", "{", "then"], correct: 1 },
+    { question: "How does Python know which code is inside an `if`?", options: ["Curly braces", "Indentation", "Parentheses", "The word 'end'"], correct: 1 },
+    { question: "What does `10 % 3` return?", options: ["3", "1", "3.33", "0"], correct: 1 },
+    { question: "When does the `else` block run?", options: ["Always", "When all conditions above are False", "When the first condition is True", "Never"], correct: 1 },
   ],
   "3": [
     { question: "Which loop runs a set number of times?", options: ["while loop", "for loop", "do loop", "repeat loop"], correct: 1 },
     { question: "What does `range(5)` generate?", options: ["1 to 5", "0 to 5", "0 to 4", "1 to 4"], correct: 2 },
     { question: "How do you exit a loop early?", options: ["stop", "exit", "break", "return"], correct: 2 },
+    { question: "What does `continue` do in a loop?", options: ["Ends the loop", "Skips to the next repetition", "Restarts the program", "Pauses the loop"], correct: 1 },
+    { question: "What does `range(2, 6)` generate?", options: ["2,3,4,5", "2,3,4,5,6", "3,4,5,6", "2,6"], correct: 0 },
+    { question: "A `while` loop runs as long as...", options: ["Its condition is True", "Its condition is False", "10 times", "Forever, always"], correct: 0 },
+    { question: "What does `range(0, 10, 2)` generate?", options: ["0,2,4,6,8", "0,2,4,6,8,10", "2,4,6,8,10", "0 to 9"], correct: 0 },
+    { question: "How many times does `for i in range(3): print('hi')` print?", options: ["2", "3", "4", "1"], correct: 1 },
+    { question: "What is `'*' * 3`?", options: ["'***'", "9", "Error", "'* 3'"], correct: 0 },
+    { question: "What happens if a while loop's condition never becomes False?", options: ["It stops after 100 runs", "It runs forever (infinite loop)", "Python fixes it", "It errors immediately"], correct: 1 },
   ],
   "4": [
     { question: "Which keyword defines a function?", options: ["func", "function", "def", "define"], correct: 2 },
     { question: "What does `return` do in a function?", options: ["Prints a value", "Sends a value back to the caller", "Stops the program", "Creates a variable"], correct: 1 },
     { question: "What are function inputs called?", options: ["Variables", "Returns", "Parameters", "Loops"], correct: 2 },
+    { question: "How do you call a function named `greet`?", options: ["call greet", "greet()", "def greet", "run greet"], correct: 1 },
+    { question: "What does a function return if it has no `return`?", options: ["0", "\"\"", "None", "False"], correct: 2 },
+    { question: "In `def add(a, b):`, what are `a` and `b`?", options: ["Returns", "Parameters", "Loops", "Strings"], correct: 1 },
+    { question: "Why use functions?", options: ["To make code slower", "To reuse code and organize it", "Python requires them", "To add comments"], correct: 1 },
+    { question: "What does `add(2, 3)` return if `add` returns `a + b`?", options: ["23", "5", "None", "Error"], correct: 1 },
+    { question: "Can a function call another function?", options: ["Yes", "No", "Only built-in ones", "Only once"], correct: 0 },
+    { question: "What is a default parameter, like `def hi(name=\"friend\")`?", options: ["A required value", "A value used if none is given", "A global variable", "An error"], correct: 1 },
   ],
 };
 
-const exercises: Record<string, { title: string; prompt: string; starter: string }> = {
-  "1": { title: "Hello, World! and Beyond", prompt: "Write a Python program that asks for the user's name and prints a personalized greeting.", starter: "# Week 1 Exercise: Hello, World! and Beyond\n# Ask the user for their name and print a greeting\n\nname = \"Alice\"\n\n# TODO: Print a greeting like \"Hello, [name]! Welcome to Kid2Kid CS!\"\nprint(\"Hello, \" + name + \"!\")\n\n# BONUS: Also print how many letters are in their name\nprint(\"Your name has\", len(name), \"letters!\")\n" },
-  "2": { title: "Grade Calculator", prompt: "Write a program that takes a score (0-100) and prints the letter grade (A: 90+, B: 80+, C: 70+, D: 60+, F: below 60).", starter: "score = 85\n\n# Print the letter grade\n" },
-  "3": { title: "Pattern Printer", prompt: "Write a program that prints a right triangle of stars with 5 rows.", starter: "# Print a right triangle\nfor i in range(1, 6):\n    print('*' * i)\n" },
-  "4": { title: "Calculator App", prompt: "Write a function that takes two numbers and an operator (+, -, *, /) and returns the result.", starter: "def calculate(a, b, op):\n    # Your code here\n    pass\n\nprint(calculate(10, 3, '+'))\n" },
+interface Exercise { title: string; prompt: string; starter: string }
+
+const exercises: Record<string, Exercise[]> = {
+  "1": [
+    { title: "Personal Greeting", prompt: "Ask the user for their name using input(), then print a greeting like \"Hello, Alice! Welcome to Kid2Kid CS!\". Bonus: print how many letters are in their name.", starter: "# Exercise 1: Personal Greeting\n# Step 1: Ask the user for their name and store it in a variable\n\n\n# Step 2: Print a personalized greeting\n\n\n# BONUS: Print how many letters are in their name\n\n" },
+    { title: "Age in the Future", prompt: "Ask the user for their age, convert it to a number with int(), and print how old they will be in 10 years.", starter: "# Exercise 2: Age in the Future\n# Step 1: Ask for the user's age (remember input() gives you text!)\n\n\n# Step 2: Convert it to a number\n\n\n# Step 3: Print their age in 10 years\n\n" },
+  ],
+  "2": [
+    { title: "Grade Calculator", prompt: "Ask for a score (0-100) and print the letter grade: A for 90+, B for 80+, C for 70+, D for 60+, F below 60.", starter: "# Exercise 1: Grade Calculator\nscore = int(input(\"Enter your score: \"))\n\n# Use if / elif / else to print the letter grade\n\n" },
+    { title: "Even or Odd", prompt: "Ask the user for a number and print whether it is even or odd. Hint: use the % operator.", starter: "# Exercise 2: Even or Odd\n# Ask for a number\n\n\n# Check if it is even or odd and print the answer\n\n" },
+  ],
+  "3": [
+    { title: "Pattern Printer", prompt: "Use a for loop to print a right triangle of stars with 5 rows (1 star, then 2, ... up to 5).", starter: "# Exercise 1: Pattern Printer\n# Use a for loop to print a triangle of stars\n\n" },
+    { title: "Countdown", prompt: "Use a while loop to count down from 10 to 1, then print \"Liftoff!\".", starter: "# Exercise 2: Countdown\ncount = 10\n\n# Write a while loop that prints count and makes it smaller\n\n\n# Print Liftoff! at the end\n\n" },
+  ],
+  "4": [
+    { title: "Calculator Function", prompt: "Write a function calculate(a, b, op) that returns the result for +, -, * or /. Test it with a few calls.", starter: "# Exercise 1: Calculator Function\ndef calculate(a, b, op):\n    # Your code here\n    pass\n\nprint(calculate(10, 3, '+'))\nprint(calculate(10, 3, '*'))\n" },
+    { title: "Biggest Number", prompt: "Write a function biggest(a, b, c) that returns the largest of three numbers without using max().", starter: "# Exercise 2: Biggest Number\ndef biggest(a, b, c):\n    # Your code here (don't use max!)\n    pass\n\nprint(biggest(4, 9, 2))\n" },
+  ],
 };
 
 const LineNumbers = ({ count }: { count: number }) => (
@@ -59,17 +101,25 @@ const WeekExercise = () => {
   const { weekId } = useParams();
   const { unlockedWeeks } = useStudentContext();
   const weekNum = parseInt(weekId || "1");
-  const ex = exercises[weekId || "1"];
+  const weekExercises = exercises[weekId || "1"] || [];
+  const [exIdx, setExIdx] = useState(0);
+  const ex = weekExercises[exIdx];
   const quiz = quizzes[weekId || "1"] || [];
 
-  // Persist code in localStorage
-  const storageKey = `k2k_code_week_${weekId}`;
-  const quizKey = `k2k_quiz_week_${weekId}`;
+  // Persist code in localStorage (v2 = no-answers starters, per exercise)
+  const storageKey = `k2k_code_v2_week_${weekId}_ex_${exIdx + 1}`;
+  const quizKey = `k2k_quiz_v2_week_${weekId}`;
 
   const [code, setCode] = useState(() => {
     const saved = localStorage.getItem(storageKey);
     return saved || ex?.starter || "";
   });
+
+  useEffect(() => {
+    setCode(localStorage.getItem(storageKey) || ex?.starter || "");
+    setOutput("");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [storageKey]);
   const [output, setOutput] = useState("");
   const { runCode, loading: pyodideLoading, ready: pyodideReady } = usePyodide();
   const [isRunning, setIsRunning] = useState(false);
@@ -93,10 +143,10 @@ const WeekExercise = () => {
   useEffect(() => {
     if (!isInPerson()) return;
     const t = setTimeout(() => {
-      syncExerciseCode(weekId || "1", code).catch(() => {});
+      syncExerciseCode(`${weekId || "1"}.${exIdx + 1}`, code).catch(() => {});
     }, 1500);
     return () => clearTimeout(t);
-  }, [code, weekId]);
+  }, [code, weekId, exIdx]);
 
   const lineCount = Math.max(code.split("\n").length, 12);
 
@@ -268,7 +318,21 @@ const WeekExercise = () => {
       <div className="flex-1 flex min-h-0">
         {/* Prompt panel */}
         <div className="w-72 border-r border-border p-5 overflow-y-auto bg-card shrink-0">
-          <div className="text-[11px] uppercase tracking-wider text-muted-foreground/60 mb-3">Exercise</div>
+          <div className="flex gap-2 mb-5">
+            {weekExercises.map((e, i) => (
+              <button
+                key={i}
+                onClick={() => setExIdx(i)}
+                className={cn(
+                  "flex-1 rounded-md border px-3 py-2 text-xs font-medium transition-colors",
+                  i === exIdx ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground hover:border-primary/50"
+                )}
+              >
+                Exercise {i + 1}
+              </button>
+            ))}
+          </div>
+          <div className="text-[11px] uppercase tracking-wider text-muted-foreground/60 mb-3">Exercise {exIdx + 1} of {weekExercises.length}</div>
           <h3 className="font-bold mb-3">{ex?.title}</h3>
           <p className="text-sm text-muted-foreground leading-relaxed">{ex?.prompt}</p>
         </div>
