@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback } from "react";
+import { TURTLE_SHIM } from "@/lib/turtleShim";
 
 interface PyodideInstance {
   runPythonAsync: (code: string) => Promise<any>;
@@ -42,9 +43,12 @@ export const usePyodide = () => {
     return pyodide;
   }, []);
 
+  const turtleRef = useRef<any[]>([]);
+
   const runCode = useCallback(async (code: string): Promise<string> => {
     const pyodide = await loadPyodideRuntime();
     let output = "";
+    turtleRef.current = [];
 
     pyodide.setStdout({
       batched: (text: string) => { output += text + "\n"; },
@@ -53,6 +57,7 @@ export const usePyodide = () => {
       batched: (text: string) => { output += "[Error] " + text + "\n"; },
     });
 
+    const usesTurtle = /\bturtle\b/.test(code);
     try {
       // Wrap input() to use the browser's prompt() so students can type values
       (pyodide as any).globals.set("_js_prompt", (msg: string) => {
@@ -68,6 +73,9 @@ def _browser_input(prompt=""):
     return val
 builtins.input = _browser_input
 `);
+      if (usesTurtle) {
+        await pyodide.runPythonAsync(TURTLE_SHIM);
+      }
       const result = await pyodide.runPythonAsync(code);
       if (result !== undefined && result !== null) {
         output += String(result);
@@ -75,9 +83,17 @@ builtins.input = _browser_input
     } catch (err: any) {
       output += err.message || String(err);
     }
+    if (usesTurtle) {
+      try {
+        const json = await pyodide.runPythonAsync(`import sys\nsys.modules['turtle']._export() if 'turtle' in sys.modules else '[]'`);
+        turtleRef.current = JSON.parse(String(json));
+      } catch { /* ignore */ }
+    }
 
     return output.trim();
   }, [loadPyodideRuntime]);
 
-  return { runCode, loading, ready };
+  const getTurtleEvents = useCallback(() => turtleRef.current, []);
+
+  return { runCode, loading, ready, getTurtleEvents };
 };
