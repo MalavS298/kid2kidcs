@@ -89,6 +89,56 @@ const exercises: Record<string, Exercise[]> = {
   ],
 };
 
+// ---------- Automatic answer checking ----------
+interface ExTest { inputs?: string[]; append?: string; check: (out: string, code: string) => string | null }
+
+const lines = (o: string) => o.split("\n").map(l => l.trim()).filter(Boolean);
+const hasErr = (o: string) => /Traceback|Error/.test(o) ? "Your code crashed:\n" + o.split("\n").slice(-3).join("\n") : null;
+const grade = (score: string, letter: string): ExTest => ({
+  inputs: [score],
+  check: (o) => {
+    const found = (o.match(/\b[ABCDF]\b/g) || []);
+    if (found.length !== 1 || found[0] !== letter) return `For a score of ${score}, your program should print only the grade ${letter}.`;
+    return null;
+  },
+});
+
+const exerciseTests: Record<string, ExTest[][]> = {
+  "1": [
+    [{ inputs: ["Alice"], check: (o, c) => !/input\s*\(/.test(c) ? "Use input() to ask for the name." : !/alice/i.test(o) ? "Your greeting should include the name the user typed (we tried \"Alice\")." : null }],
+    [
+      { inputs: ["12"], check: (o, c) => !/int\s*\(/.test(c) ? "Remember to convert the age with int()." : !/\b22\b/.test(o) ? "If the user is 12, your program should print 22." : null },
+      { inputs: ["5"], check: (o) => !/\b15\b/.test(o) ? "If the user is 5, your program should print 15." : null },
+    ],
+  ],
+  "2": [
+    [grade("95", "A"), grade("85", "B"), grade("72", "C"), grade("65", "D"), grade("40", "F")],
+    [
+      { inputs: ["4"], check: (o) => /even/i.test(o) && !/odd/i.test(o) ? null : "For 4, your program should say even (and not odd)." },
+      { inputs: ["7"], check: (o) => /odd/i.test(o) && !/even/i.test(o) ? null : "For 7, your program should say odd (and not even)." },
+    ],
+  ],
+  "3": [
+    [{ check: (o, c) => {
+      if (!/\bfor\b/.test(c)) return "Use a for loop.";
+      const star = lines(o).filter(l => l.includes("*"));
+      return star.join("|") === "*|**|***|****|*****" ? null : "Print 5 rows: *, **, ***, ****, ***** (one per line).";
+    } }],
+    [{ check: (o, c) => {
+      if (!/\bwhile\b/.test(c)) return "Use a while loop.";
+      const nums = lines(o).filter(l => /^\d+$/.test(l)).join(",");
+      if (nums !== "10,9,8,7,6,5,4,3,2,1") return "Print the numbers 10 down to 1, one per line.";
+      return /liftoff/i.test(o) ? null : "Don't forget to print Liftoff! at the end.";
+    } }],
+  ],
+  "4": [
+    [{ append: "\nassert calculate(10, 3, '+') == 13, \"calculate(10, 3, '+') should be 13\"\nassert calculate(10, 3, '-') == 7, \"calculate(10, 3, '-') should be 7\"\nassert calculate(10, 3, '*') == 30, \"calculate(10, 3, '*') should be 30\"\nassert abs(calculate(10, 4, '/') - 2.5) < 1e-9, \"calculate(10, 4, '/') should be 2.5\"\nprint('__K2K_OK__')",
+      check: (o) => o.includes("__K2K_OK__") ? null : (o.match(/AssertionError:?\s*(.*)/)?.[1] || hasErr(o) || "Your function doesn't return the right answers yet.") }],
+    [{ append: "\nfor _a, _b, _c, _r in [(4,9,2,9),(10,3,5,10),(1,2,30,30),(7,7,7,7),(-5,-2,-9,-2)]:\n    assert biggest(_a,_b,_c) == _r, f'biggest({_a}, {_b}, {_c}) should be {_r}'\nprint('__K2K_OK__')",
+      check: (o, c) => /\bmax\s*\(/.test(c) ? "Try solving it without using max()!" : o.includes("__K2K_OK__") ? null : (o.match(/AssertionError:?\s*(.*)/)?.[1] || hasErr(o) || "Your function doesn't return the biggest number yet.") }],
+  ],
+};
+
 const LineNumbers = ({ count }: { count: number }) => (
   <div className="select-none text-right pr-4 pt-5 pb-5 pl-4 text-muted-foreground/30 font-mono text-sm leading-relaxed">
     {Array.from({ length: count }, (_, i) => (
