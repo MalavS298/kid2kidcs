@@ -45,7 +45,7 @@ export const usePyodide = () => {
 
   const turtleRef = useRef<any[]>([]);
 
-  const runCode = useCallback(async (code: string): Promise<string> => {
+  const runCode = useCallback(async (code: string, testInputs?: string[]): Promise<string> => {
     const pyodide = await loadPyodideRuntime();
     let output = "";
     turtleRef.current = [];
@@ -59,14 +59,19 @@ export const usePyodide = () => {
 
     const usesTurtle = /\bturtle\b/.test(code);
     try {
+      const queue = testInputs ? [...testInputs] : null;
       // Wrap input() to use the browser's prompt() so students can type values
       (pyodide as any).globals.set("_js_prompt", (msg: string) => {
+        if (queue) return queue.length ? queue.shift()! : "";
         const v = window.prompt(msg ?? "");
         return v === null ? "" : v;
       });
+      (pyodide as any).globals.set("_k2k_testing", !!queue);
       await pyodide.runPythonAsync(`
 import builtins
 def _browser_input(prompt=""):
+    if _k2k_testing:
+        return _js_prompt(str(prompt))
     print(prompt, end="")
     val = _js_prompt(str(prompt))
     print(val)
