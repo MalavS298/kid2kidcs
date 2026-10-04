@@ -6,6 +6,7 @@ import { usePyodide } from "@/hooks/usePyodide";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import TurtleCanvas, { type TurtleEvent } from "@/components/TurtleCanvas";
 
 interface Snippet {
   id: string;
@@ -23,7 +24,9 @@ print("Hello, Kid2Kid!")
 
 const StudentSandbox = () => {
   const user = JSON.parse(localStorage.getItem("k2k_user") || '{"name":"Student"}');
-  const { runCode, loading } = usePyodide();
+  const { runCode, loading, getTurtleEvents } = usePyodide();
+  const [turtleEvents, setTurtleEvents] = useState<TurtleEvent[]>([]);
+  const [runKey, setRunKey] = useState(0);
   const [snippets, setSnippets] = useState<Snippet[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [title, setTitle] = useState("Untitled");
@@ -69,7 +72,10 @@ const StudentSandbox = () => {
     setOutput("Running…");
     try {
       const result = await runCode(code);
-      setOutput(result || "(no output)");
+      const ev = getTurtleEvents();
+      setTurtleEvents(ev);
+      setRunKey(k => k + 1);
+      setOutput(result || (ev.length ? "(turtle drawing below)" : "(no output)"));
     } catch (e: any) {
       setOutput(`[Error] ${e.message || e}`);
     } finally {
@@ -285,6 +291,17 @@ const StudentSandbox = () => {
               {output || <span style={{ color: "#475569" }}>Click 'Run' to execute your code</span>}
             </pre>
           </div>
+
+          {turtleEvents.length > 0 && (
+            <div className="rounded-lg overflow-hidden" style={{ backgroundColor: "#0f172a", boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.04)" }}>
+              <div className="flex items-center gap-2 px-4 py-2" style={{ backgroundColor: "#0c1322" }}>
+                <span className="text-[11px] uppercase tracking-wider font-mono" style={{ color: "#475569" }}>Turtle</span>
+              </div>
+              <div className="p-3">
+                <TurtleCanvas events={turtleEvents} runKey={runKey} />
+              </div>
+            </div>
+          )}
         </section>
       </div>
     </div>
