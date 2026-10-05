@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useMemo } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Code, Play, RotateCcw, Circle, Lock, ArrowLeft, Loader2, CheckCircle2, XCircle, ShieldCheck, ArrowRight } from "lucide-react";
@@ -154,7 +154,22 @@ const WeekExercise = () => {
   const weekExercises = exercises[weekId || "1"] || [];
   const [exIdx, setExIdx] = useState(0);
   const ex = weekExercises[exIdx];
-  const quiz = quizzes[weekId || "1"] || [];
+  // Shuffle answer choices once per quiz attempt so the correct answer isn't always in the same spot
+  const quiz = useMemo(() => {
+    const raw = quizzes[weekId || "1"] || [];
+    return raw.map(q => {
+      const order = q.options.map((_, i) => i);
+      for (let i = order.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [order[i], order[j]] = [order[j], order[i]];
+      }
+      return {
+        ...q,
+        options: order.map(i => q.options[i]),
+        correct: order.indexOf(q.correct),
+      };
+    });
+  }, [weekId]);
 
   // Persist code in localStorage (v2 = no-answers starters, per exercise)
   const storageKey = `k2k_code_v2_week_${weekId}_ex_${exIdx + 1}`;
