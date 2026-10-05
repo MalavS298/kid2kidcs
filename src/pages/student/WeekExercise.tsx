@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Code, Play, RotateCcw, Circle, Lock, ArrowLeft, Loader2, CheckCircle2, XCircle } from "lucide-react";
+import { Code, Play, RotateCcw, Circle, Lock, ArrowLeft, Loader2, CheckCircle2, XCircle, ShieldCheck, ArrowRight } from "lucide-react";
 import { useStudentContext } from "@/components/StudentLayout";
 import { usePyodide } from "@/hooks/usePyodide";
 import { Progress } from "@/components/ui/progress";
@@ -212,6 +212,54 @@ const WeekExercise = () => {
     setIsRunning(false);
   }, [code, runCode]);
 
+  // Completion tracking
+  const doneKey = `k2k_done_week_${weekId}`;
+  const [done, setDone] = useState<number[]>(() => JSON.parse(localStorage.getItem(doneKey) || "[]"));
+  useEffect(() => { setDone(JSON.parse(localStorage.getItem(doneKey) || "[]")); }, [doneKey]);
+  const [isChecking, setIsChecking] = useState(false);
+  const [checkResult, setCheckResult] = useState<{ ok: boolean; msg?: string } | null>(null);
+  useEffect(() => { setCheckResult(null); }, [storageKey]);
+
+  const handleCheck = useCallback(async () => {
+    setIsChecking(true);
+    setCheckResult(null);
+    setOutput("⏳ Checking your answer...");
+    const tests = exerciseTests[weekId || "1"]?.[exIdx] || [];
+    let fail: string | null = null;
+    let lastOut = "";
+    for (const t of tests) {
+      const out = await runCode(code + (t.append || ""), t.inputs || []);
+      lastOut = out.replace(/__K2K_OK__/g, "").trim();
+      fail = t.check(out, code) || (hasErr(out) && !out.includes("__K2K_OK__") ? hasErr(out) : null);
+      if (fail) break;
+    }
+    setOutput(lastOut || "(No output)");
+    if (!fail) {
+      const next = Array.from(new Set([...done, exIdx]));
+      setDone(next);
+      localStorage.setItem(doneKey, JSON.stringify(next));
+      setCheckResult({ ok: true });
+    } else {
+      setCheckResult({ ok: false, msg: fail });
+    }
+    setIsChecking(false);
+  }, [code, runCode, weekId, exIdx, done, doneKey]);
+
+  const navigate = useNavigate();
+  const hasNextEx = exIdx + 1 < weekExercises.length;
+  const nextWeekUnlocked = weekNum + 1 <= unlockedWeeks && weekNum < 4;
+  const nextLabel = hasNextEx
+    ? { desc: "Great work! On to the next exercise.", action: `Exercise ${exIdx + 2}` }
+    : weekNum >= 4
+      ? { desc: "You finished every exercise in the camp! Amazing job.", action: "" }
+      : nextWeekUnlocked
+        ? { desc: `Week ${weekNum} complete! Week ${weekNum + 1} is ready.`, action: `Go to Week ${weekNum + 1}` }
+        : { desc: `Week ${weekNum} complete! Week ${weekNum + 1} unlocks when your teacher opens it.`, action: "" };
+  const goNext = () => {
+    if (hasNextEx) setExIdx(exIdx + 1);
+    else if (nextWeekUnlocked) { setExIdx(0); navigate(`/student/week/${weekNum + 1}/exercise`); }
+  };
+
   const handleAnswerSubmit = () => {
     if (selectedAnswer === undefined) return;
     const correct = parseInt(selectedAnswer) === quiz[currentQ].correct;
@@ -358,9 +406,13 @@ const WeekExercise = () => {
           <Button variant="outline" size="sm" onClick={() => setCode(ex?.starter || "")}>
             <RotateCcw className="w-3 h-3" /> Reset
           </Button>
-          <Button size="sm" className="bg-primary" onClick={handleRun} disabled={isRunning}>
+          <Button size="sm" variant="secondary" onClick={handleRun} disabled={isRunning || isChecking}>
             {isRunning ? <Loader2 className="w-3 h-3 animate-spin" /> : <Play className="w-3 h-3" />}
             {isRunning ? "Running..." : "Run"}
+          </Button>
+          <Button size="sm" className="bg-primary" onClick={handleCheck} disabled={isRunning || isChecking}>
+            {isChecking ? <Loader2 className="w-3 h-3 animate-spin" /> : <ShieldCheck className="w-3 h-3" />}
+            {isChecking ? "Checking..." : "Check Answer"}
           </Button>
         </div>
       </div>
@@ -374,10 +426,11 @@ const WeekExercise = () => {
                 key={i}
                 onClick={() => setExIdx(i)}
                 className={cn(
-                  "flex-1 rounded-md border px-3 py-2 text-xs font-medium transition-colors",
+                  "flex-1 rounded-md border px-3 py-2 text-xs font-medium transition-colors flex items-center justify-center gap-1",
                   i === exIdx ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground hover:border-primary/50"
                 )}
               >
+                {done.includes(i) && <CheckCircle2 className="w-3 h-3 text-green-500" />}
                 Exercise {i + 1}
               </button>
             ))}
@@ -420,6 +473,30 @@ const WeekExercise = () => {
               </div>
             </div>
           </div>
+
+          <AnimatePresence>
+            {checkResult && (
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                data-testid="check-result"
+                className={cn(
+                  "mx-3 mb-3 rounded-lg border px-4 py-3 flex items-start gap-3 shrink-0",
+                  checkResult.ok ? "border-green-500/40 bg-green-500/10" : "border-destructive/40 bg-destructive/10"
+                )}
+              >
+                {checkResult.ok ? <CheckCircle2 className="w-5 h-5 text-green-500 shrink-0 mt-0.5" /> : <XCircle className="w-5 h-5 text-destructive shrink-0 mt-0.5" />}
+                <div className="flex-1 text-sm">
+                  <div className="font-semibold">{checkResult.ok ? "Correct! 🎉" : "Not quite yet"}</div>
+                  <div className="text-muted-foreground whitespace-pre-wrap">{checkResult.ok ? nextLabel.desc : checkResult.msg}</div>
+                </div>
+                {checkResult.ok && nextLabel.action && (
+                  <Button size="sm" onClick={goNext}>{nextLabel.action} <ArrowRight className="w-3 h-3" /></Button>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           <div className="h-36 px-3 pb-3 shrink-0">
             <div className="h-full rounded-lg overflow-hidden" style={{
